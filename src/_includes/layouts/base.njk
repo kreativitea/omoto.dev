@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="{{ site.locale }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if title %}{{ title }} — {{ site.name }}{% else %}{{ site.name }}{% endif %}</title>
+<meta name="description" content="{{ description or site.description }}">
+<link rel="canonical" href="{{ site.url }}{{ page.url }}">
+<link rel="alternate" type="application/atom+xml" title="{{ site.name }}" href="/feed.xml">
+<link rel="stylesheet" href="/assets/css/site.css">
+<meta property="og:type" content="{% if layout == 'layouts/post.njk' %}article{% else %}website{% endif %}">
+<meta property="og:title" content="{{ title or site.name }}">
+<meta property="og:description" content="{{ description or site.description }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta name="twitter:card" content="summary">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+{% include "defs.njk" %}
+
+<div class="page">
+
+  <header class="masthead">
+    <div>
+      <h1 class="wordmark">
+        <a href="/">Michael <span class="mid">Toshiro</span> Omoto</a>
+        {# Ruby, not bare hiragana: on a practice-sheet site a reading aid earns
+           its place — it is the thing the sheet is for. #}
+        <span class="reading" lang="ja"><ruby>{%- for r in site.nameJaRuby -%}{{ r.base }}<rt>{{ r.rt }}</rt>{%- endfor -%}</ruby></span>
+      </h1>
+
+      {# One stroke. The outline is tapered — thin where the brush lands, fat
+         through the middle, thin as it lifts — and the white streaks are kasure
+         (掠れ), paper showing through where the ink ran out. #}
+      <svg class="brush" viewBox="0 0 440 26" aria-hidden="true">
+        <g style="mix-blend-mode:var(--wash-blend)" filter="url(#dry1)" opacity=".82">
+          <path d="M8 12 C 80 4.6, 170 9.6, 250 11.6 C 320 13.4, 380 10.6, 424 8.6
+                   C 430 8.3, 434 9.2, 436 10.6
+                   L 433 17.6 C 427 19.2, 417 20, 405 19.6 C 365 18.2, 315 21.6, 245 19.6
+                   C 165 17.4, 77 20.6, 8 18.6 Z" fill="currentColor"/>
+          {# a second pass over the first, the way a loaded brush doubles back #}
+          <path d="M120 13 C 200 8, 300 16, 400 11" fill="none" stroke="currentColor"
+                stroke-width="2.4" opacity=".3"/>
+          <g stroke="var(--paper)" fill="none">
+            <path d="M320 14 H 436" stroke-width="1.5" stroke-dasharray="10 4 2 7 2 11"/>
+            <path d="M352 16.4 H 434" stroke-width="1.3" stroke-dasharray="6 5 3 8"/>
+            <path d="M386 18.4 H 432" stroke-width="1.1" stroke-dasharray="4 6 2 5"/>
+            <path d="M56 15 H 148" stroke-width=".9" stroke-dasharray="17 33" opacity=".55"/>
+          </g>
+        </g>
+      </svg>
+
+      <p class="role">{{ site.role }}</p>
+    </div>
+
+    {% include "seal.njk" %}
+  </header>
+
+  <nav class="rail" aria-label="Primary">
+    {%- for item in site.nav %}
+    <a href="{{ item.url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.label }}</a>
+    {%- endfor %}
+  </nav>
+
+  <main id="main">
+    {{ content | safe }}
+  </main>
+
+  {# The same character, five times, getting better. #}
+  <div class="practice-row" aria-hidden="true">
+    {%- for a in [
+      {o:".17", r:"-3",   f:"carve-rough"},
+      {o:".26", r:"2",    f:"carve-rough"},
+      {o:".38", r:"-1.4", f:"carve"},
+      {o:".54", r:".8",   f:"carve"},
+      {o:".82", r:"0",    f:""}
+    ] %}
+    <svg viewBox="0 0 60 60"><g {% if a.f %}filter="url(#{{ a.f }})" {% endif %}opacity="{{ a.o }}" transform="rotate({{ a.r }} 30 30)">
+      <text x="30" y="46" text-anchor="middle"
+            font-family="'Hiragino Mincho ProN','Yu Mincho',serif" font-size="40" fill="currentColor">敏</text>
+    </g></svg>
+    {%- endfor %}
+    <span class="caption">&larr; keep practising</span>
+  </div>
+
+  <footer class="colophon">
+    <span>{{ site.name }} &middot; Tokyo</span>
+    <ul>
+      {%- for s in site.social %}
+      <li><a href="{{ s.url }}"{% if '://' in s.url %} rel="me"{% endif %}>{{ s.label }}</a></li>
+      {%- endfor %}
+    </ul>
+  </footer>
+
+</div>
+</body>
+</html>

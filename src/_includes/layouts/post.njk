@@ -1,0 +1,24 @@
+---
+layout: layouts/base.njk
+---
+<article class="article col">
+
+  <h1>{{ title }}</h1>
+
+  {# Metadata that admits its own process, rather than one authoritative date. #}
+  <p class="byline">
+    <time datetime="{{ page.date | isoDate }}">{{ page.date | readable }}</time>
+    {%- if drafts %} &middot; {{ drafts | draftCount }}{% endif %}
+    {%- if touched %} &middot; last touched {{ touched }}{% endif %}
+  </p>
+
+  {% if wash %}
+  <figure class="wash-figure">
+    {% wash wash.seed, wash.palette %}
+    {% if wash.caption %}<figcaption>{{ wash.caption }}</figcaption>{% endif %}
+  </figure>
+  {% endif %}
+
+  {{ content | safe }}
+
+</article>

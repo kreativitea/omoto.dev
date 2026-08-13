@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letterpress — omoto.dev</title>
+<style>
+:root{
+  --paper:#f4f1ea;
+  --ink:#2e2b26;
+  --ink-soft:#6b665e;
+  --faint:#a8a297;
+  --wash:#9aa9b8;
+  --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
+  --sc:'Iowan Old Style',Palatino,Georgia,serif;
+  --sans:Optima,'Avenir Next',system-ui,sans-serif;
+  --measure:31rem;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--serif);font-size:18px;line-height:1.72;
+  font-variant-numeric:oldstyle-nums;text-rendering:optimizeLegibility;
+  hanging-punctuation:first last;
+}
+/* heavy stock: fine grain + a very soft cockle across the sheet */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.42;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:8;
+  background:radial-gradient(120% 90% at 50% 0%,rgba(255,255,255,.5),transparent 60%),
+             radial-gradient(120% 100% at 50% 100%,rgba(120,105,85,.07),transparent 55%);
+}
+
+/* the press impression: type sits slightly *into* the sheet */
+.deboss{
+  text-shadow:0 1px 0 rgba(255,255,255,.75), 0 -1px 1px rgba(70,60,45,.13);
+}
+
+.page{max-width:var(--measure);margin:0 auto;padding:0 1.4rem 8rem;position:relative}
+
+/* ---- colophon head ---------------------------------------------------- */
+header.colophon{padding:6rem 0 0;text-align:center}
+h1.name{
+  margin:0;font-size:1.42rem;font-weight:400;letter-spacing:.42em;text-transform:uppercase;
+  text-indent:.42em;
+}
+.rule-wash{position:relative;height:26px;margin:1.6rem 0 0}
+.rule-wash svg{position:absolute;inset:0;width:100%;height:100%}
+.sub{margin:1.4rem 0 0;font-family:var(--sans);font-size:.74rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--faint)}
+nav.set{margin:2.6rem 0 0;display:flex;justify-content:center;gap:1.6rem;flex-wrap:wrap;
+  font-size:.86rem;letter-spacing:.1em;font-variant:small-caps}
+nav.set a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid rgba(107,102,94,.28);
+  padding-bottom:1px}
+nav.set a:hover{color:var(--ink);border-bottom-color:var(--ink)}
+nav.set a[aria-current]{color:var(--ink);border-bottom-color:var(--ink)}
+
+.standfirst{margin:4rem 0 0;font-size:1.06rem;color:#403c36;text-align:center}
+
+/* ---- contents --------------------------------------------------------- */
+.contents{margin:5rem 0 0}
+.contents h2{font-size:.74rem;font-family:var(--sans);letter-spacing:.26em;text-transform:uppercase;
+  color:var(--faint);text-align:center;margin:0 0 2.4rem;font-weight:400}
+.toc{list-style:none;margin:0;padding:0}
+.toc li{padding:1.15rem 0;border-bottom:1px solid rgba(168,162,151,.32)}
+.toc li:first-child{border-top:1px solid rgba(168,162,151,.32)}
+.toc a{display:flex;align-items:baseline;gap:.7rem;text-decoration:none;color:inherit}
+.toc .title{font-size:1.06rem;line-height:1.45}
+.toc .leader{flex:1;border-bottom:1px dotted rgba(168,162,151,.7);transform:translateY(-.28em);min-width:1.5rem}
+.toc time{font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;color:var(--faint);white-space:nowrap}
+.toc a:hover .title{font-style:italic}
+.toc .gloss{display:block;color:var(--ink-soft);font-size:.9rem;margin-top:.25rem;line-height:1.6}
+
+/* ---- specimen --------------------------------------------------------- */
+article{margin:6rem 0 0}
+.orn{display:block;width:64px;margin:0 auto 2.6rem;opacity:.55}
+article h2.title{font-size:1.9rem;font-weight:400;line-height:1.28;margin:0;text-align:center;
+  letter-spacing:.005em}
+article .byline{margin:1.3rem 0 0;text-align:center;font-family:var(--sans);font-size:.7rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+article p{margin:1.5rem 0 0;text-align:justify;hyphens:auto}
+.opening{position:relative;margin-top:2.8rem}
+.opening::first-letter{
+  float:left;font-size:3.9rem;line-height:.82;padding:.1em .28rem 0 0;font-weight:400;
+}
+.capwash{position:absolute;left:-.55rem;top:-.35rem;width:3.9rem;height:3.9rem;z-index:-1}
+.smallcaps{font-variant:small-caps;letter-spacing:.06em}
+
+/* margin footnote */
+.fn{counter-increment:fn}
+.fn::after{content:counter(fn);vertical-align:super;font-size:.62em;color:var(--ink-soft);
+  margin-left:1px;font-variant-numeric:lining-nums}
+body{counter-reset:fn}
+.sidenote{
+  display:block;font-size:.82rem;line-height:1.6;color:var(--ink-soft);
+  border-left:2px solid rgba(154,169,184,.5);padding-left:.9rem;margin:1.3rem 0 0;
+}
+@media (min-width:1100px){
+  .sidenote{position:absolute;left:calc(100% + 2.6rem);width:12rem;margin-top:-1.4rem;border-left:none;
+    padding-left:0}
+  .sidenote::before{content:"";display:block;width:1.6rem;height:1px;background:rgba(154,169,184,.7);
+    margin-bottom:.5rem}
+  .noted{position:relative}
+}
+
+blockquote{margin:2.4rem 2rem 0;font-size:1rem;color:#403c36;text-align:left}
+blockquote p{text-align:left;margin:0}
+blockquote cite{display:block;margin-top:.7rem;font-style:normal;font-family:var(--sans);
+  font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+
+.ring{position:absolute;right:-5rem;top:14rem;width:150px;height:150px;opacity:.5;pointer-events:none}
+@media (max-width:1200px){.ring{display:none}}
+
+footer.imprint{margin:6rem 0 0;padding-top:2rem;border-top:1px solid rgba(168,162,151,.32);
+  text-align:center;font-family:var(--sans);font-size:.68rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--faint);line-height:2.2}
+footer.imprint a{color:var(--faint);text-decoration:none;margin:0 .45rem}
+footer.imprint a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="l-wob" x="-40%" y="-60%" width="180%" height="220%">
+    <feTurbulence type="fractalNoise" baseFrequency=".018" numOctaves="4" seed="17" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation=".8"/>
+  </filter>
+  <filter id="l-wob2" x="-40%" y="-60%" width="180%" height="220%">
+    <feTurbulence type="fractalNoise" baseFrequency=".028" numOctaves="3" seed="64" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="13" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="1.5"/>
+  </filter>
+  <filter id="l-gran">
+    <feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="4" seed="29"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+</defs></svg>
+
+<div class="page">
+
+  <header class="colophon">
+    <h1 class="name deboss">Michael Omoto</h1>
+
+    <div class="rule-wash">
+      <svg viewBox="0 0 480 26" preserveAspectRatio="none" aria-hidden="true">
+        <g style="mix-blend-mode:multiply">
+          <ellipse cx="240" cy="14" rx="200" ry="6" fill="#9aa9b8" opacity=".34" filter="url(#l-wob)"/>
+          <ellipse cx="180" cy="16" rx="120" ry="4" fill="#b0a3b8" opacity=".26" filter="url(#l-wob2)"/>
+        </g>
+        <ellipse cx="240" cy="14" rx="200" ry="6" fill="none" stroke="#6f8194" stroke-width="1.6"
+                 opacity=".3" filter="url(#l-wob)" style="mix-blend-mode:multiply"/>
+        <line x1="60" y1="10" x2="420" y2="10" stroke="#2e2b26" stroke-width=".8" opacity=".45"/>
+      </svg>
+    </div>
+
+    <p class="sub">Tokyo &middot; Engineering &amp; product &middot; Est. 2013</p>
+
+    <nav class="set">
+      <a href="#" aria-current="page">Writing</a>
+      <a href="#">About</a>
+      <a href="#">Work</a>
+      <a href="#">Talks</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <p class="standfirst">
+    Engineering leader in Tokyo, cognitive scientist by training, a teacher for ten years before
+    that. These are essays on privacy, on how teams learn, and on building things in two languages.
+  </p>
+
+  <section class="contents">
+    <h2>Contents</h2>
+    <ul class="toc">
+      <li><a href="#">
+        <span class="title">A system that can&rsquo;t be subpoenaed<span class="gloss">On moving four years of location history onto the device.</span></span>
+        <span class="leader"></span><time datetime="2026-07-30">VII &middot; 2026</time>
+      </a></li>
+      <li><a href="#">
+        <span class="title">Hiring a hundred engineers in sixteen months<span class="gloss">The funnel was never the constraint.</span></span>
+        <span class="leader"></span><time datetime="2026-06-14">VI &middot; 2026</time>
+      </a></li>
+      <li><a href="#">
+        <span class="title">The classroom was the management training<span class="gloss">A lesson plan is a hypothesis about attention.</span></span>
+        <span class="leader"></span><time datetime="2026-05-02">V &middot; 2026</time>
+      </a></li>
+      <li><a href="#">
+        <span class="title">日系 &mdash; notes on being Nikkei in Tokyo<span class="gloss">After the 64th Convention of Nikkei &amp; Japanese Abroad.</span></span>
+        <span class="leader"></span><time datetime="2026-03-21">III &middot; 2026</time>
+      </a></li>
+    </ul>
+  </section>
+
+  <article>
+    <svg class="orn" viewBox="0 0 64 16" aria-hidden="true">
+      <g style="mix-blend-mode:multiply">
+        <ellipse cx="32" cy="8" rx="26" ry="4" fill="#9aa9b8" opacity=".4" filter="url(#l-wob2)"/>
+      </g>
+      <path d="M6 8 L 26 8 M38 8 L 58 8" stroke="#2e2b26" stroke-width=".9" opacity=".5"/>
+      <circle cx="32" cy="8" r="2.2" fill="#2e2b26" opacity=".5"/>
+    </svg>
+
+    <h2 class="title deboss">A system that can&rsquo;t be subpoenaed</h2>
+    <p class="byline">30 July 2026 &middot; Fourteen minutes</p>
+
+    <svg class="ring" viewBox="0 0 150 150" aria-hidden="true">
+      <g style="mix-blend-mode:multiply">
+        <circle cx="75" cy="75" r="58" fill="none" stroke="#b08d5e" stroke-width="7"
+                opacity=".3" filter="url(#l-wob)"/>
+        <circle cx="75" cy="75" r="58" fill="#c2a274" opacity=".08" filter="url(#l-wob2)"/>
+      </g>
+    </svg>
+
+    <p class="opening noted">
+      <svg class="capwash" viewBox="0 0 60 60" aria-hidden="true">
+        <g style="mix-blend-mode:multiply">
+          <ellipse cx="30" cy="32" rx="25" ry="24" fill="#9aa9b8" opacity=".3" filter="url(#l-wob)"/>
+          <ellipse cx="34" cy="28" rx="16" ry="15" fill="#b0a3b8" opacity=".22" filter="url(#l-wob2)"/>
+        </g>
+        <ellipse cx="22" cy="20" rx="10" ry="5" fill="#fff" opacity=".38" style="mix-blend-mode:screen"/>
+      </svg>
+      The cheapest way to protect a location history is to never let it leave the phone. That
+      sentence took four years to ship. Every surface in <span class="smallcaps">Maps</span> that
+      asks you to review a place you have just visited used to work by asking a server what you had
+      been doing lately.<span class="fn"></span> The server knew, so the server could be compelled
+      to say.
+      <span class="sidenote">A geofence warrant compels a company to identify everyone near a
+      location at a given time. It is answered from exactly this kind of index.</span>
+    </p>
+
+    <p>
+      The redesign is unglamorous. Candidate places are fetched by coarse region rather than by
+      trajectory; the intersection with your actual history happens on the device; only the
+      interaction is ever logged, never the reason the prompt appeared. Nothing about it is
+      technically novel. What it required was four years of somebody insisting that the ranking
+      model be rebuilt on a smaller feature set.
+    </p>
+
+    <blockquote>
+      <p>You cannot comply with a question you have made yourself unable to answer.</p>
+      <cite>The only sentence worth keeping</cite>
+    </blockquote>
+
+    <p>
+      The cost is real and it arrives before the benefit. Solicitation volume &mdash; the metric the
+      team is judged on &mdash; falls for two quarters while the model relearns. The only way through
+      is to have written down, in advance and in front of witnesses, how large you expected the dip
+      to be and how long you would tolerate it. We did. It recovered in five months, and the legal
+      exposure went to zero, which is a number that appears on no dashboard I was ever reviewed
+      against.
+    </p>
+  </article>
+
+  <footer class="imprint">
+    Direction 04 &middot; Letterpress<br>
+    <a href="#">mike@omoto.dev</a><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">RSS</a>
+  </footer>
+
+</div>
+</body>
+</html>

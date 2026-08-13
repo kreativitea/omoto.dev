@@ -1,0 +1,17 @@
+{
+  "name": "omoto-dev",
+  "version": "1.0.0",
+  "private": true,
+  "description": "omoto.dev — personal site and writing",
+  "type": "module",
+  "scripts": {
+    "dev": "eleventy --serve",
+    "build": "eleventy",
+    "clean": "rm -rf _site"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-plugin-rss": "^2.0.2",
+    "luxon": "^3.5.0"
+  }
+}

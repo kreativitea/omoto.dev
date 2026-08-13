@@ -1,0 +1,39 @@
+---
+layout: layouts/base.njk
+description: Engineering leader in Tokyo. Writing on privacy, how teams learn, and building in two languages.
+---
+
+<div class="col noted">
+  <p class="lede">
+    I <span class="revise"><del>manage</del><ins>build</ins></span> engineering organisations in
+    Tokyo — currently at a frontier AI research lab, before that Google Maps, Mercari, and a
+    hardware company in California. Trained as a cognitive scientist. Taught for ten years before
+    writing a line of production code. I write here about privacy, about how teams learn, and
+    occasionally in Japanese.
+  </p>
+  <span class="mnote">
+    <svg class="mark" viewBox="0 0 38 20" aria-hidden="true">
+      <path d="M36 4 C 26 2, 12 7, 3 15" fill="none" stroke="currentColor" stroke-width="1.2"
+            stroke-linecap="round" filter="url(#pen)"/>
+      <path d="M3 15 l 8 -1 M3 15 l 1 -7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+    third draft. still one clause too long
+  </span>
+</div>
+
+<section class="col">
+  <ul class="index">
+    <h2 class="section-head">Writing</h2>
+    {%- for post in collections.writing %}
+    <li>
+      <a class="piece" href="{{ post.url }}">
+        <time datetime="{{ post.date | isoDate }}">{{ post.date | monthYear }}</time>
+        <div>
+          <h3>{% dab post.fileSlug, (post.data.wash.palette if post.data.wash else "indigo"), 22 %}{{ post.data.title }}</h3>
+          <p>{{ post.data.summary }}</p>
+        </div>
+      </a>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>

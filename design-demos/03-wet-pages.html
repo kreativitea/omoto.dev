@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wet Pages — omoto.dev</title>
+<style>
+:root{
+  --paper:#f3f0e9;
+  --card:#fbf9f4;
+  --ink:#33302c;
+  --ink-soft:#6d6862;
+  --faint:#a39d94;
+  --sakura:#e2a9b0;
+  --sea:#8fbfb4;
+  --indigo:#8fa2c8;
+  --ochre:#d9b47c;
+  --serif:'Iowan Old Style',Palatino,'Palatino Linotype',Georgia,serif;
+  --hand:'Bradley Hand','Segoe Print',cursive;
+  --sans:Avenir,'Avenir Next',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--serif);font-size:17px;line-height:1.78;
+  text-rendering:optimizeLegibility;overflow-x:hidden;
+}
+/* cold-press tooth: coarser grain than the other directions */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.62;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E");
+}
+.page{max-width:60rem;margin:0 auto;padding:0 1.5rem 7rem;position:relative}
+
+/* ---- hero illustration ------------------------------------------------ */
+.hero{position:relative;margin:0 -1.5rem}
+.hero svg{display:block;width:100%;height:auto}
+.hero-copy{position:absolute;left:0;right:0;bottom:8%;text-align:center;padding:0 1.5rem}
+h1.name{margin:0;font-size:clamp(2.1rem,6vw,3.3rem);font-weight:400;letter-spacing:.02em;line-height:1.1}
+h1.name em{font-family:var(--hand);font-style:normal;display:block;font-size:.42em;
+  color:var(--ink-soft);letter-spacing:.02em;margin-top:.7rem;transform:rotate(-1deg)}
+
+nav.tabs{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:2.2rem 0 0}
+nav.tabs a{
+  font-family:var(--sans);font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;
+  text-decoration:none;color:var(--ink-soft);padding:.42rem 1rem;border-radius:3px;
+  position:relative;transition:color .25s;
+}
+nav.tabs a::before{
+  content:"";position:absolute;inset:0;border-radius:14px 10px 16px 9px/9px 15px 8px 14px;
+  background:var(--sea);opacity:0;transform:scale(.85);transition:opacity .3s,transform .3s;
+  mix-blend-mode:multiply;z-index:-1;
+}
+nav.tabs a:hover{color:var(--ink)}
+nav.tabs a:hover::before{opacity:.35;transform:scale(1)}
+nav.tabs a[aria-current]{color:var(--ink)}
+nav.tabs a[aria-current]::before{opacity:.4;transform:scale(1);background:var(--ochre)}
+
+.intro{max-width:34rem;margin:3.5rem auto 0;text-align:center;font-size:1.1rem;color:#44403b}
+
+/* ---- taped paper scraps ----------------------------------------------- */
+.scraps{margin:5rem 0 0;display:grid;gap:2.6rem;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr))}
+.scrap{
+  position:relative;background:var(--card);padding:1.7rem 1.5rem 1.5rem;text-decoration:none;color:inherit;
+  box-shadow:0 1px 2px rgba(60,50,40,.09),0 8px 22px -12px rgba(60,50,40,.3);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;
+  /* torn / deckled edges */
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' preserveAspectRatio='none'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='4' seed='4'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='7'/%3E%3C/filter%3E%3Crect x='4' y='4' width='392' height='292' fill='%23fff' filter='url(%23t)'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' preserveAspectRatio='none'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='4' seed='4'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='7'/%3E%3C/filter%3E%3Crect x='4' y='4' width='392' height='292' fill='%23fff' filter='url(%23t)'/%3E%3C/svg%3E");
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;
+}
+.scrap:nth-child(1){transform:rotate(-.8deg)}
+.scrap:nth-child(2){transform:rotate(.7deg)}
+.scrap:nth-child(3){transform:rotate(-.4deg)}
+.scrap:nth-child(4){transform:rotate(1deg)}
+.scrap:hover{transform:rotate(0deg) translateY(-4px);box-shadow:0 2px 3px rgba(60,50,40,.1),0 18px 34px -14px rgba(60,50,40,.36)}
+.tape{position:absolute;top:-11px;left:50%;width:76px;height:24px;transform:translateX(-50%) rotate(-2.5deg);
+  background:rgba(217,180,124,.42);mix-blend-mode:multiply;
+  box-shadow:inset 0 0 12px rgba(180,140,80,.25)}
+.tape::after{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 2px,transparent 2px 5px)}
+.scrap .blot{position:absolute;top:.9rem;right:1.1rem;width:34px;height:34px;opacity:.85}
+.scrap time{font-family:var(--sans);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+.scrap h3{margin:.55rem 0 0;font-size:1.16rem;font-weight:600;line-height:1.4;padding-right:2rem}
+.scrap p{margin:.6rem 0 0;font-size:.94rem;color:var(--ink-soft);line-height:1.65}
+.scrap .more{display:inline-block;margin-top:.9rem;font-family:var(--hand);color:var(--indigo);font-size:1rem}
+
+/* ---- specimen --------------------------------------------------------- */
+.sec-head{margin:6rem 0 0;text-align:center;font-family:var(--hand);font-size:1.5rem;
+  color:var(--ink-soft);transform:rotate(-.6deg)}
+article{max-width:34rem;margin:2.5rem auto 0}
+article h2{font-size:1.75rem;font-weight:600;line-height:1.3;margin:0}
+article .byline{font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);margin:.8rem 0 0}
+article p{margin:1.5rem 0 0}
+.dropcap::first-letter{
+  float:left;font-size:3.4rem;line-height:.86;padding:.14em .3rem 0 0;font-weight:600;color:#3b3833;
+}
+.spot{float:right;width:9.5rem;margin:.4rem -4.5rem .8rem 1.4rem;shape-outside:circle(50%)}
+@media (max-width:900px){.spot{float:none;display:block;margin:2rem auto;width:12rem}}
+blockquote{margin:2.2rem 0 0;padding:0 0 0 1.3rem;position:relative;font-size:1.08rem;color:#413d38}
+blockquote::before{content:"";position:absolute;left:0;top:.35rem;bottom:.35rem;width:4px;
+  background:var(--sakura);opacity:.6;border-radius:3px;mix-blend-mode:multiply}
+.stamp{display:block;margin:3.5rem auto 0;width:120px;opacity:.8}
+
+footer.bottom{margin:5rem 0 0;text-align:center;font-family:var(--sans);font-size:.72rem;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+footer.bottom a{color:var(--faint);text-decoration:none;margin:0 .5rem}
+footer.bottom a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="w1" x="-30%" y="-30%" width="160%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="4" seed="8" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="30" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation=".8"/>
+  </filter>
+  <filter id="w2" x="-30%" y="-30%" width="160%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency=".019" numOctaves="3" seed="53" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="1.7"/>
+  </filter>
+  <filter id="w3" x="-30%" y="-30%" width="160%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="3" seed="91" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="2.4"/>
+  </filter>
+  <filter id="inkline" x="-10%" y="-50%" width="120%" height="200%">
+    <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="3" seed="6" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <!-- pigment granulation, clipped into washes -->
+  <filter id="gran">
+    <feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="4" seed="14"/>
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer><feFuncA type="linear" slope=".55" intercept="0"/></feComponentTransfer>
+  </filter>
+</defs></svg>
+
+<div class="page">
+
+  <div class="hero">
+    <svg viewBox="0 0 900 420" aria-hidden="true">
+      <!-- sky wash -->
+      <g style="mix-blend-mode:multiply">
+        <ellipse cx="430" cy="150" rx="420" ry="140" fill="#b7c9e0" opacity=".3" filter="url(#w1)"/>
+        <ellipse cx="620" cy="120" rx="250" ry="95"  fill="#e2a9b0" opacity=".26" filter="url(#w2)"/>
+        <ellipse cx="240" cy="170" rx="230" ry="88"  fill="#c9bcd8" opacity=".22" filter="url(#w2)"/>
+      </g>
+      <!-- distant hills -->
+      <g style="mix-blend-mode:multiply">
+        <path d="M0 300 C 140 214, 250 268, 360 232 S 560 190, 700 246 S 850 226, 900 262 L 900 340 L 0 340 Z"
+              fill="#8fa2c8" opacity=".38" filter="url(#w1)"/>
+        <path d="M0 322 C 180 262, 320 306, 470 280 S 720 268, 900 302 L 900 360 L 0 360 Z"
+              fill="#8fbfb4" opacity=".34" filter="url(#w2)"/>
+        <path d="M0 350 C 200 318, 400 348, 640 330 S 840 336, 900 344 L 900 400 L 0 400 Z"
+              fill="#d9b47c" opacity=".3" filter="url(#w3)"/>
+      </g>
+      <!-- pooled wet edges, the tell that it hasn't dried -->
+      <path d="M0 300 C 140 214, 250 268, 360 232 S 560 190, 700 246 S 850 226, 900 262"
+            fill="none" stroke="#5f74a3" stroke-width="3.4" opacity=".3" filter="url(#w1)"
+            style="mix-blend-mode:multiply"/>
+      <path d="M0 322 C 180 262, 320 306, 470 280 S 720 268, 900 302"
+            fill="none" stroke="#5e948a" stroke-width="2.8" opacity=".26" filter="url(#w2)"
+            style="mix-blend-mode:multiply"/>
+      <!-- granulation in the pigment -->
+      <g style="mix-blend-mode:multiply" opacity=".18">
+        <rect x="0" y="230" width="900" height="180" filter="url(#gran)"/>
+      </g>
+      <!-- bloom / backrun -->
+      <ellipse cx="700" cy="200" rx="70" ry="30" fill="#f3f0e9" opacity=".5" filter="url(#w3)"/>
+      <!-- wet sheen -->
+      <ellipse cx="330" cy="96"  rx="120" ry="30" fill="#fff" opacity=".4" style="mix-blend-mode:screen"/>
+      <ellipse cx="690" cy="290" rx="70"  ry="17" fill="#fff" opacity=".3" style="mix-blend-mode:screen"/>
+      <!-- ink over wash: a few pen marks -->
+      <g filter="url(#inkline)" opacity=".55">
+        <path d="M60 356 C 200 336, 420 360, 620 342 S 840 350, 894 344" fill="none"
+              stroke="#33302c" stroke-width="1.1"/>
+        <path d="M120 348 l 9 -13 M148 352 l 7 -11 M176 346 l 10 -12 M206 351 l 8 -12"
+              stroke="#33302c" stroke-width="1"/>
+        <path d="M742 330 l 0 -22 M742 308 l -10 8 M742 308 l 10 8" stroke="#33302c" stroke-width="1"/>
+      </g>
+    </svg>
+    <div class="hero-copy">
+      <h1 class="name">Michael Omoto<em>notes from Tokyo, still drying</em></h1>
+    </div>
+  </div>
+
+  <nav class="tabs">
+    <a href="#" aria-current="page">Writing</a>
+    <a href="#">Sketchbook</a>
+    <a href="#">About</a>
+    <a href="#">Work</a>
+    <a href="#">Talks</a>
+  </nav>
+
+  <p class="intro">
+    Engineering leader, recovering cognitive scientist, ten years a teacher first.
+    I build teams in Tokyo and write down what I learn while it&rsquo;s still wet.
+  </p>
+
+  <div class="scraps">
+
+    <a class="scrap" href="#">
+      <span class="tape"></span>
+      <svg class="blot" viewBox="0 0 40 40" aria-hidden="true"><g style="mix-blend-mode:multiply">
+        <ellipse cx="20" cy="20" rx="15" ry="13" fill="#8fa2c8" opacity=".5" filter="url(#w3)"/>
+        <ellipse cx="17" cy="18" rx="8" ry="7" fill="#6f83ad" opacity=".4" filter="url(#w3)"/></g></svg>
+      <time datetime="2026-07-30">30 July 2026</time>
+      <h3>A system that can&rsquo;t be subpoenaed</h3>
+      <p>Four years moving location history onto the device &mdash; and what privacy by design costs when it meets a launch review.</p>
+      <span class="more">read &rarr;</span>
+    </a>
+
+    <a class="scrap" href="#">
+      <span class="tape" style="transform:translateX(-50%) rotate(3deg)"></span>
+      <svg class="blot" viewBox="0 0 40 40" aria-hidden="true"><g style="mix-blend-mode:multiply">
+        <ellipse cx="20" cy="20" rx="14" ry="14" fill="#e2a9b0" opacity=".5" filter="url(#w3)"/>
+        <ellipse cx="23" cy="22" rx="7" ry="6" fill="#cf8b95" opacity=".4" filter="url(#w3)"/></g></svg>
+      <time datetime="2026-06-14">14 June 2026</time>
+      <h3>Hiring a hundred engineers in sixteen months</h3>
+      <p>What the Mercari funnel actually looked like, and the two decisions I&rsquo;d make differently now.</p>
+      <span class="more">read &rarr;</span>
+    </a>
+
+    <a class="scrap" href="#">
+      <span class="tape" style="transform:translateX(-50%) rotate(-4deg)"></span>
+      <svg class="blot" viewBox="0 0 40 40" aria-hidden="true"><g style="mix-blend-mode:multiply">
+        <ellipse cx="20" cy="20" rx="15" ry="12" fill="#8fbfb4" opacity=".5" filter="url(#w3)"/>
+        <ellipse cx="18" cy="23" rx="7" ry="6" fill="#5e948a" opacity=".38" filter="url(#w3)"/></g></svg>
+      <time datetime="2026-05-02">2 May 2026</time>
+      <h3>The classroom was the management training</h3>
+      <p>Lesson planning and running a team are the same skill, practised on different people.</p>
+      <span class="more">read &rarr;</span>
+    </a>
+
+    <a class="scrap" href="#">
+      <span class="tape" style="transform:translateX(-50%) rotate(1.5deg)"></span>
+      <svg class="blot" viewBox="0 0 40 40" aria-hidden="true"><g style="mix-blend-mode:multiply">
+        <ellipse cx="20" cy="20" rx="14" ry="13" fill="#d9b47c" opacity=".5" filter="url(#w3)"/>
+        <ellipse cx="22" cy="17" rx="7" ry="6" fill="#bd9558" opacity=".38" filter="url(#w3)"/></g></svg>
+      <time datetime="2026-03-21">21 March 2026</time>
+      <h3>日系 &mdash; notes on being Nikkei in Tokyo</h3>
+      <p>Written after the 64th Convention of Nikkei &amp; Japanese Abroad.</p>
+      <span class="more">read &rarr;</span>
+    </a>
+
+  </div>
+
+  <p class="sec-head">&mdash; how a post reads &mdash;</p>
+
+  <article>
+    <h2>Hiring a hundred engineers in sixteen months</h2>
+    <p class="byline">14 June 2026 &middot; Nine minutes</p>
+
+    <svg class="spot" viewBox="0 0 200 200" aria-hidden="true">
+      <g style="mix-blend-mode:multiply">
+        <circle cx="100" cy="100" r="78" fill="#e2a9b0" opacity=".3" filter="url(#w1)"/>
+        <circle cx="118" cy="86"  r="55" fill="#8fa2c8" opacity=".28" filter="url(#w2)"/>
+        <circle cx="80"  cy="120" r="48" fill="#d9b47c" opacity=".26" filter="url(#w2)"/>
+      </g>
+      <circle cx="100" cy="100" r="78" fill="none" stroke="#c98d95" stroke-width="3"
+              opacity=".3" filter="url(#w1)" style="mix-blend-mode:multiply"/>
+      <g style="mix-blend-mode:multiply" opacity=".2"><circle cx="100" cy="100" r="76" filter="url(#gran)"/></g>
+      <ellipse cx="76" cy="66" rx="30" ry="12" fill="#fff" opacity=".4" style="mix-blend-mode:screen"/>
+    </svg>
+
+    <p class="dropcap">
+      The number is the least interesting part. A hundred hires in sixteen months sounds like a
+      recruiting story, and it was really an onboarding story: the constraint was never how many
+      offers we could extend, it was how many new people the existing team could absorb per week
+      before the codebase stopped making sense to anybody.
+    </p>
+
+    <p>
+      I was the first English-speaking engineering manager at a company that ran in Japanese. That
+      is a translation problem for about two weeks and an organisational design problem forever
+      after. You are not adding English speakers to a Japanese company; you are making the company
+      bilingual, which is a different and much more expensive thing to be.
+    </p>
+
+    <blockquote>
+      Every process that existed only in someone&rsquo;s head had to be written down before it could
+      be translated. The translation was the easy half.
+    </blockquote>
+
+    <p>
+      What I&rsquo;d change: I would have built the bootcamp first, not eleventh, and I would have
+      refused to open a fourth team until the third one had a manager who had already run a team.
+      Both mistakes cost about a quarter each, and both were visible in advance if I had been
+      willing to slow the number down.
+    </p>
+
+    <svg class="stamp" viewBox="0 0 120 40" aria-hidden="true">
+      <g style="mix-blend-mode:multiply">
+        <ellipse cx="34" cy="20" rx="16" ry="9" fill="#8fbfb4" opacity=".45" filter="url(#w3)"/>
+        <ellipse cx="60" cy="20" rx="16" ry="9" fill="#e2a9b0" opacity=".45" filter="url(#w3)"/>
+        <ellipse cx="86" cy="20" rx="16" ry="9" fill="#d9b47c" opacity=".45" filter="url(#w3)"/>
+      </g>
+    </svg>
+  </article>
+
+  <footer class="bottom">
+    Direction 03 &middot; Wet Pages
+    &nbsp;&nbsp;&nbsp;
+    <a href="#">mike@omoto.dev</a><a href="#">GitHub</a><a href="#">RSS</a>
+  </footer>
+
+</div>
+</body>
+</html>

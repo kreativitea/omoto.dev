@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sumi &amp; Wash — omoto.dev</title>
+<style>
+:root{
+  --paper:#faf7f1;
+  --ink:#2b2926;
+  --ink-soft:#7a746c;
+  --faint:#b4ada2;
+  --vermilion:#c2452f;
+  --indigo:#5a6f8c;
+  --serif:'Hoefler Text',Baskerville,'Times New Roman',Times,serif;
+  --sans:Optima,'Avenir Next',Avenir,'Hiragino Sans',system-ui,sans-serif;
+  --jp:'Hiragino Mincho ProN','Yu Mincho',serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--serif);font-size:17px;line-height:1.85;
+  letter-spacing:.005em;text-rendering:optimizeLegibility;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.45;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.3'/%3E%3C/svg%3E");
+}
+/* faint washi fibres, longer strands */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:8;opacity:.16;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006 0.15' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23f)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+.page{max-width:63rem;margin:0 auto;padding:0 2rem 8rem;position:relative}
+
+/* ---- masthead: brushstroke + seal ------------------------------------- */
+header.top{padding:5.5rem 0 0;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start}
+h1.name{margin:0;font-size:2.1rem;font-weight:400;letter-spacing:.06em;line-height:1.25}
+h1.name small{display:block;font-family:var(--jp);font-size:.9rem;letter-spacing:.5em;
+  color:var(--faint);margin-top:.55rem;font-weight:400}
+.brush{display:block;width:min(26rem,100%);height:34px;margin:1.1rem 0 0}
+.seal{width:62px;height:62px;flex:none;opacity:.9}
+.role{margin:1.6rem 0 0;color:var(--ink-soft);font-family:var(--sans);font-size:.86rem;
+  letter-spacing:.13em;text-transform:uppercase}
+
+nav.rail{margin:3.2rem 0 0;display:flex;gap:2.4rem;flex-wrap:wrap;
+  font-family:var(--sans);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase}
+nav.rail a{color:var(--faint);text-decoration:none;position:relative;padding-bottom:.35rem}
+nav.rail a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;
+  background:var(--vermilion);transition:right .4s ease}
+nav.rail a:hover{color:var(--ink)}
+nav.rail a:hover::after{right:0}
+nav.rail a[aria-current]{color:var(--ink)}
+nav.rail a[aria-current]::after{right:0;background:var(--ink);opacity:.35}
+
+/* ---- body ------------------------------------------------------------- */
+.lede{max-width:36rem;margin:4.5rem 0 0;font-size:1.22rem;line-height:1.75;color:#3c3934}
+
+section.list{margin:6rem 0 0}
+.sec-title{font-family:var(--sans);font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 2.2rem;display:flex;align-items:center;gap:1.2rem}
+.sec-title::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(180,173,162,.6),transparent)}
+
+.piece{display:grid;grid-template-columns:7rem 1fr;gap:2rem;padding:1.9rem 0;
+  border-bottom:1px solid rgba(180,173,162,.28);text-decoration:none;color:inherit}
+.piece:first-of-type{border-top:1px solid rgba(180,173,162,.28)}
+.piece time{font-family:var(--sans);font-size:.74rem;letter-spacing:.12em;color:var(--faint);
+  padding-top:.45rem}
+.piece h3{margin:0;font-size:1.28rem;font-weight:400;line-height:1.4;transition:color .3s}
+.piece p{margin:.5rem 0 0;color:var(--ink-soft);font-size:.95rem;max-width:34rem;line-height:1.7}
+.piece:hover h3{color:var(--vermilion)}
+@media (max-width:620px){.piece{grid-template-columns:1fr;gap:.5rem}.piece time{padding-top:0}}
+
+/* ---- specimen --------------------------------------------------------- */
+article{margin:7rem 0 0;max-width:36rem}
+article h2{font-size:1.85rem;font-weight:400;line-height:1.35;margin:0;letter-spacing:.01em}
+article .byline{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);margin:1.1rem 0 0}
+article p{margin:1.7rem 0 0}
+.wash-figure{margin:3rem 0 0;position:relative}
+.wash-figure svg{display:block;width:100%;height:auto}
+.wash-figure figcaption{font-family:var(--sans);font-size:.74rem;letter-spacing:.1em;
+  color:var(--faint);margin-top:1rem;text-transform:uppercase}
+
+.pull{margin:3rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:start}
+.pull .vertical{font-family:var(--jp);writing-mode:vertical-rl;font-size:1.05rem;
+  letter-spacing:.28em;color:var(--indigo);line-height:2;max-height:12rem}
+.pull blockquote{margin:0;font-size:1.15rem;line-height:1.8;color:#3c3934;font-style:normal}
+.pull blockquote footer{font-family:var(--sans);font-size:.74rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);margin-top:1rem}
+
+footer.bottom{margin:8rem 0 0;padding-top:2rem;border-top:1px solid rgba(180,173,162,.3);
+  display:flex;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;
+  font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+footer.bottom a{color:var(--faint);text-decoration:none}
+footer.bottom a:hover{color:var(--vermilion)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="s-wob" x="-25%" y="-40%" width="150%" height="180%">
+    <feTurbulence type="fractalNoise" baseFrequency=".016" numOctaves="4" seed="21" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation=".6"/>
+  </filter>
+  <filter id="s-wob2" x="-25%" y="-40%" width="150%" height="180%">
+    <feTurbulence type="fractalNoise" baseFrequency=".026" numOctaves="3" seed="77" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="1.6"/>
+  </filter>
+  <filter id="dry" x="-20%" y="-60%" width="140%" height="220%">
+    <feTurbulence type="fractalNoise" baseFrequency=".05 .012" numOctaves="4" seed="5" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="carve" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency=".09" numOctaves="3" seed="33" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+
+<div class="page">
+
+  <header class="top">
+    <div>
+      <h1 class="name">Michael Omoto<small>おおもと</small></h1>
+      <svg class="brush" viewBox="0 0 420 34" preserveAspectRatio="none" aria-hidden="true">
+        <g style="mix-blend-mode:multiply">
+          <path d="M6 20 C 90 8, 180 26, 268 15 S 390 12, 414 19 L 414 25 C 380 20, 300 30, 220 24 S 70 30, 6 26 Z"
+                fill="#3a3a3c" opacity=".72" filter="url(#dry)"/>
+          <path d="M120 21 C 200 14, 300 24, 400 18" fill="none" stroke="#2b2926" stroke-width="3"
+                opacity=".35" filter="url(#dry)"/>
+        </g>
+      </svg>
+      <p class="role">VP of Engineering &middot; Tokyo</p>
+    </div>
+
+    <svg class="seal" viewBox="0 0 62 62" aria-hidden="true">
+      <g filter="url(#carve)">
+        <rect x="3" y="3" width="56" height="56" rx="5" fill="#c2452f" opacity=".88"/>
+        <rect x="9" y="9" width="44" height="44" rx="2" fill="none" stroke="#faf7f1" stroke-width="2.6" opacity=".9"/>
+        <path d="M31 16 a15 15 0 1 0 .1 0 M31 24 a7 7 0 1 1 -.1 0" fill="none"
+              stroke="#faf7f1" stroke-width="4.6" stroke-linecap="square" opacity=".92"/>
+      </g>
+    </svg>
+  </header>
+
+  <nav class="rail">
+    <a href="#" aria-current="page">Writing</a>
+    <a href="#">About</a>
+    <a href="#">Work</a>
+    <a href="#">Talks</a>
+    <a href="#">日本語</a>
+  </nav>
+
+  <p class="lede">
+    I build engineering organisations in Tokyo &mdash; currently at a frontier AI research lab,
+    before that Google Maps, Mercari, and a hardware company in California. Trained as a cognitive
+    scientist. Taught for ten years before writing a line of production code. I write here about
+    privacy, about how teams learn, and occasionally in Japanese.
+  </p>
+
+  <section class="list">
+    <h2 class="sec-title">Writing</h2>
+
+    <a class="piece" href="#">
+      <time datetime="2026-07-30">July 2026</time>
+      <div>
+        <h3>A system that can&rsquo;t be subpoenaed</h3>
+        <p>Four years moving location history to the device, and what privacy by design costs once it has to survive a launch review.</p>
+      </div>
+    </a>
+    <a class="piece" href="#">
+      <time datetime="2026-06-14">June 2026</time>
+      <div>
+        <h3>Hiring a hundred engineers in sixteen months</h3>
+        <p>What the funnel actually looked like, and the two decisions I would make differently.</p>
+      </div>
+    </a>
+    <a class="piece" href="#">
+      <time datetime="2026-05-02">May 2026</time>
+      <div>
+        <h3>The classroom was the management training</h3>
+        <p>Lesson planning and running a team are the same skill, practised on different people.</p>
+      </div>
+    </a>
+    <a class="piece" href="#">
+      <time datetime="2026-03-21">March 2026</time>
+      <div>
+        <h3>日系 &mdash; notes on being Nikkei in Tokyo</h3>
+        <p>Written after the 64th Convention of Nikkei &amp; Japanese Abroad.</p>
+      </div>
+    </a>
+  </section>
+
+  <article>
+    <h2>The classroom was the management training</h2>
+    <p class="byline">2 May 2026 &middot; Eleven minutes</p>
+
+    <p>
+      Before any of the engineering, I stood in front of a room of Japanese middle schoolers four
+      times a day and tried to get thirty-five people to want something. Nothing since has been
+      harder, and nothing has transferred more completely.
+    </p>
+
+    <figure class="wash-figure">
+      <svg viewBox="0 0 640 260" aria-hidden="true">
+        <g style="mix-blend-mode:multiply">
+          <ellipse cx="220" cy="150" rx="150" ry="72" fill="#8fa9c4" opacity=".32" filter="url(#s-wob)"/>
+          <ellipse cx="330" cy="128" rx="118" ry="58" fill="#b9a7c4" opacity=".26" filter="url(#s-wob2)"/>
+          <ellipse cx="430" cy="165" rx="132" ry="52" fill="#a8bfa8" opacity=".26" filter="url(#s-wob)"/>
+          <ellipse cx="300" cy="180" rx="90"  ry="34" fill="#d3b48d" opacity=".22" filter="url(#s-wob2)"/>
+        </g>
+        <!-- pooled wet edges -->
+        <ellipse cx="220" cy="150" rx="150" ry="72" fill="none" stroke="#5f7f9e" stroke-width="3"
+                 opacity=".28" filter="url(#s-wob)" style="mix-blend-mode:multiply"/>
+        <ellipse cx="430" cy="165" rx="132" ry="52" fill="none" stroke="#7c9a7c" stroke-width="2.6"
+                 opacity=".24" filter="url(#s-wob)" style="mix-blend-mode:multiply"/>
+        <!-- wet sheen -->
+        <ellipse cx="255" cy="112" rx="58" ry="17" fill="#fff" opacity=".38" style="mix-blend-mode:screen"/>
+        <ellipse cx="418" cy="140" rx="34" ry="11" fill="#fff" opacity=".3" style="mix-blend-mode:screen"/>
+        <!-- pen over wash -->
+        <path d="M150 196 C 250 176, 360 208, 500 182" fill="none" stroke="#2b2926" stroke-width="1.2"
+              opacity=".5" filter="url(#dry)"/>
+        <path d="M196 205 l 14 -9 M232 200 l 12 -10 M268 206 l 13 -9" stroke="#2b2926" stroke-width="1"
+              opacity=".35" filter="url(#dry)"/>
+      </svg>
+      <figcaption>Chiba, 2012 &mdash; from a notebook</figcaption>
+    </figure>
+
+    <p>
+      A lesson plan is a hypothesis about attention. You decide what the room should be able to do
+      in forty-five minutes, you choose the smallest number of moves that get there, and then you
+      watch what actually happens and adjust in real time. Every one-on-one I have ever run is that,
+      with a smaller room.
+    </p>
+
+    <div class="pull">
+      <div class="vertical">習うより慣れよ</div>
+      <blockquote>
+        Teaching is the only job I know where you receive feedback on your communication four times
+        a day, from an audience with no incentive to be polite about it.
+        <footer>&mdash; from the piece</footer>
+      </blockquote>
+    </div>
+
+    <p>
+      The specific thing I took from it: never explain twice the same way. If a person did not
+      follow you, the words were the problem, not the person. Managers who are frustrated at being
+      misunderstood have usually never had thirty-five people demonstrate, simultaneously and
+      visibly, that a sentence did not land.
+    </p>
+  </article>
+
+  <footer class="bottom">
+    <span>Direction 02 &middot; Sumi &amp; Wash</span>
+    <span><a href="#">mike@omoto.dev</a> &nbsp; <a href="#">GitHub</a> &nbsp; <a href="#">LinkedIn</a> &nbsp; <a href="#">RSS</a></span>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{# 敏 — intaglio (白文): the character is carved away, so it reads white out of
+   a vermilion ground. Stamped a couple of degrees off true, over-inked at one
+   corner, with a bald patch where the stone didn't take.
+
+   TODO before launch: the glyph is system-font <text>, so it depends on
+   Hiragino Mincho being present. Trace it to a <path> — ideally in 篆書
+   (seal script), which is what a real hanko uses. #}
+<svg class="seal" viewBox="0 0 76 76" role="img" aria-label="Seal reading Toshi">
+  <g filter="url(#carve)">
+    <rect x="4" y="4" width="68" height="68" rx="5" fill="var(--vermilion)" opacity=".9"/>
+  </g>
+  <g filter="url(#carve-rough)" style="mix-blend-mode:multiply">
+    <ellipse cx="19" cy="63" rx="15" ry="10" fill="#a5301f" opacity=".45"/>
+  </g>
+  <ellipse cx="60" cy="16" rx="11" ry="7" fill="var(--paper)" opacity=".3" filter="url(#carve-rough)"/>
+  <g filter="url(#carve)">
+    <rect x="9" y="9" width="58" height="58" rx="2" fill="none" stroke="var(--paper)" stroke-width="2" opacity=".55"/>
+    <text x="38" y="55" text-anchor="middle"
+          font-family="'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif"
+          font-size="46" fill="var(--paper)">敏</text>
+  </g>
+</svg>

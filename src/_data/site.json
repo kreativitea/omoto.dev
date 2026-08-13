@@ -1,0 +1,27 @@
+{
+  "name": "Michael Toshiro Omoto",
+  "nameJa": "大本　マイケル　敏郎",
+  "nameJaRuby": [
+    { "base": "大本", "rt": "おおもと" },
+    { "base": "　マイケル　" },
+    { "base": "敏郎", "rt": "としろう" }
+  ],
+  "role": "VP of Engineering · Tokyo",
+  "url": "https://omoto.dev",
+  "description": "Engineering leader in Tokyo. Writing on privacy, how teams learn, and building in two languages.",
+  "locale": "en",
+  "email": "mike@omoto.dev",
+  "nav": [
+    { "label": "Writing", "url": "/" },
+    { "label": "About", "url": "/about/" },
+    { "label": "Work", "url": "/work/" },
+    { "label": "Talks", "url": "/talks/" },
+    { "label": "日本語", "url": "/ja/" }
+  ],
+  "social": [
+    { "label": "mike@omoto.dev", "url": "mailto:mike@omoto.dev" },
+    { "label": "GitHub", "url": "https://github.com/kreativitea" },
+    { "label": "LinkedIn", "url": "https://linkedin.com/in/momoto" },
+    { "label": "RSS", "url": "/feed.xml" }
+  ]
+}

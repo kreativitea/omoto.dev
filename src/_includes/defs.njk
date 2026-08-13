@@ -1,0 +1,32 @@
+{# Shared SVG filter definitions. Included once per page.
+
+   Keep an eye on the total number of live filters in a viewport: high-frequency
+   turbulence over a large filter region makes Chromium silently fail to
+   rasterise — the region paints blank while the DOM lays out perfectly.
+   Grain stays at numOctaves 2; regions stay tight. #}
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+
+  {# Dry brush. Displacement scale must stay small relative to the stroke's
+     height, or the mark dissolves into fuzz rather than fraying. #}
+  <filter id="dry1" x="-20%" y="-70%" width="140%" height="240%">
+    <feTurbulence type="fractalNoise" baseFrequency=".055 .012" numOctaves="4" seed="5" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+
+  {# Carved stone edge, for the seal and the practice row. #}
+  <filter id="carve" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency=".11" numOctaves="4" seed="33" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="carve-rough" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency=".14" numOctaves="4" seed="9" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+
+  {# Pencil, for marginalia arrows. #}
+  <filter id="pen" x="-15%" y="-120%" width="130%" height="340%">
+    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="3" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+
+</defs></svg>

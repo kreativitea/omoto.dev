@@ -1,0 +1,264 @@
+/* =======================================================================
+   omoto.dev
+
+   Sumi and washi, pulled toward a practice sheet — 稽古, not a gallery
+   print. The governing idea: every page should look like the third attempt
+   at something, with the first two still visible.
+   ======================================================================= */
+
+:root{
+  --paper:#faf7f1;
+  --ink:#2b2926;
+  --ink-soft:#7a746c;
+  --faint:#b4ada2;
+  --vermilion:#c2452f;
+  --indigo:#5a6f8c;
+  --pencil:#6f7b96;
+  --hairline:rgba(180,173,162,.3);
+
+  --serif:'Hoefler Text',Baskerville,'Times New Roman',Times,serif;
+  --sans:Optima,'Avenir Next',Avenir,'Hiragino Sans',system-ui,sans-serif;
+  --jp:'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif;
+  --hand:'Bradley Hand','Segoe Print',cursive;
+
+  --measure:36rem;
+  --page-max:66rem;
+  --page-pad:2rem;
+  --grid-tile:112px;
+  --grid-reach:1120px;      /* 10 × --grid-tile */
+  --grid-stroke:#8a7f6d;
+  --grid-alpha:.07;
+}
+
+/* Warm dark stock. Paper-and-ink inverts badly if you just flip the values:
+   the washes have to stop multiplying and start screening, or they turn into
+   dark smears on a dark ground. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#211f1c;
+    --ink:#e8e3d9;
+    --ink-soft:#a49d92;
+    --faint:#6e6862;
+    --vermilion:#d6604a;
+    --indigo:#93a8c4;
+    --pencil:#93a0bd;
+    --hairline:rgba(150,143,132,.25);
+    --grid-stroke:#c9bda6;
+    --grid-alpha:.05;
+    --wash-blend:screen;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#211f1c;
+  --ink:#e8e3d9;
+  --ink-soft:#a49d92;
+  --faint:#6e6862;
+  --vermilion:#d6604a;
+  --indigo:#93a8c4;
+  --pencil:#93a0bd;
+  --hairline:rgba(150,143,132,.25);
+  --grid-stroke:#c9bda6;
+  --grid-alpha:.05;
+  --wash-blend:screen;
+}
+:root{--wash-blend:multiply}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+
+/* -----------------------------------------------------------------------
+   GROUND
+   Washi fibre and long strands ride on <body> — they're noise, so where
+   they land doesn't matter. They're tiled backgrounds rather than fixed
+   overlay elements because a fixed layer forces a full-viewport repaint on
+   every scroll frame, which the SVG filters cannot afford. Opacity is baked
+   into each tile so no element-level compositing is needed either.
+   ----------------------------------------------------------------------- */
+body{
+  margin:0;color:var(--ink);
+  font-family:var(--serif);font-size:17px;line-height:1.85;
+  text-rendering:optimizeLegibility;
+  overflow-x:clip;
+  background-color:var(--paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006 0.15' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23f)' opacity='.075'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.13'/%3E%3C/svg%3E");
+  background-blend-mode:multiply,multiply;
+}
+
+/* The practice grid (米字格) is anchored to the CONTENT column, not to the
+   viewport. Tiles start exactly --grid-reach to the left of where the text
+   begins; because that's a whole number of tiles, a grid line always lands
+   on the text edge and stays there at every window width. The sheet still
+   bleeds to both edges of the window.
+
+   `position:relative` with no z-index is deliberate — it avoids creating a
+   stacking context, so washes inside can still multiply against the paper
+   colour painted on <body>. */
+.page{
+  max-width:var(--page-max);margin:0 auto;
+  padding:0 var(--page-pad) 7rem;position:relative;
+}
+.page::before{
+  content:"";position:absolute;top:0;bottom:0;z-index:-1;pointer-events:none;
+  left:calc(var(--page-pad) - var(--grid-reach));
+  right:calc(var(--page-pad) - var(--grid-reach));
+  background-position:0 0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112'%3E%3Cg fill='none' stroke='%238a7f6d' stroke-opacity='.07' stroke-width='1'%3E%3Crect x='.5' y='.5' width='111' height='111'/%3E%3Cpath d='M56 0V112M0 56H112' stroke-dasharray='5 7'/%3E%3Cpath d='M0 0L112 112M112 0L0 112' stroke-dasharray='3 9'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.col{max-width:var(--measure)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:var(--page-pad);top:.5rem;background:var(--paper);padding:.5rem .8rem;z-index:10}
+
+/* ------------------------------------------------------------ MASTHEAD - */
+.masthead{padding:5.5rem 0 0;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start}
+.wordmark{margin:0;font-size:2.1rem;font-weight:400;letter-spacing:.06em;line-height:1.25;text-wrap:balance}
+.wordmark a{color:inherit;text-decoration:none}
+/* the middle name sits a shade back — it's the one the seal carves */
+.wordmark .mid{color:var(--ink-soft)}
+/* Ruby: readings set above their own segment — おおもと over 大本, としろう over
+   敏郎, and マイケル bare in the middle (katakana is already phonetic). Spacing
+   between the name parts comes from ideographic spaces in the data, so
+   letter-spacing here stays tight. */
+.wordmark .reading{display:block;margin-top:.7rem;font-family:var(--jp);font-weight:400;
+  font-size:1.18rem;letter-spacing:.1em;color:var(--ink-soft);ruby-align:center}
+.wordmark .reading rt{font-size:.42em;letter-spacing:.1em;color:var(--faint);font-weight:400}
+.brush{display:block;width:min(28rem,100%);height:26px;margin:1.1rem 0 0}
+.seal{width:76px;height:76px;flex:none;transform:rotate(2.4deg);margin-top:.2rem}
+.role{margin:1.5rem 0 0;color:var(--ink-soft);font-family:var(--sans);font-size:.86rem;
+  letter-spacing:.13em;text-transform:uppercase}
+
+.rail{margin:3rem 0 0;display:flex;gap:2.4rem;flex-wrap:wrap;
+  font-family:var(--sans);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase}
+.rail a{color:var(--faint);text-decoration:none;position:relative;padding-bottom:.35rem}
+.rail a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;
+  background:var(--vermilion);transition:right .4s ease}
+.rail a:hover,.rail a:focus-visible{color:var(--ink)}
+.rail a:hover::after,.rail a:focus-visible::after{right:0}
+.rail a[aria-current]{color:var(--ink)}
+/* stops a hair short of the word — misregistration, on purpose */
+.rail a[aria-current]::after{right:2px;background:var(--ink);opacity:.4}
+
+/* -------------------------------------------------- VISIBLE REVISION --- */
+/* A struck word with its replacement written in above. Once or twice a
+   page — a signature, not a gimmick. */
+.revise{position:relative;white-space:nowrap;padding-top:.1em}
+.revise del{text-decoration:none;position:relative;color:var(--ink-soft);opacity:.62}
+.revise del::after{content:"";position:absolute;left:-.06em;right:-.06em;top:52%;height:1.4px;
+  background:var(--pencil);opacity:.75;transform:rotate(-.7deg)}
+.revise ins{position:absolute;left:50%;bottom:1.32em;transform:translateX(-50%) rotate(-1.6deg);
+  font-family:var(--hand);font-size:.88em;color:var(--pencil);text-decoration:none;
+  white-space:nowrap;line-height:1}
+.revise ins::after{content:"";position:absolute;left:50%;bottom:-.34em;width:7px;height:7px;
+  border-left:1.2px solid var(--pencil);border-bottom:1.2px solid var(--pencil);
+  transform:translateX(-50%) rotate(-45deg);opacity:.7}
+
+.lede{margin:4rem 0 0;font-size:1.22rem;line-height:1.95;color:var(--ink)}
+
+/* ---------------------------------------------------------- MARGINALIA - */
+/* Self-correction, not commentary. */
+.noted{position:relative}
+.mnote{
+  display:block;font-family:var(--hand);color:var(--pencil);font-size:.95rem;line-height:1.4;
+  margin:.9rem 0 0;padding-left:1rem;border-left:1.5px solid color-mix(in srgb,var(--pencil) 35%,transparent);
+  transform:rotate(-.5deg);
+}
+.mnote .jp{font-family:var(--jp);font-size:.86rem;letter-spacing:.08em}
+.mnote .mark{display:block;width:38px;height:20px;margin:0 0 .15rem -.2rem;opacity:.6}
+@media (min-width:1080px){
+  .mnote{position:absolute;left:calc(100% + 2.4rem);top:.35rem;width:11.5rem;margin:0;
+    padding-left:0;border-left:none;transform:rotate(-1.4deg)}
+  .mnote--low{top:2.6rem;transform:rotate(1.1deg)}
+}
+
+/* --------------------------------------------------------- WRITING LIST */
+.section-head{font-family:var(--sans);font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 2rem;display:flex;align-items:center;gap:1.1rem}
+.section-head::after{content:"";flex:1;height:1px;margin-right:1.8rem;
+  background:linear-gradient(to right,var(--hairline),transparent)}
+
+.index{margin:5.5rem 0 0;list-style:none;padding:0}
+.piece{display:grid;grid-template-columns:7rem 1fr;gap:2rem;padding:1.8rem 0;
+  text-decoration:none;color:inherit;position:relative}
+/* the rule stops short of the margin rather than meeting it */
+.piece::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
+.index li:first-child .piece{border-top:1px solid var(--hairline)}
+.piece time{font-family:var(--sans);font-size:.74rem;letter-spacing:.12em;color:var(--faint);padding-top:.45rem}
+.piece h3{margin:0;font-size:1.28rem;font-weight:400;line-height:1.4;transition:color .3s}
+.piece p{margin:.5rem 0 0;color:var(--ink-soft);font-size:.95rem;max-width:33rem;line-height:1.7}
+.piece:hover h3,.piece:focus-visible h3{color:var(--vermilion)}
+.piece .dab{width:1.1rem;height:1.1rem;vertical-align:-.15em;margin-right:.35rem;display:inline-block}
+
+/* -------------------------------------------------------------- ARTICLE */
+.article{margin:4rem 0 0}
+.article h1{font-size:1.85rem;font-weight:400;line-height:1.35;margin:0;letter-spacing:.01em}
+.article h2{font-size:1.24rem;font-weight:400;margin:2.8rem 0 0;letter-spacing:.02em}
+.ja-name{font-family:var(--jp);font-size:1.15rem;letter-spacing:.1em;color:var(--ink-soft);
+  margin:1.2rem 0 0;font-weight:400}
+.byline{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);margin:1.1rem 0 0}
+.article p{margin:1.7rem 0 0}
+.article a{color:inherit;text-decoration-color:color-mix(in srgb,var(--vermilion) 55%,transparent);
+  text-underline-offset:.18em}
+.article a:hover{color:var(--vermilion)}
+.article ul,.article ol{margin:1.7rem 0 0;padding-left:1.2rem}
+.article code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.84em;
+  background:color-mix(in srgb,var(--indigo) 10%,transparent);padding:.1em .35em;border-radius:2px}
+.article pre{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.8rem;line-height:1.6;
+  overflow-x:auto;margin:1.7rem 0 0;padding:1rem 1.1rem;
+  background:color-mix(in srgb,var(--indigo) 7%,transparent);
+  border-left:2px solid color-mix(in srgb,var(--indigo) 30%,transparent)}
+.article pre code{background:none;padding:0}
+
+.wash-figure{margin:3rem 0 0}
+.wash-figure .wash{display:block;width:100%;height:auto}
+.wash-figure figcaption{font-family:var(--sans);font-size:.74rem;letter-spacing:.1em;
+  color:var(--faint);margin-top:.9rem;text-transform:uppercase}
+
+.pull{margin:3rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:start}
+.pull .vertical{font-family:var(--jp);writing-mode:vertical-rl;font-size:1.05rem;
+  letter-spacing:.28em;color:var(--indigo);line-height:2;max-height:12rem}
+.pull blockquote{margin:0;font-size:1.15rem;line-height:1.85}
+.pull blockquote footer{font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);margin-top:.9rem}
+
+/* ------------------------------------------- FOOTER: the practice row -- */
+/* The same character, five times, getting better. */
+.practice-row{margin:7rem 0 0;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap}
+.practice-row svg{width:58px;height:58px;flex:none}
+.practice-row .caption{font-family:var(--hand);color:var(--pencil);font-size:.95rem;
+  margin-left:.8rem;transform:rotate(-1deg);padding-bottom:.5rem}
+
+.colophon{margin:2.5rem 0 0;padding-top:1.8rem;
+  display:flex;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;position:relative;
+  font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.colophon::before{content:"";position:absolute;left:.6rem;right:2.4rem;top:0;height:1px;background:var(--hairline)}
+.colophon a{color:var(--faint);text-decoration:none}
+.colophon a:hover{color:var(--vermilion)}
+.colophon ul{list-style:none;margin:0;padding:0;display:flex;gap:1.4rem;flex-wrap:wrap}
+
+/* ------------------------------------------------------------ RESPONSIVE */
+@media (max-width:620px){
+  .piece{grid-template-columns:1fr;gap:.4rem}
+  .piece time{padding-top:0}
+  .pull{grid-template-columns:1fr;gap:1rem}
+  .pull .vertical{writing-mode:horizontal-tb;max-height:none;letter-spacing:.12em}
+}
+@media (max-width:520px){
+  .role{font-size:.76rem;letter-spacing:.09em}
+  .rail{gap:1.1rem 1.3rem;margin-top:2.4rem}
+  .masthead{gap:1.2rem}
+  .seal{width:62px;height:62px}
+}
+
+/* The washes are decorative and the transitions are slight, but honour the
+   preference anyway. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+
+@media print{
+  .page::before,.brush,.practice-row{display:none}
+  body{background:#fff;color:#000}
+}

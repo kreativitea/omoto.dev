@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sumi — Practice Sheet — omoto.dev</title>
+<style>
+/* Self-hosted brush faces, subset to the single character 敏 (~1.4KB each).
+   Embedded as data URIs here so this comp stays a single portable file; the
+   real site loads them from /assets/fonts/. Neither is true 篆書 — no open
+   seal-script face exists — so this is a brush-carved seal, not a seal-script one. */
+@font-face{font-family:'Yuji Syuku';font-display:swap;
+  src:url(data:font/woff2;base64,d09GMgABAAAAAAW0AA8AAAAACagAAAVfAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGYFSHEoGYAA8EQgKiASGBQsKAAE2AiQDDgQgBYN6ByAXJBgKG5QHyMQH6NR/h6DwRe1wpTIpBdMBqJSlg3iolGZCMojBPsz7n2ulO7YYCVLCqzaRf7OoIoh3gSsuC3j8/IQO0O+dBuxqQX5eFD8gACyAEhdAQ56ZXTAJgxcuN1UgqthUWI6okvlVpRhcPr9qPgZXzDdXIQpyyKco0IhCGJahTwUhf9cM/FEEbxBYBoKaCgL7MadViJMGAFpgEEAobcsjPwABHW4tXVi0oHRhkbl0UWG1qbqy6mOpJyKgB9kj+Lbv9QXNBSBJ5KIlJrMeygT3jLSOKBE5od9NU4+IfZAB5A5yGgAjdIg50BM5DtJraDjrp5QKlvMXRcbMqV8xgC0cS9VI2wB6G8EaAiGDASBDyb8YO9h5ATlXFgBKbGVAIwaAfDQcSbZJ0o9YFJI+arT9gNmlBAhJgmeGzwqfCevNC8fBuPwH4iXI8D9R0BRFUXxyZBAbGEgofOQzZnrPmjmjVDZtms+MlRzHdNsiei5FNZ6JOuYYbLukFgS19Xy8cK5HzTUz3UdaQ+65so/1J4RGtWiNFtvaNEI3w3Ge3Y+Cre5Bbe6+Qo/6qNs9yHr3oU5salSLotdOrzZ3X0FQC40a692LuoZ6hqtndt6/r7E/jLU5HP3rTx2LuOhMFEVNm7vP+tZgq/2wtt7hOKU97hzCHz58uKzb4XD0rz8Wwdmimk6eDLGebNMIPUeCeYtKFLws9os6vjkeLfbzGovdPt3l0osiIXAM59nQrl3HMbxFx3VHNDt6WeyHddajR6PFphndNk+e51X167TW85pueemaxNkYrr6e4TmGU63boRZ2gF/HrINoUfEWTZt7CreDqW/XWi0qnvda36Rpapva/l+dU9c7elkt0evbNE1tmPvr3L8+bx+aHnqsfWj7kE3muvYhN2vT24dgOBSef8eaOP+tw5qFdOP1SZkNNPFIP0k/vcbQLbs9L2ni2+zhHraxWhFa/kPgZ3+PXfMNtTN3EjcYtSnzqBeR928V+I+zBBqH5ecv+3iCzwyluKjD9Pv2lsRz+n0yGVnrlzYx+nJh/cej1pfsSvRvmTtzZ1/VuMFvL3pSeHk2NZd8d8eyvybGG4Z3kyryjNpIq6wvxL+/kyt9DEx6bPogY/x63/4Hcq8amzMUeUQu7fHi/cS3VBXzXl/u5dHvj5MVezNSasInpShp8kJAYO+uFaU239Af710c2DC2/UFvg2HZfxlXvOZ1pi6gg0ePVPSV1wo/3z6EyXJjoUbbkVEwpJdflvvT4eNiNXHvvdfrrGEZgdvct9LH+l+6UePIG5G3MUsdmpkpl/mztDxdSVLEjQn71utPZSgyN6mcMb+WOLbixYfzflQq9brIfO8vU9aHppgMTYHTlvZbzwQZkgYNxUXArtD+jRvUT96a6zf8NyVFfVkXfOcHsSY6+F5t4nDpkpROs1TtxTKRhEfobf9/CNBrpEv/JtMsKFtFEb+C+Rt4WxDwqZImP4Ya55+LPpu4vD4lihIr7SHJe/C9mgCDt9UkfPFETWEgBDWNCJjUMgRjmlqOMAxkfXE9UAIzzKjBYgxFMpLFxoUwoRQ1MBviJCxmK/D8aphQjGSMRTYKMB11KEMpJmK5tKscdUjEBBSimDlUgfkwYQoKYSI+Vo0qsOiHJKQgBXpxnoU+tu/H1Q6DEZmYimH9DSmM7CORgWrUAJsdFM/bz0LP/TQVLCahBIVgSYfGwYRqlKEQC38rTUMdzChZicWLwSJm7fzFKP34mjosQBIWohqVSIYRpaii+eejaDVSZhRhfotYO+xyjuoRYh9wVFkqNUMPexvhD+LX/72pL6kvEZEu0Uknto/dR1BfIoCqoWowCwA=) format('woff2')}
+:root{
+  /* One face for both. The seal is thickened by stroking the glyph rather than
+     by a bold weight — Yuji Syuku ships 400 only — which also happens to be the
+     honest analogue for a seal: a wider carved channel. Past about +3 the
+     counters close up and 敏 stops reading as 敏. */
+  --seal-face:'Yuji Syuku','Hiragino Mincho ProN',serif;
+  --brush-face:'Yuji Syuku','Hiragino Mincho ProN',serif;
+  --seal-weight:0;
+}
+:root{
+  --paper:#faf7f1;
+  --ink:#2b2926;
+  --ink-soft:#7a746c;
+  --faint:#b4ada2;
+  --vermilion:#c2452f;
+  --indigo:#5a6f8c;
+  --pencil:#6f7b96;
+  --grid:#8a7f6d;
+  --page-pad:2rem;
+  --grid-tile:112px;
+  --grid-reach:1120px;   /* 10 × --grid-tile: how far the sheet bleeds past the column */
+  --serif:'Hoefler Text',Baskerville,'Times New Roman',Times,serif;
+  --sans:Optima,'Avenir Next',Avenir,'Hiragino Sans',system-ui,sans-serif;
+  --jp:'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif;
+  --hand:'Bradley Hand','Segoe Print',cursive;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+/* ---------------------------------------------------------------------- */
+/* 1. GROUND.                                                             */
+/*    Washi fibre and long strands ride on <body> — they're noise, so     */
+/*    where they land doesn't matter. They are tiled backgrounds rather   */
+/*    than fixed overlay elements because fixed layers force a full-      */
+/*    viewport repaint every scroll frame, which the SVG filters below    */
+/*    cannot afford. Opacity is baked into each tile, so no element-level */
+/*    compositing is needed either.                                       */
+/*    The practice grid is handled separately — see .page::before.        */
+/* ---------------------------------------------------------------------- */
+html{overflow-x:clip}
+body{
+  margin:0;color:var(--ink);
+  font-family:var(--serif);font-size:17px;line-height:1.85;
+  text-rendering:optimizeLegibility;
+  overflow-x:clip;
+  background-color:var(--paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006 0.15' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23f)' opacity='.075'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.13'/%3E%3C/svg%3E");
+  background-blend-mode:multiply,multiply;
+}
+
+/* The practice grid (米字格) is anchored to the CONTENT column, not to the
+   viewport. Tiles are laid from a point exactly --grid-reach to the left of
+   where the text starts; because --grid-reach is a whole number of tiles, a
+   grid line always lands on the text edge. The sheet still bleeds to both
+   edges of the window, but the lines no longer slide around under the text
+   as the window is resized. (`position:relative` with no z-index deliberately
+   avoids creating a stacking context, so the washes can still multiply
+   against the paper colour on <body>.) */
+.page{max-width:66rem;margin:0 auto;padding:0 var(--page-pad) 7rem;position:relative}
+.page::before{
+  content:"";position:absolute;top:0;bottom:0;z-index:-1;pointer-events:none;
+  left:calc(var(--page-pad) - var(--grid-reach));
+  right:calc(var(--page-pad) - var(--grid-reach));
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112'%3E%3Cg fill='none' stroke='%238a7f6d' stroke-opacity='.07' stroke-width='1'%3E%3Crect x='.5' y='.5' width='111' height='111'/%3E%3Cpath d='M56 0V112M0 56H112' stroke-dasharray='5 7'/%3E%3Cpath d='M0 0L112 112M112 0L0 112' stroke-dasharray='3 9'/%3E%3C/g%3E%3C/svg%3E");
+  background-position:0 0;
+}
+.col{max-width:36rem}
+
+/* ---------------------------------------------------------------------- */
+/* 2. MASTHEAD: a single sumi stroke, crooked seal                         */
+/* ---------------------------------------------------------------------- */
+header.top{padding:5.5rem 0 0;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start}
+h1.name{margin:0;font-size:2.1rem;font-weight:400;letter-spacing:.06em;line-height:1.25;
+  text-wrap:balance}
+/* .np shrink-wraps the name so the wash sits behind the words rather than
+   spanning the whole column. No z-index on .np, so it creates no stacking
+   context and the wash can still multiply against the paper. */
+h1.name .np{position:relative;display:inline-block}
+.name-wash{position:absolute;left:-.85rem;right:-.85rem;top:-.3rem;bottom:-.12rem;
+  width:auto;height:auto;z-index:-1;pointer-events:none}
+/* the middle name sits a shade back — it's the one the seal carves */
+h1.name .mid{color:var(--ink-soft)}
+/* Ruby: the kanji with its reading set above it. On a practice-sheet site a
+   reading aid earns its place — it is the thing the sheet is for. */
+h1.name .reading{display:block;margin-top:.7rem;font-family:var(--jp);font-weight:400;
+  font-size:1.18rem;letter-spacing:.1em;color:var(--ink-soft);ruby-align:center}
+h1.name .reading rt{font-size:.42em;letter-spacing:.1em;color:var(--faint);font-weight:400}
+.brush{display:block;width:min(28rem,100%);height:26px;margin:1.1rem 0 0}
+.seal{width:76px;height:76px;flex:none;transform:rotate(2.4deg);margin-top:.2rem}
+.role{margin:1.5rem 0 0;color:var(--ink-soft);font-family:var(--sans);font-size:.86rem;
+  letter-spacing:.13em;text-transform:uppercase}
+
+nav.rail{margin:3rem 0 0;display:flex;gap:2.4rem;flex-wrap:wrap;
+  font-family:var(--sans);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase}
+nav.rail a{color:var(--faint);text-decoration:none;position:relative;padding-bottom:.35rem}
+nav.rail a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;
+  background:var(--vermilion);transition:right .4s ease}
+nav.rail a:hover{color:var(--ink)}
+nav.rail a:hover::after{right:0}
+nav.rail a[aria-current]{color:var(--ink)}
+nav.rail a[aria-current]::after{right:2px;background:var(--ink);opacity:.4}
+
+@media (max-width:520px){
+  /* keep "VP of Engineering · Tokyo" on one line, and stop the nav from
+     wrapping into two loosely-spaced rows */
+  .role{font-size:.76rem;letter-spacing:.09em}
+  nav.rail{gap:1.1rem 1.3rem;margin-top:2.4rem}
+  header.top{gap:1.2rem}
+}
+
+/* ---------------------------------------------------------------------- */
+/* 3. VISIBLE REVISION: struck word, replacement in hand above             */
+/* ---------------------------------------------------------------------- */
+.revise{position:relative;white-space:nowrap;padding-top:.1em}
+.revise del{text-decoration:none;position:relative;color:var(--ink-soft);opacity:.62}
+.revise del::after{content:"";position:absolute;left:-.06em;right:-.06em;top:52%;height:1.4px;
+  background:var(--pencil);opacity:.75;transform:rotate(-.7deg)}
+.revise ins{position:absolute;left:50%;bottom:1.32em;transform:translateX(-50%) rotate(-1.6deg);
+  font-family:var(--hand);font-size:.88em;color:var(--pencil);text-decoration:none;
+  white-space:nowrap;line-height:1}
+.revise ins::after{content:"";position:absolute;left:50%;bottom:-.34em;width:7px;height:7px;
+  border-left:1.2px solid var(--pencil);border-bottom:1.2px solid var(--pencil);
+  transform:translateX(-50%) rotate(-45deg);opacity:.7}
+
+.lede{margin:4rem 0 0;font-size:1.22rem;line-height:1.95;color:#3c3934}
+
+/* ---------------------------------------------------------------------- */
+/* 4. MARGINALIA: self-correction out in the margin                       */
+/* ---------------------------------------------------------------------- */
+.noted{position:relative}
+.mnote{
+  display:block;font-family:var(--hand);color:var(--pencil);font-size:.95rem;line-height:1.4;
+  margin:.9rem 0 0;padding-left:1rem;border-left:1.5px solid rgba(111,123,150,.35);
+  transform:rotate(-.5deg);
+}
+.mnote .jp{font-family:var(--jp);font-size:.86rem;letter-spacing:.08em}
+.mnote .mark{display:block;width:38px;height:20px;margin:0 0 .15rem -.2rem;opacity:.6}
+@media (min-width:1080px){
+  .mnote{position:absolute;left:calc(100% + 2.4rem);top:.35rem;width:11.5rem;margin:0;
+    padding-left:0;border-left:none;transform:rotate(-1.4deg)}
+  .mnote--low{top:2.6rem;transform:rotate(1.1deg)}
+}
+
+/* ---------------------------------------------------------------------- */
+/* 5. WRITING LIST — rules deliberately not quite meeting                  */
+/* ---------------------------------------------------------------------- */
+section.list{margin:5.5rem 0 0}
+.sec-title{font-family:var(--sans);font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 2rem;display:flex;align-items:center;gap:1.1rem}
+.sec-title::after{content:"";flex:1;height:1px;margin-right:1.8rem;
+  background:linear-gradient(to right,rgba(180,173,162,.55),transparent)}
+
+.piece{display:grid;grid-template-columns:7rem 1fr;gap:2rem;padding:1.8rem 0;
+  text-decoration:none;color:inherit;position:relative}
+.piece::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;
+  background:rgba(180,173,162,.3)}
+.piece:first-of-type{border-top:1px solid rgba(180,173,162,.3)}
+.piece time{font-family:var(--sans);font-size:.74rem;letter-spacing:.12em;color:var(--faint);
+  padding-top:.45rem}
+.piece h3{margin:0;font-size:1.28rem;font-weight:400;line-height:1.4;transition:color .3s}
+.piece p{margin:.5rem 0 0;color:var(--ink-soft);font-size:.95rem;max-width:33rem;line-height:1.7}
+.piece .reps{font-family:var(--sans);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(180,173,162,.9);margin-left:.7rem}
+.piece:hover h3{color:var(--vermilion)}
+@media (max-width:620px){.piece{grid-template-columns:1fr;gap:.4rem}.piece time{padding-top:0}}
+
+/* ---------------------------------------------------------------------- */
+/* 6. ARTICLE                                                             */
+/* ---------------------------------------------------------------------- */
+article{margin:6.5rem 0 0}
+article h2{font-size:1.85rem;font-weight:400;line-height:1.35;margin:0;letter-spacing:.01em}
+article .byline{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);margin:1.1rem 0 0}
+article p{margin:1.7rem 0 0}
+
+.wash-figure{margin:3rem 0 0}
+.wash-figure svg{display:block;width:100%;height:auto}
+.wash-figure figcaption{font-family:var(--sans);font-size:.74rem;letter-spacing:.1em;
+  color:var(--faint);margin-top:.9rem;text-transform:uppercase}
+
+.pull{margin:3rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:start}
+.pull .vertical{font-family:var(--jp);writing-mode:vertical-rl;font-size:1.05rem;
+  letter-spacing:.28em;color:var(--indigo);line-height:2;max-height:12rem}
+.pull blockquote{margin:0;font-size:1.15rem;line-height:1.85;color:#3c3934}
+.pull blockquote footer{font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);margin-top:.9rem}
+
+/* ---------------------------------------------------------------------- */
+/* 7. FOOTER: the same character, five times, getting better               */
+/* ---------------------------------------------------------------------- */
+.practice-row{margin:7rem 0 0;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap}
+.practice-row svg{width:58px;height:58px;flex:none}
+.practice-row .caption{font-family:var(--hand);color:var(--pencil);font-size:.95rem;
+  margin-left:.8rem;transform:rotate(-1deg);padding-bottom:.5rem}
+
+footer.bottom{margin:2.5rem 0 0;padding-top:1.8rem;
+  display:flex;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;position:relative;
+  font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+footer.bottom::before{content:"";position:absolute;left:.6rem;right:2.4rem;top:0;height:1px;
+  background:rgba(180,173,162,.32)}
+footer.bottom a{color:var(--faint);text-decoration:none}
+footer.bottom a:hover{color:var(--vermilion)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <!-- Wet wash. One filter does the whole job: warp the shape off its geometry,
+       soften it, then granulate the pigment *inside* its own alpha — so the
+       grain can never show up as a rectangle the way a separate layer does. -->
+  <filter id="wash-a" x="-22%" y="-28%" width="144%" height="156%">
+    <feTurbulence type="fractalNoise" baseFrequency=".026" numOctaves="4" seed="21" result="warp"/>
+    <feDisplacementMap in="SourceGraphic" in2="warp" scale="17" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation=".7" result="shape"/>
+    <feTurbulence type="fractalNoise" baseFrequency=".4" numOctaves="2" seed="14" result="grain"/>
+    <feColorMatrix in="grain" type="saturate" values="0" result="grey"/>
+    <feComponentTransfer in="grey" result="soft">
+      <feFuncR type="linear" slope=".28" intercept=".72"/>
+      <feFuncG type="linear" slope=".28" intercept=".72"/>
+      <feFuncB type="linear" slope=".28" intercept=".72"/>
+    </feComponentTransfer>
+    <feComposite in="soft" in2="shape" operator="in" result="grainIn"/>
+    <feBlend in="shape" in2="grainIn" mode="multiply"/>
+  </filter>
+  <filter id="wash-b" x="-22%" y="-28%" width="144%" height="156%">
+    <feTurbulence type="fractalNoise" baseFrequency=".032" numOctaves="4" seed="77" result="warp"/>
+    <feDisplacementMap in="SourceGraphic" in2="warp" scale="13" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="1.5" result="shape"/>
+    <feTurbulence type="fractalNoise" baseFrequency=".45" numOctaves="2" seed="52" result="grain"/>
+    <feColorMatrix in="grain" type="saturate" values="0" result="grey"/>
+    <feComponentTransfer in="grey" result="soft">
+      <feFuncR type="linear" slope=".24" intercept=".76"/>
+      <feFuncG type="linear" slope=".24" intercept=".76"/>
+      <feFuncB type="linear" slope=".24" intercept=".76"/>
+    </feComponentTransfer>
+    <feComposite in="soft" in2="shape" operator="in" result="grainIn"/>
+    <feBlend in="shape" in2="grainIn" mode="multiply"/>
+  </filter>
+  <filter id="wash-c" x="-22%" y="-28%" width="144%" height="156%">
+    <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="3" seed="140" result="warp"/>
+    <feDisplacementMap in="SourceGraphic" in2="warp" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="2.6"/>
+  </filter>
+  <!-- dry brush: the stroke itself wobbles and frays -->
+  <filter id="dry1" x="-20%" y="-70%" width="140%" height="240%">
+    <feTurbulence type="fractalNoise" baseFrequency=".055 .012" numOctaves="4" seed="5" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <!-- carved stone edge for the seal -->
+  <filter id="carve" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency=".11" numOctaves="4" seed="33" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="carve-rough" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency=".14" numOctaves="4" seed="9" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <!-- pencil line for marginalia arrows -->
+  <filter id="pen" x="-15%" y="-120%" width="130%" height="340%">
+    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="3" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+
+<div class="page">
+
+  <!-- ============================ MASTHEAD ============================ -->
+  <header class="top">
+    <div>
+      <h1 class="name"><span class="np">
+        <!-- Western: a loose wet wash sitting under the name, edges pooled,
+             one highlight where the paint is still shining. -->
+        <svg class="name-wash" viewBox="0 0 340 48" preserveAspectRatio="none" aria-hidden="true">
+          <g style="mix-blend-mode:multiply">
+            <ellipse cx="170" cy="25" rx="156" ry="15" fill="#a8c3d8" opacity=".3"  filter="url(#wash-a)"/>
+            <ellipse cx="126" cy="28" rx="102" ry="11" fill="#b9a7c4" opacity=".22" filter="url(#wash-b)"/>
+            <ellipse cx="236" cy="21" rx="70"  ry="9"  fill="#a8bfa8" opacity=".2"  filter="url(#wash-c)"/>
+          </g>
+          <ellipse cx="170" cy="25" rx="156" ry="15" fill="none" stroke="#6f8fae" stroke-width="2"
+                   opacity=".24" filter="url(#wash-a)" style="mix-blend-mode:multiply"/>
+          <ellipse cx="116" cy="17" rx="40" ry="5" fill="#fff" opacity=".32" style="mix-blend-mode:screen"/>
+        </svg>
+        Michael <span class="mid">Toshiro</span> Omoto</span><span class="reading" lang="ja"><ruby>大本<rt>おおもと</rt>　マイケル　<rt></rt>敏郎<rt>としろう</rt></ruby></span></h1>
+
+      <!-- One stroke. The outline is tapered — thin where the brush lands, fat
+           through the middle, thin as it lifts — and the white streaks are
+           kasure (掠れ), paper showing through where the ink ran out. -->
+      <svg class="brush" viewBox="0 0 440 26" aria-hidden="true">
+        <g style="mix-blend-mode:multiply" filter="url(#dry1)" opacity=".82">
+          <path d="M8 12 C 80 4.6, 170 9.6, 250 11.6 C 320 13.4, 380 10.6, 424 8.6
+                   C 430 8.3, 434 9.2, 436 10.6
+                   L 433 17.6 C 427 19.2, 417 20, 405 19.6 C 365 18.2, 315 21.6, 245 19.6
+                   C 165 17.4, 77 20.6, 8 18.6 Z" fill="#33322f"/>
+          <!-- a second pass over the first, the way a loaded brush doubles back -->
+          <path d="M120 13 C 200 8, 300 16, 400 11" fill="none" stroke="#2b2926"
+                stroke-width="2.4" opacity=".3"/>
+          <g stroke="#faf7f1" fill="none">
+            <path d="M320 14 H 436" stroke-width="1.5" stroke-dasharray="10 4 2 7 2 11"/>
+            <path d="M352 16.4 H 434" stroke-width="1.3" stroke-dasharray="6 5 3 8"/>
+            <path d="M386 18.4 H 432" stroke-width="1.1" stroke-dasharray="4 6 2 5"/>
+            <path d="M56 15 H 148" stroke-width=".9" stroke-dasharray="17 33" opacity=".55"/>
+          </g>
+        </g>
+      </svg>
+
+      <p class="role">VP of Engineering &middot; Tokyo</p>
+    </div>
+
+    <!-- 敏 · intaglio (白文): white character reversed out of a vermilion ground -->
+    <svg class="seal" viewBox="0 0 76 76" role="img" aria-label="Seal reading Toshi">
+      <g filter="url(#carve)">
+        <rect x="4" y="4" width="68" height="68" rx="5" fill="#c2452f" opacity=".9"/>
+      </g>
+      <!-- over-inked corner + a bald patch where the stone didn't take -->
+      <g filter="url(#carve-rough)" style="mix-blend-mode:multiply">
+        <ellipse cx="19" cy="63" rx="15" ry="10" fill="#a5301f" opacity=".45"/>
+      </g>
+      <ellipse cx="60" cy="16" rx="11" ry="7" fill="#faf7f1" opacity=".3" filter="url(#carve-rough)"/>
+      <g filter="url(#carve)">
+        <rect x="9" y="9" width="58" height="58" rx="2" fill="none" stroke="#faf7f1" stroke-width="2" opacity=".55"/>
+        <text x="38" y="55" text-anchor="middle" font-family="var(--seal-face)"
+              font-size="46" fill="#faf7f1">敏</text>
+      </g>
+    </svg>
+  </header>
+
+  <nav class="rail">
+    <a href="#" aria-current="page">Writing</a>
+    <a href="#">About</a>
+    <a href="#">Work</a>
+    <a href="#">Talks</a>
+    <a href="#">日本語</a>
+  </nav>
+
+  <!-- ============================== LEDE ============================== -->
+  <div class="col noted">
+    <p class="lede">
+      I <span class="revise"><del>manage</del><ins>build</ins></span> engineering organisations in
+      Tokyo &mdash; currently at a frontier AI research lab, before that Google Maps, Mercari, and a
+      hardware company in California. Trained as a cognitive scientist. Taught for ten years before
+      writing a line of production code. I write here about privacy, about how teams learn, and
+      occasionally in Japanese.
+    </p>
+    <span class="mnote">
+      <svg class="mark" viewBox="0 0 38 20" aria-hidden="true">
+        <path d="M36 4 C 26 2, 12 7, 3 15" fill="none" stroke="#6f7b96" stroke-width="1.2"
+              stroke-linecap="round" filter="url(#pen)"/>
+        <path d="M3 15 l 8 -1 M3 15 l 1 -7" fill="none" stroke="#6f7b96" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      third draft. still one clause too long
+    </span>
+  </div>
+
+  <!-- ============================= WRITING ============================ -->
+  <section class="list col">
+    <h2 class="sec-title">Writing</h2>
+
+    <a class="piece" href="#">
+      <time datetime="2026-07-30">July 2026</time>
+      <div>
+        <h3>A system that can&rsquo;t be subpoenaed</h3>
+        <p>Four years moving location history to the device, and what privacy by design costs once it has to survive a launch review.</p>
+      </div>
+    </a>
+    <a class="piece" href="#">
+      <time datetime="2026-06-14">June 2026</time>
+      <div>
+        <h3>Hiring a hundred engineers in sixteen months</h3>
+        <p>What the funnel actually looked like, and the two decisions I would make differently.</p>
+      </div>
+    </a>
+    <a class="piece" href="#">
+      <time datetime="2026-05-02">May 2026</time>
+      <div>
+        <h3>The classroom was the management training</h3>
+        <p>Lesson planning and running a team are the same skill, practised on different people.</p>
+      </div>
+    </a>
+    <a class="piece" href="#">
+      <time datetime="2026-03-21">March 2026</time>
+      <div>
+        <h3>日系 &mdash; notes on being Nikkei in Tokyo</h3>
+        <p>Written after the 64th Convention of Nikkei &amp; Japanese Abroad.</p>
+      </div>
+    </a>
+  </section>
+
+  <!-- ============================ SPECIMEN ============================ -->
+  <article class="col">
+    <h2>The classroom was the management training</h2>
+    <p class="byline">2 May 2026 &middot; fourth draft &middot; last touched 12 Aug</p>
+
+    <div class="noted">
+      <p>
+        Before any of the engineering, I stood in front of a room of Japanese middle schoolers four
+        times a day and tried to get thirty-five people to want something. Nothing since has been
+        harder, and nothing has transferred more completely.
+      </p>
+      <span class="mnote mnote--low">
+        <span class="jp">もう一度</span><br>open here instead?
+      </span>
+    </div>
+
+    <figure class="wash-figure">
+      <svg viewBox="0 0 640 250" aria-hidden="true">
+        <g style="mix-blend-mode:multiply">
+          <path d="M120 120 C 170 70, 300 62, 360 100 S 470 150, 400 190 S 210 210, 150 176 S 70 170, 120 120 Z"
+                fill="#8fa9c4" opacity=".4" filter="url(#wash-a)"/>
+          <path d="M320 84 C 400 50, 492 76, 512 122 S 458 188, 378 182 S 270 148, 320 84 Z"
+                fill="#b9a7c4" opacity=".28" filter="url(#wash-b)"/>
+          <path d="M420 140 C 496 112, 588 130, 592 168 S 512 214, 436 202 S 382 168, 420 140 Z"
+                fill="#a8bfa8" opacity=".3" filter="url(#wash-a)"/>
+          <path d="M150 168 C 200 150, 268 160, 270 186 S 200 214, 156 204 S 122 184, 150 168 Z"
+                fill="#d3b48d" opacity=".22" filter="url(#wash-c)"/>
+        </g>
+        <!-- pooled edges: the tell that it hasn't dried -->
+        <path d="M120 120 C 170 70, 300 62, 360 100 S 470 150, 400 190 S 210 210, 150 176 S 70 170, 120 120 Z"
+              fill="none" stroke="#5f7f9e" stroke-width="4" opacity=".42" filter="url(#wash-a)"
+              style="mix-blend-mode:multiply"/>
+        <path d="M420 140 C 496 112, 588 130, 592 168 S 512 214, 436 202 S 382 168, 420 140 Z"
+              fill="none" stroke="#7c9a7c" stroke-width="3.2" opacity=".36" filter="url(#wash-a)"
+              style="mix-blend-mode:multiply"/>
+        <path d="M320 84 C 400 50, 492 76, 512 122 S 458 188, 378 182 S 270 148, 320 84 Z"
+              fill="none" stroke="#8b7a9e" stroke-width="2.8" opacity=".3" filter="url(#wash-b)"
+              style="mix-blend-mode:multiply"/>
+        <!-- granulation now lives inside the wash filters above -->
+
+
+        <!-- backrun bloom -->
+        <ellipse cx="252" cy="112" rx="44" ry="21" fill="#faf7f1" opacity=".5" filter="url(#wash-c)"/>
+        <!-- wet sheen -->
+        <ellipse cx="205" cy="104" rx="46" ry="13" fill="#fff" opacity=".38" style="mix-blend-mode:screen"/>
+        <ellipse cx="448" cy="150" rx="30" ry="9" fill="#fff" opacity=".28" style="mix-blend-mode:screen"/>
+        <!-- pen over the wash -->
+        <g filter="url(#dry1)" opacity=".45">
+          <path d="M150 200 C 250 182, 360 210, 500 186" fill="none" stroke="#2b2926" stroke-width="1.1"/>
+          <path d="M196 209 l 14 -9 M232 204 l 12 -10 M268 210 l 13 -9" stroke="#2b2926" stroke-width="1"/>
+        </g>
+      </svg>
+      <figcaption>Chiba, 2012 &mdash; from a notebook</figcaption>
+    </figure>
+
+    <p>
+      A lesson plan is a hypothesis about attention. You decide what the room should be able to do
+      in forty-five minutes, you choose the smallest number of moves that get there, and then you
+      watch what actually happens and adjust in real time. Every one-on-one I have ever run is that,
+      with a smaller room.
+    </p>
+
+    <div class="pull">
+      <div class="vertical">習うより慣れよ</div>
+      <blockquote>
+        Teaching is the only job I know where you receive feedback on your communication four times
+        a day, from an audience with no incentive to be polite about it.
+        <footer>&mdash; from the piece</footer>
+      </blockquote>
+    </div>
+
+    <div class="noted">
+      <p>
+        The specific thing I took from it: never explain twice the same way. If a person did not
+        follow you, the words were the problem, not the person. Managers who are frustrated at being
+        misunderstood have usually never had thirty-five people demonstrate, simultaneously and
+        visibly, that a sentence did not land.
+      </p>
+      <span class="mnote">cut? &mdash; or make it the opening</span>
+    </div>
+  </article>
+
+  <!-- ================= FOOTER: five attempts at 敏 ==================== -->
+  <div class="practice-row" aria-hidden="true">
+    <svg viewBox="0 0 60 60"><g filter="url(#carve-rough)" opacity=".17" transform="rotate(-3 30 30)"><text x="30" y="46" text-anchor="middle" font-family="var(--brush-face)" font-size="40" fill="#2b2926">敏</text></g></svg>
+    <svg viewBox="0 0 60 60"><g filter="url(#carve-rough)" opacity=".26" transform="rotate(2 30 30)"><text x="30" y="46" text-anchor="middle" font-family="var(--brush-face)" font-size="40" fill="#2b2926">敏</text></g></svg>
+    <svg viewBox="0 0 60 60"><g filter="url(#carve)" opacity=".38" transform="rotate(-1.4 30 30)"><text x="30" y="46" text-anchor="middle" font-family="var(--brush-face)" font-size="40" fill="#2b2926">敏</text></g></svg>
+    <svg viewBox="0 0 60 60"><g filter="url(#carve)" opacity=".54" transform="rotate(.8 30 30)"><text x="30" y="46" text-anchor="middle" font-family="var(--brush-face)" font-size="40" fill="#2b2926">敏</text></g></svg>
+    <svg viewBox="0 0 60 60"><g opacity=".82"><text x="30" y="46" text-anchor="middle" font-family="var(--brush-face)" font-size="40" fill="#2b2926">敏</text></g></svg>
+    <span class="caption">&larr; keep practising</span>
+  </div>
+
+  <footer class="bottom">
+    <span>Direction 05 &middot; Sumi, practice sheet</span>
+    <span><a href="#">mike@omoto.dev</a> &nbsp; <a href="#">GitHub</a> &nbsp; <a href="#">LinkedIn</a> &nbsp; <a href="#">RSS</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
