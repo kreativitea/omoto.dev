@@ -26,42 +26,18 @@
   --page-pad:2rem;
   --grid-tile:112px;
   --grid-reach:1120px;      /* 10 × --grid-tile */
-  --grid-stroke:#8a7f6d;
-  --grid-alpha:.07;
+
+  /* Every wash multiplies into the paper. This is a token only so the
+     intent is stated once rather than repeated at each call site. */
+  --wash-blend:multiply;
 }
 
-/* Warm dark stock. Paper-and-ink inverts badly if you just flip the values:
-   the washes have to stop multiplying and start screening, or they turn into
-   dark smears on a dark ground. */
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --paper:#211f1c;
-    --ink:#e8e3d9;
-    --ink-soft:#a49d92;
-    --faint:#6e6862;
-    --vermilion:#d6604a;
-    --indigo:#93a8c4;
-    --pencil:#93a0bd;
-    --hairline:rgba(150,143,132,.25);
-    --grid-stroke:#c9bda6;
-    --grid-alpha:.05;
-    --wash-blend:screen;
-  }
-}
-:root[data-theme="dark"]{
-  --paper:#211f1c;
-  --ink:#e8e3d9;
-  --ink-soft:#a49d92;
-  --faint:#6e6862;
-  --vermilion:#d6604a;
-  --indigo:#93a8c4;
-  --pencil:#93a0bd;
-  --hairline:rgba(150,143,132,.25);
-  --grid-stroke:#c9bda6;
-  --grid-alpha:.05;
-  --wash-blend:screen;
-}
-:root{--wash-blend:multiply}
+/* Light only, deliberately. This design is a sheet of paper — a sheet that
+   turns black is a contradiction, and the ground is warm cream rather than
+   glaring white, so there is little for a dark mode to relieve. Declaring
+   color-scheme stops browsers from auto-darkening form controls and
+   scrollbars against a page that never inverts. */
+:root{color-scheme:light}
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;overflow-x:clip}
@@ -115,6 +91,12 @@ body{
 .masthead{padding:5.5rem 0 0;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start}
 .wordmark{margin:0;font-size:2.1rem;font-weight:400;letter-spacing:.06em;line-height:1.25;text-wrap:balance}
 .wordmark a{color:inherit;text-decoration:none}
+/* .np shrink-wraps the name so the wash sits behind the words rather than
+   spanning the whole column. No z-index on .np, so it creates no stacking
+   context and the wash can still multiply against the paper on <body>. */
+.wordmark .np{position:relative;display:inline-block}
+.name-wash{position:absolute;left:-.85rem;right:-.85rem;top:-.3rem;bottom:-.12rem;
+  width:auto;height:auto;z-index:-1;pointer-events:none}
 /* the middle name sits a shade back — it's the one the seal carves */
 .wordmark .mid{color:var(--ink-soft)}
 /* Ruby: readings set above their own segment — おおもと over 大本, としろう over

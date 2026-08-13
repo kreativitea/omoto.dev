@@ -23,6 +23,36 @@
     <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
 
+  {# Wet wash, for the static splash behind the wordmark. Post illustrations
+     don't use these — lib/wash.js emits its own per-figure filters with unique
+     ids, so two figures on a page can't inherit each other's warp. Warp
+     frequency is matched to this element's size; a lower frequency with a
+     bigger scale facets the ellipse into a polygon. #}
+  <filter id="nw-a" x="-22%" y="-28%" width="144%" height="156%">
+    <feTurbulence type="fractalNoise" baseFrequency=".026" numOctaves="4" seed="21" result="warp"/>
+    <feDisplacementMap in="SourceGraphic" in2="warp" scale="17" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation=".7" result="shape"/>
+    <feTurbulence type="fractalNoise" baseFrequency=".4" numOctaves="2" seed="14" result="grain"/>
+    <feColorMatrix in="grain" type="saturate" values="0" result="grey"/>
+    <feComponentTransfer in="grey" result="soft">
+      <feFuncR type="linear" slope=".28" intercept=".72"/>
+      <feFuncG type="linear" slope=".28" intercept=".72"/>
+      <feFuncB type="linear" slope=".28" intercept=".72"/>
+    </feComponentTransfer>
+    <feComposite in="soft" in2="shape" operator="in" result="grainIn"/>
+    <feBlend in="shape" in2="grainIn" mode="multiply"/>
+  </filter>
+  <filter id="nw-b" x="-22%" y="-28%" width="144%" height="156%">
+    <feTurbulence type="fractalNoise" baseFrequency=".032" numOctaves="4" seed="77" result="warp"/>
+    <feDisplacementMap in="SourceGraphic" in2="warp" scale="13" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="1.5"/>
+  </filter>
+  <filter id="nw-c" x="-22%" y="-28%" width="144%" height="156%">
+    <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="3" seed="140" result="warp"/>
+    <feDisplacementMap in="SourceGraphic" in2="warp" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="2.6"/>
+  </filter>
+
   {# Pencil, for marginalia arrows. #}
   <filter id="pen" x="-15%" y="-120%" width="130%" height="340%">
     <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="3" result="n"/>
