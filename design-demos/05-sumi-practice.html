@@ -18,7 +18,7 @@
      counters close up and 敏 stops reading as 敏. */
   --seal-face:'Yuji Syuku','Hiragino Mincho ProN',serif;
   --brush-face:'Yuji Syuku','Hiragino Mincho ProN',serif;
-  --seal-weight:0;
+  --seal-weight:2.2;
 }
 :root{
   --paper:#faf7f1;
@@ -101,6 +101,12 @@ h1.name .reading{display:block;margin-top:.7rem;font-family:var(--jp);font-weigh
 h1.name .reading rt{font-size:.42em;letter-spacing:.1em;color:var(--faint);font-weight:400}
 .brush{display:block;width:min(28rem,100%);height:26px;margin:1.1rem 0 0}
 .seal{width:76px;height:76px;flex:none;transform:rotate(2.4deg);margin-top:.2rem}
+/* The glyph is driven from CSS rather than SVG presentation attributes so
+   --seal-weight is a single knob. paint-order draws the stroke under the fill,
+   so thickening never eats into the letterform's own shape. */
+.seal text{font-family:var(--seal-face);fill:var(--paper);stroke:var(--paper);
+  stroke-width:var(--seal-weight);stroke-linejoin:round;paint-order:stroke fill}
+.practice-row text{font-family:var(--brush-face)}
 .role{margin:1.5rem 0 0;color:var(--ink-soft);font-family:var(--sans);font-size:.86rem;
   letter-spacing:.13em;text-transform:uppercase}
 
@@ -346,8 +352,7 @@ footer.bottom a:hover{color:var(--vermilion)}
       <ellipse cx="60" cy="16" rx="11" ry="7" fill="#faf7f1" opacity=".3" filter="url(#carve-rough)"/>
       <g filter="url(#carve)">
         <rect x="9" y="9" width="58" height="58" rx="2" fill="none" stroke="#faf7f1" stroke-width="2" opacity=".55"/>
-        <text x="38" y="55" text-anchor="middle" font-family="var(--seal-face)"
-              font-size="46" fill="#faf7f1">敏</text>
+        <text x="38" y="55" text-anchor="middle" font-size="46">敏</text>
       </g>
     </svg>
   </header>
@@ -537,11 +542,11 @@ footer.bottom a:hover{color:var(--vermilion)}
 
   <!-- ================= FOOTER: five attempts at 敏 ==================== -->
   <div class="practice-row" aria-hidden="true">
-    <svg viewBox="0 0 60 60"><g filter="url(#carve-rough)" opacity=".17" transform="rotate(-3 30 30)"><text x="30" y="46" text-anchor="middle" font-family="var(--brush-face)" font-size="40" fill="#2b2926">敏</text></g></svg>
-    <svg viewBox="0 0 60 60"><g filter="url(#carve-rough)" opacity=".26" transform="rotate(2 30 30)"><text x="30" y="46" text-anchor="middle" font-family="var(--brush-face)" font-size="40" fill="#2b2926">敏</text></g></svg>
-    <svg viewBox="0 0 60 60"><g filter="url(#carve)" opacity=".38" transform="rotate(-1.4 30 30)"><text x="30" y="46" text-anchor="middle" font-family="var(--brush-face)" font-size="40" fill="#2b2926">敏</text></g></svg>
-    <svg viewBox="0 0 60 60"><g filter="url(#carve)" opacity=".54" transform="rotate(.8 30 30)"><text x="30" y="46" text-anchor="middle" font-family="var(--brush-face)" font-size="40" fill="#2b2926">敏</text></g></svg>
-    <svg viewBox="0 0 60 60"><g opacity=".82"><text x="30" y="46" text-anchor="middle" font-family="var(--brush-face)" font-size="40" fill="#2b2926">敏</text></g></svg>
+    <svg viewBox="0 0 60 60"><g filter="url(#carve-rough)" opacity=".17" transform="rotate(-3 30 30)"><text x="30" y="46" text-anchor="middle" font-size="40" fill="#2b2926">敏</text></g></svg>
+    <svg viewBox="0 0 60 60"><g filter="url(#carve-rough)" opacity=".26" transform="rotate(2 30 30)"><text x="30" y="46" text-anchor="middle" font-size="40" fill="#2b2926">敏</text></g></svg>
+    <svg viewBox="0 0 60 60"><g filter="url(#carve)" opacity=".38" transform="rotate(-1.4 30 30)"><text x="30" y="46" text-anchor="middle" font-size="40" fill="#2b2926">敏</text></g></svg>
+    <svg viewBox="0 0 60 60"><g filter="url(#carve)" opacity=".54" transform="rotate(.8 30 30)"><text x="30" y="46" text-anchor="middle" font-size="40" fill="#2b2926">敏</text></g></svg>
+    <svg viewBox="0 0 60 60"><g opacity=".82"><text x="30" y="46" text-anchor="middle" font-size="40" fill="#2b2926">敏</text></g></svg>
     <span class="caption">&larr; keep practising</span>
   </div>
 

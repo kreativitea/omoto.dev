@@ -6,7 +6,27 @@
    at something, with the first two still visible.
    ======================================================================= */
 
+/* Self-hosted, subset to the single character it is used for. unicode-range
+   keeps the browser from reaching for it — or downloading it — for any other
+   text on the page. */
+@font-face{
+  font-family:'Yuji Syuku';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url('/assets/fonts/yuji-syuku.woff2') format('woff2');
+  unicode-range:U+654F;   /* 敏 */
+}
+
 :root{
+  /* One brush face for the seal and the practice row. Yuji Syuku ships 400
+     only, so the seal is weighted by stroking the glyph rather than by a bold
+     — which is also the honest analogue for a seal: a wider carved channel.
+     Past about 3 the counters close up and 敏 stops reading as 敏. */
+  --seal-face:'Yuji Syuku','Hiragino Mincho ProN',serif;
+  --brush-face:'Yuji Syuku','Hiragino Mincho ProN',serif;
+  --seal-weight:2.2;
+
   --paper:#faf7f1;
   --ink:#2b2926;
   --ink-soft:#7a746c;
@@ -108,6 +128,16 @@ body{
 .wordmark .reading rt{font-size:.42em;letter-spacing:.1em;color:var(--faint);font-weight:400}
 .brush{display:block;width:min(28rem,100%);height:26px;margin:1.1rem 0 0}
 .seal{width:76px;height:76px;flex:none;transform:rotate(2.4deg);margin-top:.2rem}
+/* The glyph is driven from CSS rather than SVG presentation attributes so
+   --seal-weight is a single knob. paint-order draws the stroke under the fill,
+   so thickening never eats into the letterform's own shape. */
+.seal text{
+  font-family:var(--seal-face);
+  fill:var(--paper);stroke:var(--paper);
+  stroke-width:var(--seal-weight);stroke-linejoin:round;
+  paint-order:stroke fill;
+}
+.practice-row text{font-family:var(--brush-face)}
 .role{margin:1.5rem 0 0;color:var(--ink-soft);font-family:var(--sans);font-size:.86rem;
   letter-spacing:.13em;text-transform:uppercase}
 
