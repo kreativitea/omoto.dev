@@ -53,6 +53,16 @@
     <feGaussianBlur stdDeviation="2.6"/>
   </filter>
 
+  {# Painted line, for the 青海波 and 麻の葉 motifs. The wash filters above are
+     built for large filled shapes; their 2.6px blur turns a 1.2px stroke into a
+     grey smudge. Fine line work needs a small displacement and barely any blur
+     — enough to look drawn rather than printed, not enough to erase it. #}
+  <filter id="wet-line" x="-18%" y="-18%" width="136%" height="136%">
+    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="11" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation=".35"/>
+  </filter>
+
   {# Pencil, for marginalia arrows. #}
   <filter id="pen" x="-15%" y="-120%" width="130%" height="340%">
     <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="3" result="n"/>

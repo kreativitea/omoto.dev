@@ -207,7 +207,12 @@ body{
 
 /* ------------------------------------------- FOOTER: the practice row -- */
 /* The same character, five times, getting better. */
-.practice-row{margin:7rem 0 0;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap}
+/* Motifs — Japanese patterns kept small and pale, so they read as marks on the
+   sheet rather than decoration competing with the type. */
+.motif-asanoha{width:1.15rem;height:1.15rem;flex:none}
+.motif-seigaiha{display:block;width:14rem;height:auto;margin:6.5rem 0 0}
+
+.practice-row{margin:2.6rem 0 0;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap}
 .practice-row svg{width:58px;height:58px;flex:none}
 .practice-row .caption{font-family:var(--hand);color:var(--pencil);font-size:.95rem;
   margin-left:.8rem;transform:rotate(-1deg);padding-bottom:.5rem}
