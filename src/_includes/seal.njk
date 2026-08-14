@@ -2,10 +2,12 @@
    a vermilion ground. Stamped a couple of degrees off true, over-inked at one
    corner, with a bald patch where the stone didn't take.
 
-   TODO before launch: the glyph is system-font <text>, so it depends on
-   Hiragino Mincho being present. Trace it to a <path> — ideally in 篆書
-   (seal script), which is what a real hanko uses. #}
-<svg class="seal" viewBox="0 0 76 76" role="img" aria-label="Seal reading Toshi">
+   The glyph is set in Yuji Syuku, self-hosted and subset to this one
+   character, so it doesn't depend on anything being installed locally. It is a
+   brush face, not 篆書 — no open seal-script font exists — so this reads as a
+   brush-carved seal rather than a seal-script one. Face, fill and stroke
+   weight all come from CSS; see .seal text and --seal-weight. #}
+<svg class="seal" width="76" height="76" viewBox="0 0 76 76" role="img" aria-label="Seal reading Toshi">
   <g filter="url(#carve)">
     <rect x="4" y="4" width="68" height="68" rx="5" fill="var(--vermilion)" opacity=".9"/>
   </g>

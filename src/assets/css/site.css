@@ -115,8 +115,13 @@ body{
    spanning the whole column. No z-index on .np, so it creates no stacking
    context and the wash can still multiply against the paper on <body>. */
 .wordmark .np{position:relative;display:inline-block}
-.name-wash{position:absolute;left:-.85rem;right:-.85rem;top:-.3rem;bottom:-.12rem;
-  width:auto;height:auto;z-index:-1;pointer-events:none}
+/* Sized explicitly rather than by opposing insets: the svg carries width/height
+   attributes (so it degrades sanely with no CSS), which makes it a replaced
+   element — and `width:auto` on a replaced element resolves to its intrinsic
+   size, not to the inset box. The bleed here must match the offsets. */
+.name-wash{position:absolute;left:-.85rem;top:-.3rem;
+  width:calc(100% + 1.7rem);height:calc(100% + .42rem);
+  z-index:-1;pointer-events:none}
 /* the middle name sits a shade back — it's the one the seal carves */
 .wordmark .mid{color:var(--ink-soft)}
 /* Ruby: readings set above their own segment — おおもと over 大本, としろう over
