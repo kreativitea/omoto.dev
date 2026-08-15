@@ -306,7 +306,7 @@ body{
 .cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
 .cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
 .cv-entry:last-child::after{display:none}
-.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--ink-soft);
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--indigo);
   display:block;padding-top:.4rem;text-transform:uppercase}
 .cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
 .cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
@@ -315,9 +315,23 @@ body{
 .cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
 .cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
 .cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
-@media (max-width:620px){
-  .cv-entry{grid-template-columns:1fr;gap:.5rem}
-  .cv-when time{padding-top:0}
+@media (max-width:900px){
+  /* Below 900 the rail is hidden and the page is one column, so the 9rem date
+     column is the most expensive thing on the row. Set on its side it keeps the
+     date beside the content rather than stacked above it, at a fifteenth of the
+     width. Vertical setting is already this design's vocabulary — the pull
+     quote does it — so it reads as intentional rather than as a trick.
+
+     text-orientation:mixed rotates the Latin run as a unit; `upright` would
+     stack every glyph and make "Dec 2019 – Dec 2025" taller than its entry. */
+  .cv-entry{grid-template-columns:1.4rem 1fr;gap:1rem}
+  .cv-when time{
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    white-space:nowrap;
+    padding-top:.3rem;
+    letter-spacing:.12em;
+  }
 }
 
 /* ------------------------------------------------------------------- CV -- */
@@ -328,7 +342,7 @@ body{
 .cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
 .cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
 .cv-entry:last-child::after{display:none}
-.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--ink-soft);
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--indigo);
   display:block;padding-top:.4rem;text-transform:uppercase}
 .cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
 .cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
@@ -337,9 +351,23 @@ body{
 .cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
 .cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
 .cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
-@media (max-width:620px){
-  .cv-entry{grid-template-columns:1fr;gap:.5rem}
-  .cv-when time{padding-top:0}
+@media (max-width:900px){
+  /* Below 900 the rail is hidden and the page is one column, so the 9rem date
+     column is the most expensive thing on the row. Set on its side it keeps the
+     date beside the content rather than stacked above it, at a fifteenth of the
+     width. Vertical setting is already this design's vocabulary — the pull
+     quote does it — so it reads as intentional rather than as a trick.
+
+     text-orientation:mixed rotates the Latin run as a unit; `upright` would
+     stack every glyph and make "Dec 2019 – Dec 2025" taller than its entry. */
+  .cv-entry{grid-template-columns:1.4rem 1fr;gap:1rem}
+  .cv-when time{
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    white-space:nowrap;
+    padding-top:.3rem;
+    letter-spacing:.12em;
+  }
 }
 
 
@@ -428,7 +456,7 @@ body{
 .cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
 .cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
 .cv-entry:last-child::after{display:none}
-.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--ink-soft);
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--indigo);
   display:block;padding-top:.4rem;text-transform:uppercase}
 .cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
 .cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
@@ -437,9 +465,23 @@ body{
 .cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
 .cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
 .cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
-@media (max-width:620px){
-  .cv-entry{grid-template-columns:1fr;gap:.5rem}
-  .cv-when time{padding-top:0}
+@media (max-width:900px){
+  /* Below 900 the rail is hidden and the page is one column, so the 9rem date
+     column is the most expensive thing on the row. Set on its side it keeps the
+     date beside the content rather than stacked above it, at a fifteenth of the
+     width. Vertical setting is already this design's vocabulary — the pull
+     quote does it — so it reads as intentional rather than as a trick.
+
+     text-orientation:mixed rotates the Latin run as a unit; `upright` would
+     stack every glyph and make "Dec 2019 – Dec 2025" taller than its entry. */
+  .cv-entry{grid-template-columns:1.4rem 1fr;gap:1rem}
+  .cv-when time{
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    white-space:nowrap;
+    padding-top:.3rem;
+    letter-spacing:.12em;
+  }
 }
 
 /* Motifs — Japanese patterns kept small and pale, so they read as marks on the

@@ -287,6 +287,7 @@ body{
 
 /* ------------------------------------------- FOOTER: the practice row -- */
 /* The same character, five times, getting better. */
+
 /* ------------------------------------------------------------------- CV -- */
 /* Dates in a left rail, the entry beside them — the same two-column rhythm as
    the writing index, so Work reads as part of the same sheet. */
@@ -304,8 +305,9 @@ body{
 .cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
 .cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
 .cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
-@media (max-width:900px){
-  /* Below 900 the rail is hidden and the page is one column, so the 9rem date
+@media (min-width:621px) and (max-width:900px){
+  /* Only in this band. Below 900 the rail is hidden and the page is one
+     column, so the 9rem date
      column is the most expensive thing on the row. Set on its side it keeps the
      date beside the content rather than stacked above it, at a fifteenth of the
      width. Vertical setting is already this design's vocabulary — the pull
@@ -340,8 +342,9 @@ body{
 .cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
 .cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
 .cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
-@media (max-width:900px){
-  /* Below 900 the rail is hidden and the page is one column, so the 9rem date
+@media (min-width:621px) and (max-width:900px){
+  /* Only in this band. Below 900 the rail is hidden and the page is one
+     column, so the 9rem date
      column is the most expensive thing on the row. Set on its side it keeps the
      date beside the content rather than stacked above it, at a fifteenth of the
      width. Vertical setting is already this design's vocabulary — the pull
@@ -454,8 +457,9 @@ body{
 .cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
 .cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
 .cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
-@media (max-width:900px){
-  /* Below 900 the rail is hidden and the page is one column, so the 9rem date
+@media (min-width:621px) and (max-width:900px){
+  /* Only in this band. Below 900 the rail is hidden and the page is one
+     column, so the 9rem date
      column is the most expensive thing on the row. Set on its side it keeps the
      date beside the content rather than stacked above it, at a fifteenth of the
      width. Vertical setting is already this design's vocabulary — the pull
@@ -552,4 +556,12 @@ body{
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
+}
+
+/* Phones stack instead. At 375px stacking gives the content 311px against 273px
+   set vertically, because there is no date column to reclaim — the row is
+   already full width and the date simply sits above it. */
+@media (max-width:620px){
+  .cv-entry{grid-template-columns:1fr;gap:.5rem}
+  .cv-when time{writing-mode:horizontal-tb;padding-top:0;letter-spacing:.1em}
 }
