@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>masthead stroke — length</title>
+<style>
+/* =======================================================================
+   omoto.dev
+
+   Sumi and washi, pulled toward a practice sheet — 稽古, not a gallery
+   print. The governing idea: every page should look like the third attempt
+   at something, with the first two still visible.
+   ======================================================================= */
+
+/* Self-hosted, subset to the single character it is used for. unicode-range
+   keeps the browser from reaching for it — or downloading it — for any other
+   text on the page. */
+@font-face{
+  font-family:'Yuji Syuku';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url('../fonts/yuji-syuku.woff2') format('woff2');   /* relative to this file */
+  unicode-range:U+654F;   /* 敏 */
+}
+
+:root{
+  /* One brush face for the seal and the practice row. Yuji Syuku ships 400
+     only, so the seal is weighted by stroking the glyph rather than by a bold
+     — which is also the honest analogue for a seal: a wider carved channel.
+     Past about 3 the counters close up and 敏 stops reading as 敏. */
+  --seal-face:'Yuji Syuku','Hiragino Mincho ProN',serif;
+  --brush-face:'Yuji Syuku','Hiragino Mincho ProN',serif;
+  --seal-weight:2.0;
+
+  --paper:#faf7f1;
+  --ink:#2b2926;
+  --ink-soft:#7a746c;
+  --faint:#b4ada2;
+  --vermilion:#c2452f;
+  --indigo:#5a6f8c;
+  --pencil:#6f7b96;
+  --hairline:rgba(180,173,162,.3);
+
+  /* Gouache tier. The washes are tea-coloured on purpose — these are the
+     opaque marks that punctuate them. Never washed down, never blurred; they
+     are what the pale colour is pale *against*. Without something at full
+     strength on the sheet, a wash reads as a stain rather than as paint. */
+  --prussian:#1d3b5c;
+  --pine:#245049;
+  --ember:#bf6420;
+  --gold:#c08a34;
+
+  /* Boil. Hand-drawn animation cycles three drawings of the same line at
+     around eight frames a second; the eye reads the resulting shiver as a
+     living hand rather than a printing plate. One knob, because the rate is
+     the whole effect: much faster is a buzz, much slower is a glitch. */
+
+  --serif:'Hoefler Text',Baskerville,'Times New Roman',Times,serif;
+  --sans:Optima,'Avenir Next',Avenir,'Hiragino Sans',system-ui,sans-serif;
+  --jp:'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif;
+  --hand:'Bradley Hand','Segoe Print',cursive;
+
+  --measure:36rem;
+  --page-max:66rem;
+  --page-pad:2rem;
+  --grid-tile:112px;
+  --grid-reach:1120px;      /* 10 × --grid-tile */
+
+  /* Every wash multiplies into the paper. This is a token only so the
+     intent is stated once rather than repeated at each call site. */
+  --wash-blend:multiply;
+}
+
+/* Light only, deliberately. This design is a sheet of paper — a sheet that
+   turns black is a contradiction, and the ground is warm cream rather than
+   glaring white, so there is little for a dark mode to relieve. Declaring
+   color-scheme stops browsers from auto-darkening form controls and
+   scrollbars against a page that never inverts. */
+:root{color-scheme:light}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+
+/* -----------------------------------------------------------------------
+   GROUND
+   Washi fibre and long strands ride on <body> — they're noise, so where
+   they land doesn't matter. They're tiled backgrounds rather than fixed
+   overlay elements because a fixed layer forces a full-viewport repaint on
+   every scroll frame, which the SVG filters cannot afford. Opacity is baked
+   into each tile so no element-level compositing is needed either.
+   ----------------------------------------------------------------------- */
+body{
+  margin:0;color:var(--ink);
+  font-family:var(--serif);font-size:17px;line-height:1.85;
+  text-rendering:optimizeLegibility;
+  overflow-x:clip;
+  background-color:var(--paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006 0.15' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23f)' opacity='.075'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.13'/%3E%3C/svg%3E");
+  background-blend-mode:multiply,multiply;
+}
+
+/* The practice grid (十字格) is anchored to the CONTENT column, not to the
+   viewport. Tiles start exactly --grid-reach to the left of where the text
+   begins; because that's a whole number of tiles, a grid line always lands
+   on the text edge and stays there at every window width. The sheet still
+   bleeds to both edges of the window.
+
+   `position:relative` with no z-index is deliberate — it avoids creating a
+   stacking context, so washes inside can still multiply against the paper
+   colour painted on <body>. */
+/* Box and centre cross only. The 米 diagonals this started with are the
+   Chinese convention — they belong to sheets for learners of 漢字 as Chinese,
+   and a Japanese eye reads them as the wrong classroom. 十字 alone is what
+   Japanese practice paper rules.
+
+   The two line kinds carry different weights on purpose. At one flat opacity
+   nobody read the sheet as a practice sheet at all — it looked like stray
+   rules. The dash gap was tightened as well: the old 3/9 spacing left more
+   gap than ink, so the guide dissolved into the paper grain at any real size.
+
+   Note the box sits BELOW the cross numerically and still reads at the same
+   weight, because it is the only unbroken line here — solid rule versus 6/6
+   dash. Compare the drawn result, not the numbers, if these are retuned. */
+.page{
+  max-width:var(--page-max);margin:0 auto;
+  padding:0 var(--page-pad) 7rem;position:relative;
+}
+.page::before{
+  content:"";position:absolute;top:0;bottom:0;z-index:-1;pointer-events:none;
+  left:calc(var(--page-pad) - var(--grid-reach));
+  right:calc(var(--page-pad) - var(--grid-reach));
+  background-position:0 0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112'%3E%3Cg fill='none' stroke='%238a7f6d' stroke-width='1'%3E%3Crect x='.5' y='.5' width='111' height='111' stroke-opacity='.16'/%3E%3Cpath d='M56 0V112M0 56H112' stroke-dasharray='6 6' stroke-opacity='.21'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.col{max-width:var(--measure)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:var(--page-pad);top:.5rem;background:var(--paper);padding:.5rem .8rem;z-index:10}
+
+/* ------------------------------------------------------------ MASTHEAD - */
+.masthead{padding:5.5rem 0 0;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start}
+.wordmark{margin:0;font-size:2.1rem;font-weight:400;letter-spacing:.06em;line-height:1.25;text-wrap:balance}
+.wordmark a{color:inherit;text-decoration:none}
+/* .np shrink-wraps the name so the wash sits behind the words rather than
+   spanning the whole column. No z-index on .np, so it creates no stacking
+   context and the wash can still multiply against the paper on <body>. */
+.wordmark .np{position:relative;display:inline-block}
+/* Sized explicitly rather than by opposing insets: the svg carries width/height
+   attributes (so it degrades sanely with no CSS), which makes it a replaced
+   element — and `width:auto` on a replaced element resolves to its intrinsic
+   size, not to the inset box. The bleed here must match the offsets. */
+/* The translate is the misregistration: the colour plate has crept down and to
+   the right of the type it is meant to sit under. Small enough to read as a
+   press that was not quite square rather than as a mistake — and it is what
+   gives the name its edge, since a wash centred perfectly behind text just
+   looks like a highlighter. */
+.name-wash{position:absolute;left:-.85rem;top:-.3rem;
+  width:calc(100% + 1.7rem);height:calc(100% + .42rem);
+  transform:translate(.3rem,.17rem);
+  z-index:-1;pointer-events:none}
+/* the middle name sits a shade back — it's the one the seal carves */
+.wordmark .mid{color:var(--ink-soft)}
+/* Ruby: readings set above their own segment — おおもと over 大本, としろう over
+   敏郎, and マイケル bare in the middle (katakana is already phonetic). Spacing
+   between the name parts comes from ideographic spaces in the data, so
+   letter-spacing here stays tight. */
+.wordmark .reading{display:block;margin-top:.7rem;font-family:var(--jp);font-weight:400;
+  font-size:1.18rem;letter-spacing:.1em;color:var(--ink-soft);ruby-align:center}
+.wordmark .reading rt{font-size:.42em;letter-spacing:.1em;color:var(--faint);font-weight:400}
+/* The stroke bleeds the full width of the window, edge to edge, and only
+   shrinks once the window does. Capping it at a rem width made it start giving
+   way while there was still screen either side of it.
+
+   The negative margin walks back out of the page's own centring and padding:
+   .page is centred at max-width --page-max with --page-pad either side, so its
+   content box begins that far in from the viewport edge. max(0px, …) covers
+   the case where the window is narrower than --page-max and the page is
+   already full width, leaving only the padding to undo.
+
+   Height is fixed rather than auto, and the SVG carries
+   preserveAspectRatio="none" — together they stretch the stroke's travel
+   without touching its weight. With height:auto the mark would thicken in step
+   with the window and overpower type that stays put. */
+.brush{
+  display:block;
+  width:100vw;
+  height:26px;
+  margin:1.1rem 0 0;
+  margin-left:calc(-1 * (max(0px, (100vw - var(--page-max)) / 2) + var(--page-pad)));
+}
+/* The masthead's first column is 1fr, whose auto minimum would otherwise grow
+   to fit a 100vw child and shove the seal off the page. */
+.masthead > div{min-width:0}
+.seal{width:76px;height:76px;flex:none;transform:rotate(2.4deg);margin-top:.2rem}
+/* The glyph is driven from CSS rather than SVG presentation attributes so
+   --seal-weight is a single knob. paint-order draws the stroke under the fill,
+   so thickening never eats into the letterform's own shape. */
+.seal text{
+  font-family:var(--seal-face);
+  fill:var(--paper);stroke:var(--paper);
+  stroke-width:var(--seal-weight);stroke-linejoin:round;
+  paint-order:stroke fill;
+}
+.practice-row text{font-family:var(--brush-face)}
+.role{margin:1.5rem 0 0;color:var(--ink-soft);font-family:var(--sans);font-size:.86rem;
+  letter-spacing:.13em;text-transform:uppercase}
+
+.rail{margin:3rem 0 0;display:flex;gap:2.4rem;flex-wrap:wrap;
+  font-family:var(--sans);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase}
+.rail a{color:var(--faint);text-decoration:none;position:relative;padding-bottom:.35rem}
+.rail a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;
+  background:var(--vermilion);transition:right .4s ease}
+.rail a:hover,.rail a:focus-visible{color:var(--ink)}
+.rail a:hover::after,.rail a:focus-visible::after{right:0}
+.rail a[aria-current]{color:var(--ink)}
+/* stops a hair short of the word — misregistration, on purpose */
+.rail a[aria-current]::after{right:2px;background:var(--ink);opacity:.4}
+
+/* -------------------------------------------------- VISIBLE REVISION --- */
+/* A struck word with its replacement written in above. Once or twice a
+   page — a signature, not a gimmick. */
+.revise{position:relative;white-space:nowrap;padding-top:.1em}
+.revise del{text-decoration:none;position:relative;color:var(--ink-soft);opacity:.62}
+.revise del::after{content:"";position:absolute;left:-.06em;right:-.06em;top:52%;height:1.4px;
+  background:var(--pencil);opacity:.75;transform:rotate(-.7deg)}
+.revise ins{position:absolute;left:50%;bottom:1.32em;transform:translateX(-50%) rotate(-1.6deg);
+  font-family:var(--hand);font-size:.88em;color:var(--pencil);text-decoration:none;
+  white-space:nowrap;line-height:1}
+.revise ins::after{content:"";position:absolute;left:50%;bottom:-.34em;width:7px;height:7px;
+  border-left:1.2px solid var(--pencil);border-bottom:1.2px solid var(--pencil);
+  transform:translateX(-50%) rotate(-45deg);opacity:.7}
+
+.lede{margin:4rem 0 0;font-size:1.22rem;line-height:1.95;color:var(--ink)}
+
+/* ---------------------------------------------------------- MARGINALIA - */
+/* Self-correction, not commentary. */
+.noted{position:relative}
+.mnote{
+  display:block;font-family:var(--hand);color:var(--pencil);font-size:.95rem;line-height:1.4;
+  margin:.9rem 0 0;padding-left:1rem;border-left:1.5px solid color-mix(in srgb,var(--pencil) 35%,transparent);
+  transform:rotate(-.5deg);
+}
+.mnote .jp{font-family:var(--jp);font-size:.86rem;letter-spacing:.08em}
+.mnote .mark{display:block;width:38px;height:20px;margin:0 0 .15rem -.2rem;opacity:.6}
+@media (min-width:1080px){
+  .mnote{position:absolute;left:calc(100% + 2.4rem);top:.35rem;width:11.5rem;margin:0;
+    padding-left:0;border-left:none;transform:rotate(-1.4deg)}
+  .mnote--low{top:2.6rem;transform:rotate(1.1deg)}
+}
+
+/* --------------------------------------------------------- WRITING LIST */
+.section-head{font-family:var(--sans);font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 2rem;display:flex;align-items:center;gap:1.1rem}
+.section-head::after{content:"";flex:1;height:1px;margin-right:1.8rem;
+  background:linear-gradient(to right,var(--hairline),transparent)}
+
+.index{margin:5.5rem 0 0;list-style:none;padding:0}
+.piece{display:grid;grid-template-columns:7rem 1fr;gap:2rem;padding:1.8rem 0;
+  text-decoration:none;color:inherit;position:relative}
+/* the rule stops short of the margin rather than meeting it */
+.piece::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
+.index li:first-child .piece{border-top:1px solid var(--hairline)}
+.piece time{font-family:var(--sans);font-size:.74rem;letter-spacing:.12em;color:var(--faint);padding-top:.45rem}
+.piece h3{margin:0;font-size:1.28rem;font-weight:400;line-height:1.4;transition:color .3s}
+.piece p{margin:.5rem 0 0;color:var(--ink-soft);font-size:.95rem;max-width:33rem;line-height:1.7}
+.piece:hover h3,.piece:focus-visible h3{color:var(--vermilion)}
+.piece .dab{width:1.1rem;height:1.1rem;vertical-align:-.15em;margin-right:.35rem;display:inline-block}
+
+/* -------------------------------------------------------------- ARTICLE */
+.article{margin:4rem 0 0}
+.article h1{font-size:1.85rem;font-weight:400;line-height:1.35;margin:0;letter-spacing:.01em}
+.article h2{font-size:1.24rem;font-weight:400;margin:2.8rem 0 0;letter-spacing:.02em}
+.ja-name{font-family:var(--jp);font-size:1.15rem;letter-spacing:.1em;color:var(--ink-soft);
+  margin:1.2rem 0 0;font-weight:400}
+.byline{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);margin:1.1rem 0 0}
+.article p{margin:1.7rem 0 0}
+.article a{color:inherit;text-decoration-color:color-mix(in srgb,var(--vermilion) 55%,transparent);
+  text-underline-offset:.18em}
+.article a:hover{color:var(--vermilion)}
+.article ul,.article ol{margin:1.7rem 0 0;padding-left:1.2rem}
+.article code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.84em;
+  background:color-mix(in srgb,var(--indigo) 10%,transparent);padding:.1em .35em;border-radius:2px}
+.article pre{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.8rem;line-height:1.6;
+  overflow-x:auto;margin:1.7rem 0 0;padding:1rem 1.1rem;
+  background:color-mix(in srgb,var(--indigo) 7%,transparent);
+  border-left:2px solid color-mix(in srgb,var(--indigo) 30%,transparent)}
+.article pre code{background:none;padding:0}
+
+.wash-figure{margin:3rem 0 0}
+.wash-figure .wash{display:block;width:100%;height:auto}
+.wash-figure figcaption{font-family:var(--sans);font-size:.74rem;letter-spacing:.1em;
+  color:var(--faint);margin-top:.9rem;text-transform:uppercase}
+
+.pull{margin:3rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:start}
+.pull .vertical{font-family:var(--jp);writing-mode:vertical-rl;font-size:1.05rem;
+  letter-spacing:.28em;color:var(--indigo);line-height:2;max-height:12rem}
+.pull blockquote{margin:0;font-size:1.15rem;line-height:1.85}
+.pull blockquote footer{font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);margin-top:.9rem}
+
+/* ------------------------------------------- FOOTER: the practice row -- */
+/* The same character, five times, getting better. */
+/* ------------------------------------------------------------------- CV -- */
+/* Dates in a left rail, the entry beside them — the same two-column rhythm as
+   the writing index, so Work reads as part of the same sheet. */
+.cv{margin:3.5rem 0 0}
+.cv .section-head{margin-bottom:1.6rem}
+.cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
+.cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
+.cv-entry:last-child::after{display:none}
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+  display:block;padding-top:.4rem;text-transform:uppercase}
+.cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
+.cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
+.cv-note{margin:.35rem 0 0;font-family:var(--sans);font-size:.72rem;letter-spacing:.08em;
+  color:var(--faint);text-transform:uppercase}
+.cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
+.cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
+.cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
+@media (max-width:620px){
+  .cv-entry{grid-template-columns:1fr;gap:.5rem}
+  .cv-when time{padding-top:0}
+}
+
+/* ------------------------------------------------------------------- CV -- */
+/* Dates in a left rail, the entry beside them — the same two-column rhythm as
+   the writing index, so Work reads as part of the same sheet. */
+.cv{margin:3.5rem 0 0}
+.cv .section-head{margin-bottom:1.6rem}
+.cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
+.cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
+.cv-entry:last-child::after{display:none}
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+  display:block;padding-top:.4rem;text-transform:uppercase}
+.cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
+.cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
+.cv-note{margin:.35rem 0 0;font-family:var(--sans);font-size:.72rem;letter-spacing:.08em;
+  color:var(--faint);text-transform:uppercase}
+.cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
+.cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
+.cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
+@media (max-width:620px){
+  .cv-entry{grid-template-columns:1fr;gap:.5rem}
+  .cv-when time{padding-top:0}
+}
+
+/* ----------------------------------------------------------------- RAIL -- */
+/* The detail column is the page; the rail is orientation beside it. It sticks
+   while you read and highlights whichever entry is in view, so the overlap
+   between the two careers stays visible without competing for reading width. */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 15rem;gap:2.5rem;align-items:start}
+.work-main .article{max-width:var(--measure)}
+.work-summary{font-size:1.05rem}
+.cv-intro{color:var(--ink-soft);font-size:.95rem;margin:-1rem 0 1.6rem;max-width:32rem}
+
+.rail{position:sticky;top:2.5rem;align-self:start;font-family:var(--sans)}
+.rail-key{display:flex;justify-content:space-between;gap:.5rem;margin:0 0 .7rem;
+  font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.rail-key--career{color:var(--indigo)}
+.rail-key--community{color:var(--vermilion)}
+
+.rail-body{--rail-h:26rem;position:relative;height:var(--rail-h);
+  display:grid;grid-template-columns:1fr 2.2rem 1fr}
+.rail-bars{list-style:none;margin:0;padding:0;position:relative;height:100%}
+.rail-bar{position:absolute;
+  top:calc(var(--from) * var(--rail-h));
+  height:calc((var(--to) - var(--from)) * var(--rail-h));
+  width:calc(100% / var(--lanes));
+}
+.rail-bars--career .rail-bar{right:calc(var(--lane) * 100% / var(--lanes))}
+.rail-bars--community .rail-bar{left:calc(var(--lane) * 100% / var(--lanes))}
+.rail-line{position:absolute;top:0;bottom:0;width:3px;border-radius:2px;
+  background:var(--indigo);opacity:.28;transition:opacity .2s ease,width .2s ease}
+.rail-bars--career .rail-line{right:.35rem}
+.rail-bars--community .rail-line{left:.35rem}
+.rail-bars--community .rail-line{background:var(--vermilion)}
+.rail-bar.is-ongoing .rail-line{
+  -webkit-mask-image:linear-gradient(to bottom,#000 72%,transparent);
+  mask-image:linear-gradient(to bottom,#000 72%,transparent)}
+
+/* Only the entry you are reading is named. */
+.rail-label{position:absolute;top:-.1rem;font-size:.66rem;line-height:1.35;
+  color:var(--ink);opacity:0;transition:opacity .2s ease;pointer-events:none}
+.rail-label i{display:block;font-style:normal;color:var(--faint);font-size:.58rem;
+  letter-spacing:.06em;margin-top:.05rem}
+.rail-bars--career .rail-label{right:1rem;text-align:right}
+.rail-bars--community .rail-label{left:1rem}
+.rail-bar.is-current .rail-label{opacity:1}
+.rail-bar.is-current .rail-line{opacity:1;width:4px}
+
+/* A role that is honestly both sits on the centre line. */
+.rail-bars--both{position:absolute;left:0;right:0;top:0;height:100%}
+.rail-bars--both .rail-bar{left:50%;transform:translateX(-50%);width:auto}
+.rail-bars--both .rail-line{left:50%;transform:translateX(-50%);
+  background:linear-gradient(to bottom,var(--indigo),var(--vermilion));opacity:.4}
+.rail-bars--both .rail-label{left:50%;transform:translateX(-50%);text-align:center;
+  background:var(--paper);padding:0 .2rem}
+.rail-bars--both .rail-bar.is-current .rail-line{opacity:.95}
+
+.rail-ticks{list-style:none;margin:0;padding:0;position:relative;height:100%}
+.rail-ticks::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
+  background:var(--hairline)}
+.rail-ticks li{position:absolute;left:0;right:0;top:calc(var(--at) * var(--rail-h));
+  text-align:center}
+.rail-ticks span{font-size:.56rem;letter-spacing:.06em;color:var(--faint);
+  background:var(--paper);padding:.05rem .15rem}
+
+/* The reading column carries everything; the rail is an extra. */
+@media (max-width:900px){
+  .work{grid-template-columns:1fr}
+  .rail{display:none}
+}
+
+/* ------------------------------------------------------------------- CV -- */
+/* Dates in a left rail, the entry beside them — the same two-column rhythm as
+   the writing index, so Work reads as part of the same sheet. */
+.cv{margin:3.5rem 0 0}
+.cv .section-head{margin-bottom:1.6rem}
+.cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
+.cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
+.cv-entry:last-child::after{display:none}
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+  display:block;padding-top:.4rem;text-transform:uppercase}
+.cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
+.cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
+.cv-note{margin:.35rem 0 0;font-family:var(--sans);font-size:.72rem;letter-spacing:.08em;
+  color:var(--faint);text-transform:uppercase}
+.cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
+.cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
+.cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
+@media (max-width:620px){
+  .cv-entry{grid-template-columns:1fr;gap:.5rem}
+  .cv-when time{padding-top:0}
+}
+
+/* Motifs — Japanese patterns kept small and pale, so they read as marks on the
+   sheet rather than decoration competing with the type. */
+.motif-asanoha{width:1.15rem;height:1.15rem;flex:none}
+/* 青海波 as a bottom border. The tile is 32 wide with the upper row's fans
+   halved at each edge, so the halves complete across the seam and it repeats
+   seamlessly. Full-bleed via the centred-container trick; html already has
+   overflow-x:clip, so the 100vw width cannot introduce a scrollbar. */
+.wave-border{
+  height:38px;
+  margin:4.5rem 0 -5.5rem;          /* the negative pulls it into .page's bottom padding */
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='38'%3E%3Cg fill='none' stroke='%237f9ab8' stroke-opacity='.5' stroke-width='1.3'%3E%3Cpath d='M0 34 A16 16 0 0 1 32 34'/%3E%3Cpath d='M6 34 A10 10 0 0 1 26 34'/%3E%3Cpath d='M12 34 A4 4 0 0 1 20 34'/%3E%3Cpath d='M-16 18 A16 16 0 0 1 16 18'/%3E%3Cpath d='M-10 18 A10 10 0 0 1 10 18'/%3E%3Cpath d='M-4 18 A4 4 0 0 1 4 18'/%3E%3Cpath d='M16 18 A16 16 0 0 1 48 18'/%3E%3Cpath d='M22 18 A10 10 0 0 1 42 18'/%3E%3Cpath d='M28 18 A4 4 0 0 1 36 18'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat:repeat-x;
+  background-position:center bottom;
+}
+
+
+.practice-row{margin:2.6rem 0 0;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap}
+.practice-row svg{width:58px;height:58px;flex:none}
+.practice-row .caption{font-family:var(--hand);color:var(--pencil);font-size:.95rem;
+  margin-left:.8rem;transform:rotate(-1deg);padding-bottom:.5rem}
+
+.colophon{margin:2.5rem 0 0;padding-top:1.8rem;
+  display:flex;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;position:relative;
+  font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.colophon::before{content:"";position:absolute;left:.6rem;right:2.4rem;top:0;height:1px;background:var(--hairline)}
+.colophon a{color:var(--faint);text-decoration:none}
+.colophon a:hover{color:var(--vermilion)}
+.colophon ul{list-style:none;margin:0;padding:0;display:flex;gap:1.4rem;flex-wrap:wrap}
+
+/* ------------------------------------------------------------ RESPONSIVE */
+@media (max-width:620px){
+  .piece{grid-template-columns:1fr;gap:.4rem}
+  .piece time{padding-top:0}
+  .pull{grid-template-columns:1fr;gap:1rem}
+  .pull .vertical{writing-mode:horizontal-tb;max-height:none;letter-spacing:.12em}
+}
+@media (max-width:520px){
+  .role{font-size:.76rem;letter-spacing:.09em}
+  .rail{gap:1.1rem 1.3rem;margin-top:2.4rem}
+  .masthead{gap:1.2rem}
+  .seal{width:62px;height:62px}
+}
+
+/* The washes are decorative and the transitions are slight, but honour the
+   preference anyway. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+
+@media print{
+  .page::before,.brush,.practice-row{display:none}
+  body{background:#fff;color:#000}
+}
+
+body{padding:0}
+.sheet{max-width:66rem;margin:0 auto;padding:1.6rem 2rem 2.5rem}
+.sheet > h1{font-family:var(--sans);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--faint);font-weight:400;margin:0 0 .4rem}
+.sheet > .intro{color:var(--ink-soft);font-size:.84rem;max-width:40rem;margin:0 0 1.6rem;line-height:1.6}
+.study{margin:0 0 1.2rem}
+.study > h2{font-family:var(--sans);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--vermilion);font-weight:400;margin:0 0 .2rem}
+.rung{padding:.55rem 0;border-top:1px solid var(--hairline);
+  display:grid;grid-template-columns:9.5rem 1fr;gap:.2rem 1.5rem;align-items:start}
+.rung .len{font-family:var(--sans);font-size:.66rem;letter-spacing:.1em;color:var(--faint);padding-top:.5rem}
+.rung .note{grid-column:2;font-family:var(--sans);font-size:.66rem;color:var(--faint);letter-spacing:.02em}
+.rung .mark{min-width:0}
+/* True masthead type: the earlier study shrank the wordmark for compactness,
+   which quietly flattered every stroke's length against the name it underlines
+   — the exact relationship being judged here. */
+.rung .wordmark{font-size:2.1rem;margin:0;font-weight:400;letter-spacing:.06em;line-height:1.2}
+.rung .reading{display:block;font-family:var(--jp);font-size:.86rem;letter-spacing:.1em;
+  color:var(--ink-soft);margin-top:.25rem}
+/* width:auto is load-bearing. site.css sets .brush{width:min(28rem,100%)}, and
+   without overriding it every length below renders at 28rem — the SVGs differ,
+   the rendered marks do not, and the whole ladder silently shows one length
+   five times. auto on a replaced element resolves to its intrinsic width, which
+   is the width attribute each stroke was generated at. */
+.rung .brush{display:block;width:auto;height:auto;max-width:100%;margin:.4rem 0 0 -.75rem}
+</style>
+</head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="f-tucked-0" x="-20%" y="-70%" width="140%" height="240%">
+      <feTurbulence type="fractalNoise" baseFrequency=".06 .014" numOctaves="4" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="f-tucked-1" x="-20%" y="-70%" width="140%" height="240%">
+      <feTurbulence type="fractalNoise" baseFrequency=".06 .014" numOctaves="4" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="f-tucked-2" x="-20%" y="-70%" width="140%" height="240%">
+      <feTurbulence type="fractalNoise" baseFrequency=".06 .014" numOctaves="4" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="f-tucked-3" x="-20%" y="-70%" width="140%" height="240%">
+      <feTurbulence type="fractalNoise" baseFrequency=".06 .014" numOctaves="4" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="f-tucked-4" x="-20%" y="-70%" width="140%" height="240%">
+      <feTurbulence type="fractalNoise" baseFrequency=".06 .014" numOctaves="4" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="f-doubled-0" x="-20%" y="-70%" width="140%" height="240%">
+      <feTurbulence type="fractalNoise" baseFrequency=".062 .014" numOctaves="4" seed="151" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="f-doubled-1" x="-20%" y="-70%" width="140%" height="240%">
+      <feTurbulence type="fractalNoise" baseFrequency=".062 .014" numOctaves="4" seed="151" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="f-doubled-2" x="-20%" y="-70%" width="140%" height="240%">
+      <feTurbulence type="fractalNoise" baseFrequency=".062 .014" numOctaves="4" seed="151" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="f-doubled-3" x="-20%" y="-70%" width="140%" height="240%">
+      <feTurbulence type="fractalNoise" baseFrequency=".062 .014" numOctaves="4" seed="151" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="f-doubled-4" x="-20%" y="-70%" width="140%" height="240%">
+      <feTurbulence type="fractalNoise" baseFrequency=".062 .014" numOctaves="4" seed="151" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+</defs></svg>
+<div class="sheet">
+  <h1>Masthead stroke — how long?</h1>
+  <p class="intro">Two of the stronger options at five lengths, with the wordmark and its reading
+  at real masthead size so the stroke-to-name relationship is honest. Length stretches the travel
+  of the brush, not the brush: the mark gets finer as it gets longer, the way it would on paper.
+  All start 11px left of the M.</p>
+
+  <section class="study">
+    <h2>Tucked entry, lifted exit</h2>
+    
+    <div class="rung">
+      <span class="len">Current — 28rem</span>
+      <div class="mark">
+        <h3 class="wordmark">Michael <span class="mid">Toshiro</span> Omoto</h3>
+        <span class="reading" lang="ja">大本　マイケル　敏郎</span>
+        <svg class="brush" width="448" height="26" viewBox="0 0 448 26" aria-hidden="true">
+      <g transform="translate(-13.3 0)">
+      <g style="mix-blend-mode:var(--wash-blend)" filter="url(#f-tucked-0)" opacity=".82">
+      <path d="M14.3 16.9L16.9 17.8L19.5 18.1L22.1 18.4L24.8 18.6L27.4 18.7L30.0 18.8L32.6 19.0L35.3 19.1L37.9 19.1L40.5 19.2L43.2 19.3L45.9 19.3L48.5 19.4L51.2 19.4L53.9 19.5L56.6 19.5L59.3 19.5L62.0 19.6L64.7 19.6L67.5 19.6L70.2 19.6L72.9 19.7L75.7 19.7L78.4 19.7L81.2 19.7L83.9 19.7L86.7 19.6L89.5 19.6L92.2 19.6L95.0 19.6L97.8 19.6L100.6 19.6L103.4 19.5L106.2 19.5L109.0 19.5L111.8 19.5L114.6 19.5L117.5 19.5L120.3 19.5L123.1 19.5L126.0 19.6L128.8 19.6L131.7 19.6L134.5 19.6L137.4 19.6L140.2 19.5L143.1 19.5L146.0 19.4L148.8 19.4L151.7 19.3L154.6 19.2L157.5 19.1L160.3 19.0L163.2 18.9L166.1 18.8L169.0 18.7L171.9 18.6L174.8 18.6L177.7 18.5L180.6 18.4L183.5 18.3L186.4 18.2L189.3 18.0L192.2 17.9L195.1 17.8L198.0 17.6L200.9 17.5L203.9 17.4L206.8 17.4L209.7 17.3L212.6 17.3L215.5 17.3L218.5 17.3L221.4 17.3L224.3 17.3L227.2 17.3L230.1 17.4L233.1 17.4L236.0 17.3L238.9 17.3L241.8 17.2L244.7 17.2L247.7 17.1L250.6 17.1L253.5 17.0L256.4 16.9L259.3 16.9L262.3 16.8L265.2 16.8L268.1 16.7L271.0 16.6L273.9 16.6L276.8 16.5L279.7 16.4L282.6 16.3L285.5 16.2L288.4 16.1L291.3 16.0L294.2 15.9L297.1 15.8L300.0 15.7L302.9 15.6L305.8 15.5L308.7 15.4L311.5 15.3L314.4 15.2L317.3 15.1L320.2 15.1L323.0 15.0L325.9 14.9L328.7 14.8L331.6 14.7L334.4 14.6L337.3 14.5L340.1 14.4L343.0 14.3L345.8 14.2L348.6 14.1L351.4 14.1L354.3 14.0L357.1 13.9L359.9 13.8L362.7 13.8L365.5 13.7L368.3 13.6L371.0 13.5L373.8 13.4L376.6 13.2L379.4 13.1L382.1 12.9L384.9 12.8L387.6 12.6L390.4 12.5L393.1 12.3L395.8 12.1L398.5 12.0L401.3 11.8L404.0 11.7L406.7 11.6L409.3 11.4L412.0 11.3L414.7 11.2L417.4 11.0L420.0 10.9L422.7 10.7L425.3 10.6L428.0 10.5L430.6 10.3L433.2 10.1L435.8 9.9L435.7 7.1L433.1 7.0L430.5 7.0L427.9 7.0L425.2 6.9L422.6 6.9L419.9 6.9L417.3 6.9L414.6 6.9L411.9 6.8L409.3 6.8L406.6 6.8L403.9 6.8L401.2 6.7L398.4 6.7L395.7 6.6L393.0 6.5L390.3 6.5L387.5 6.4L384.8 6.3L382.0 6.3L379.3 6.2L376.5 6.1L373.7 6.1L370.9 6.0L368.2 6.0L365.4 6.0L362.6 5.9L359.8 5.9L357.0 5.9L354.2 5.9L351.4 5.9L348.5 5.9L345.7 5.9L342.9 5.8L340.0 5.8L337.2 5.7L334.4 5.7L331.5 5.6L328.7 5.6L325.8 5.6L322.9 5.5L320.1 5.5L317.2 5.4L314.3 5.4L311.5 5.3L308.6 5.3L305.7 5.2L302.8 5.2L299.9 5.1L297.0 5.1L294.2 5.0L291.3 4.9L288.4 4.9L285.5 4.8L282.6 4.7L279.7 4.7L276.7 4.6L273.8 4.6L270.9 4.5L268.0 4.5L265.1 4.5L262.2 4.5L259.3 4.4L256.4 4.4L253.4 4.4L250.5 4.4L247.6 4.3L244.7 4.3L241.7 4.3L238.8 4.3L235.9 4.3L233.0 4.3L230.1 4.3L227.1 4.4L224.2 4.4L221.3 4.5L218.4 4.5L215.4 4.6L212.5 4.6L209.6 4.6L206.7 4.6L203.8 4.6L200.8 4.6L197.9 4.5L195.0 4.4L192.1 4.3L189.2 4.3L186.3 4.2L183.4 4.1L180.4 4.1L177.5 4.0L174.6 4.0L171.7 4.0L168.8 4.0L165.9 4.0L163.0 4.0L160.2 4.0L157.3 3.9L154.4 3.9L151.5 3.9L148.6 3.9L145.7 3.9L142.9 3.9L140.0 3.9L137.1 4.0L134.3 4.1L131.4 4.2L128.6 4.3L125.7 4.4L122.9 4.5L120.0 4.6L117.2 4.8L114.4 4.9L111.5 5.0L108.7 5.1L105.9 5.2L103.1 5.3L100.3 5.4L97.5 5.5L94.7 5.6L91.9 5.7L89.1 5.9L86.3 6.0L83.6 6.1L80.8 6.3L78.0 6.4L75.3 6.6L72.5 6.7L69.8 6.9L67.1 7.1L64.3 7.3L61.6 7.5L58.9 7.7L56.2 7.9L53.5 8.2L50.8 8.4L48.1 8.7L45.5 8.9L42.8 9.2L40.2 9.4L37.5 9.7L34.9 10.0L32.2 10.3L29.6 10.7L27.0 11.1L24.4 11.4L21.8 11.9L19.3 12.4L16.7 13.0L14.2 14.1Z" fill="currentColor"/>
+      <g stroke="var(--paper)" fill="none" stroke-linecap="round"><path d="M276.8 13.2L279.5 13.2L282.2 13.1L284.9 13.1L287.5 13.0L290.2 13.0L292.9 12.9L295.6 12.9L298.3 12.8L300.9 12.8L303.6 12.7L306.3 12.7L308.9 12.6L311.6 12.6L314.3 12.5L316.9 12.5L319.6 12.4L322.2 12.4L324.9 12.3L327.5 12.3L330.1 12.2L332.8 12.2L335.4 12.1L338.0 12.1L340.7 12.0L343.3 12.0L345.9 11.9L348.5 11.9L351.1 11.8L353.7 11.8L356.3 11.7L358.9 11.7L361.5 11.6L364.1 11.6L366.7 11.5L369.3 11.5L371.9 11.4L374.4 11.3L377.0 11.3L379.5 11.2L382.1 11.1L384.6 11.0L387.2 10.9L389.7 10.8L392.2 10.7L394.8 10.7L397.3 10.6L399.8 10.5L402.3 10.4L404.8 10.3L407.3 10.2L409.8 10.1L412.3 10.1L414.7 10.0L417.2 9.9L419.7 9.8L422.1 9.7L424.6 9.6L427.0 9.5L429.5 9.4L431.9 9.3" stroke-width="1.4" stroke-dasharray="9 5 3 8 2 12"/><path d="M320.1 8.8L322.0 8.8L324.0 8.8L325.9 8.8L327.8 8.8L329.8 8.8L331.7 8.8L333.6 8.8L335.5 8.8L337.4 8.8L339.4 8.8L341.3 8.8L343.2 8.8L345.1 8.8L347.0 8.8L348.9 8.8L350.8 8.8L352.7 8.7L354.6 8.7L356.5 8.7L358.4 8.7L360.3 8.7L362.2 8.7L364.1 8.7L366.0 8.7L367.9 8.6L369.7 8.6L371.6 8.6L373.5 8.6L375.4 8.6L377.2 8.6L379.1 8.6L381.0 8.6L382.8 8.6L384.7 8.6L386.5 8.6L388.4 8.6L390.2 8.6L392.1 8.6L393.9 8.6L395.8 8.5L397.6 8.5L399.4 8.5L401.3 8.5L403.1 8.5L404.9 8.5L406.7 8.5L408.5 8.4L410.4 8.4L412.2 8.4L414.0 8.4L415.8 8.3L417.6 8.3L419.4 8.3L421.2 8.3L423.0 8.2L424.7 8.2L426.5 8.2L428.3 8.2L430.1 8.1L431.8 8.1" stroke-width="1.1" stroke-dasharray="5 6 3 9"/></g>
+      </g>
+      </g>
+    </svg>
+      </div>
+      <span class="note">Ends about 100px past the name.</span>
+    </div>
+    <div class="rung">
+      <span class="len">34rem</span>
+      <div class="mark">
+        <h3 class="wordmark">Michael <span class="mid">Toshiro</span> Omoto</h3>
+        <span class="reading" lang="ja">大本　マイケル　敏郎</span>
+        <svg class="brush" width="544" height="26" viewBox="0 0 544 26" aria-hidden="true">
+      <g transform="translate(-16.3 0)">
+      <g style="mix-blend-mode:var(--wash-blend)" filter="url(#f-tucked-1)" opacity=".82">
+      <path d="M17.4 16.9L20.5 17.8L23.7 18.1L26.8 18.4L30.0 18.6L33.2 18.7L36.3 18.8L39.5 19.0L42.7 19.1L45.9 19.1L49.2 19.2L52.4 19.3L55.6 19.3L58.9 19.4L62.1 19.4L65.4 19.5L68.7 19.5L71.9 19.5L75.2 19.6L78.5 19.6L81.8 19.6L85.1 19.6L88.5 19.7L91.8 19.7L95.1 19.7L98.5 19.7L101.8 19.7L105.2 19.6L108.6 19.6L111.9 19.6L115.3 19.6L118.7 19.6L122.1 19.6L125.5 19.5L128.9 19.5L132.3 19.5L135.7 19.5L139.2 19.5L142.6 19.5L146.0 19.5L149.5 19.5L152.9 19.6L156.4 19.6L159.8 19.6L163.3 19.6L166.8 19.6L170.2 19.5L173.7 19.5L177.2 19.4L180.7 19.4L184.2 19.3L187.7 19.2L191.2 19.1L194.7 19.0L198.2 18.9L201.7 18.8L205.2 18.7L208.7 18.6L212.2 18.6L215.7 18.5L219.3 18.4L222.8 18.3L226.3 18.2L229.8 18.0L233.4 17.9L236.9 17.8L240.5 17.6L244.0 17.5L247.5 17.4L251.1 17.4L254.6 17.3L258.2 17.3L261.7 17.3L265.3 17.3L268.8 17.3L272.3 17.3L275.9 17.3L279.4 17.4L283.0 17.4L286.5 17.3L290.1 17.3L293.6 17.2L297.2 17.2L300.7 17.1L304.3 17.1L307.8 17.0L311.4 16.9L314.9 16.9L318.4 16.8L322.0 16.8L325.5 16.7L329.1 16.6L332.6 16.6L336.1 16.5L339.7 16.4L343.2 16.3L346.7 16.2L350.2 16.1L353.7 16.0L357.3 15.9L360.8 15.8L364.3 15.7L367.8 15.6L371.3 15.5L374.8 15.4L378.3 15.3L381.8 15.2L385.3 15.1L388.7 15.1L392.2 15.0L395.7 14.9L399.2 14.8L402.6 14.7L406.1 14.6L409.5 14.5L413.0 14.4L416.4 14.3L419.9 14.2L423.3 14.1L426.7 14.1L430.2 14.0L433.6 13.9L437.0 13.8L440.4 13.8L443.8 13.7L447.2 13.6L450.5 13.5L453.9 13.4L457.3 13.2L460.6 13.1L464.0 12.9L467.3 12.8L470.7 12.6L474.0 12.5L477.3 12.3L480.6 12.1L483.9 12.0L487.2 11.8L490.5 11.7L493.8 11.6L497.0 11.4L500.3 11.3L503.6 11.2L506.8 11.0L510.0 10.9L513.2 10.7L516.5 10.6L519.7 10.5L522.8 10.3L526.0 10.1L529.2 9.9L529.1 7.1L526.0 7.0L522.8 7.0L519.6 7.0L516.4 6.9L513.2 6.9L510.0 6.9L506.7 6.9L503.5 6.9L500.2 6.8L497.0 6.8L493.7 6.8L490.4 6.8L487.1 6.7L483.8 6.7L480.5 6.6L477.2 6.5L473.9 6.5L470.6 6.4L467.2 6.3L463.9 6.3L460.6 6.2L457.2 6.1L453.8 6.1L450.5 6.0L447.1 6.0L443.7 6.0L440.3 5.9L436.9 5.9L433.5 5.9L430.1 5.9L426.7 5.9L423.2 5.9L419.8 5.9L416.4 5.8L412.9 5.8L409.5 5.7L406.0 5.7L402.6 5.6L399.1 5.6L395.6 5.6L392.2 5.5L388.7 5.5L385.2 5.4L381.7 5.4L378.2 5.3L374.7 5.3L371.2 5.2L367.7 5.2L364.2 5.1L360.7 5.1L357.2 5.0L353.7 4.9L350.2 4.9L346.6 4.8L343.1 4.7L339.6 4.7L336.1 4.6L332.5 4.6L329.0 4.5L325.5 4.5L321.9 4.5L318.4 4.5L314.8 4.4L311.3 4.4L307.8 4.4L304.2 4.4L300.7 4.3L297.1 4.3L293.6 4.3L290.0 4.3L286.5 4.3L282.9 4.3L279.4 4.3L275.8 4.4L272.3 4.4L268.7 4.5L265.2 4.5L261.6 4.6L258.1 4.6L254.5 4.6L251.0 4.6L247.4 4.6L243.9 4.6L240.4 4.5L236.8 4.4L233.3 4.3L229.7 4.3L226.2 4.2L222.7 4.1L219.1 4.1L215.6 4.0L212.1 4.0L208.6 4.0L205.0 4.0L201.5 4.0L198.0 4.0L194.5 4.0L191.0 3.9L187.5 3.9L184.0 3.9L180.5 3.9L177.0 3.9L173.5 3.9L170.0 3.9L166.6 4.0L163.1 4.1L159.6 4.2L156.2 4.3L152.7 4.4L149.2 4.5L145.8 4.6L142.4 4.8L138.9 4.9L135.5 5.0L132.1 5.1L128.6 5.2L125.2 5.3L121.8 5.4L118.4 5.5L115.0 5.6L111.6 5.7L108.3 5.9L104.9 6.0L101.5 6.1L98.2 6.3L94.8 6.4L91.5 6.6L88.2 6.7L84.8 6.9L81.5 7.1L78.2 7.3L74.9 7.5L71.6 7.7L68.3 7.9L65.1 8.2L61.8 8.4L58.5 8.7L55.3 8.9L52.1 9.2L48.8 9.4L45.6 9.7L42.4 10.0L39.2 10.3L36.1 10.7L32.9 11.1L29.7 11.4L26.6 11.9L23.4 12.4L20.3 13.0L17.3 14.1Z" fill="currentColor"/>
+      <g stroke="var(--paper)" fill="none" stroke-linecap="round"><path d="M336.1 13.2L339.4 13.2L342.6 13.1L345.9 13.1L349.2 13.0L352.4 13.0L355.7 12.9L358.9 12.9L362.2 12.8L365.4 12.8L368.6 12.7L371.9 12.7L375.1 12.6L378.4 12.6L381.6 12.5L384.8 12.5L388.0 12.4L391.3 12.4L394.5 12.3L397.7 12.3L400.9 12.2L404.1 12.2L407.3 12.1L410.5 12.1L413.7 12.0L416.8 12.0L420.0 11.9L423.2 11.9L426.4 11.8L429.5 11.8L432.7 11.7L435.8 11.7L439.0 11.6L442.1 11.6L445.3 11.5L448.4 11.5L451.5 11.4L454.6 11.3L457.8 11.3L460.9 11.2L464.0 11.1L467.1 11.0L470.1 10.9L473.2 10.8L476.3 10.7L479.4 10.7L482.4 10.6L485.5 10.5L488.5 10.4L491.5 10.3L494.6 10.2L497.6 10.1L500.6 10.1L503.6 10.0L506.6 9.9L509.6 9.8L512.6 9.7L515.6 9.6L518.5 9.5L521.5 9.4L524.4 9.3" stroke-width="1.4" stroke-dasharray="9 5 3 8 2 12"/><path d="M388.7 8.8L391.1 8.8L393.4 8.8L395.7 8.8L398.1 8.8L400.4 8.8L402.8 8.8L405.1 8.8L407.4 8.8L409.8 8.8L412.1 8.8L414.4 8.8L416.7 8.8L419.1 8.8L421.4 8.8L423.7 8.8L426.0 8.8L428.3 8.7L430.6 8.7L432.9 8.7L435.2 8.7L437.5 8.7L439.8 8.7L442.1 8.7L444.4 8.7L446.7 8.6L449.0 8.6L451.2 8.6L453.5 8.6L455.8 8.6L458.1 8.6L460.3 8.6L462.6 8.6L464.9 8.6L467.1 8.6L469.4 8.6L471.6 8.6L473.9 8.6L476.1 8.6L478.3 8.6L480.6 8.5L482.8 8.5L485.0 8.5L487.2 8.5L489.5 8.5L491.7 8.5L493.9 8.5L496.1 8.4L498.3 8.4L500.5 8.4L502.7 8.4L504.9 8.3L507.1 8.3L509.3 8.3L511.4 8.3L513.6 8.2L515.8 8.2L517.9 8.2L520.1 8.2L522.2 8.1L524.4 8.1" stroke-width="1.1" stroke-dasharray="5 6 3 9"/></g>
+      </g>
+      </g>
+    </svg>
+      </div>
+      <span class="note">Clears the ruby reading beneath the name.</span>
+    </div>
+    <div class="rung">
+      <span class="len">40rem</span>
+      <div class="mark">
+        <h3 class="wordmark">Michael <span class="mid">Toshiro</span> Omoto</h3>
+        <span class="reading" lang="ja">大本　マイケル　敏郎</span>
+        <svg class="brush" width="640" height="26" viewBox="0 0 640 26" aria-hidden="true">
+      <g transform="translate(-19.4 0)">
+      <g style="mix-blend-mode:var(--wash-blend)" filter="url(#f-tucked-2)" opacity=".82">
+      <path d="M20.4 16.9L24.1 17.8L27.8 18.1L31.5 18.4L35.2 18.6L39.0 18.7L42.7 18.8L46.5 19.0L50.2 19.1L54.0 19.1L57.8 19.2L61.6 19.3L65.4 19.3L69.2 19.4L73.0 19.4L76.9 19.5L80.7 19.5L84.6 19.5L88.5 19.6L92.3 19.6L96.2 19.6L100.1 19.6L104.0 19.7L107.9 19.7L111.9 19.7L115.8 19.7L119.7 19.7L123.7 19.6L127.7 19.6L131.6 19.6L135.6 19.6L139.6 19.6L143.6 19.6L147.6 19.5L151.6 19.5L155.6 19.5L159.6 19.5L163.7 19.5L167.7 19.5L171.8 19.5L175.8 19.5L179.9 19.6L183.9 19.6L188.0 19.6L192.1 19.6L196.2 19.6L200.2 19.5L204.3 19.5L208.4 19.4L212.5 19.4L216.6 19.3L220.7 19.2L224.9 19.1L229.0 19.0L233.1 18.9L237.2 18.8L241.4 18.7L245.5 18.6L249.6 18.6L253.8 18.5L257.9 18.4L262.1 18.3L266.2 18.2L270.4 18.0L274.5 17.9L278.7 17.8L282.9 17.6L287.0 17.5L291.2 17.4L295.4 17.4L299.5 17.3L303.7 17.3L307.9 17.3L312.0 17.3L316.2 17.3L320.4 17.3L324.6 17.3L328.7 17.4L332.9 17.4L337.1 17.3L341.3 17.3L345.4 17.2L349.6 17.2L353.8 17.1L358.0 17.1L362.1 17.0L366.3 16.9L370.5 16.9L374.6 16.8L378.8 16.8L383.0 16.7L387.1 16.6L391.3 16.6L395.4 16.5L399.6 16.4L403.7 16.3L407.9 16.2L412.0 16.1L416.2 16.0L420.3 15.9L424.4 15.8L428.6 15.7L432.7 15.6L436.8 15.5L440.9 15.4L445.0 15.3L449.1 15.2L453.2 15.1L457.3 15.1L461.4 15.0L465.5 14.9L469.6 14.8L473.7 14.7L477.7 14.6L481.8 14.5L485.9 14.4L489.9 14.3L494.0 14.2L498.0 14.1L502.0 14.1L506.0 14.0L510.1 13.9L514.1 13.8L518.1 13.8L522.1 13.7L526.1 13.6L530.0 13.5L534.0 13.4L538.0 13.2L541.9 13.1L545.9 12.9L549.8 12.8L553.7 12.6L557.6 12.5L561.5 12.3L565.4 12.1L569.3 12.0L573.2 11.8L577.1 11.7L580.9 11.6L584.7 11.4L588.6 11.3L592.4 11.2L596.2 11.0L600.0 10.9L603.8 10.7L607.6 10.6L611.3 10.5L615.1 10.3L618.8 10.1L622.6 9.9L622.5 7.1L618.8 7.0L615.0 7.0L611.3 7.0L607.5 6.9L603.7 6.9L600.0 6.9L596.2 6.9L592.3 6.9L588.5 6.8L584.7 6.8L580.8 6.8L577.0 6.8L573.1 6.7L569.2 6.7L565.4 6.6L561.5 6.5L557.6 6.5L553.6 6.4L549.7 6.3L545.8 6.3L541.8 6.2L537.9 6.1L533.9 6.1L530.0 6.0L526.0 6.0L522.0 6.0L518.0 5.9L514.0 5.9L510.0 5.9L506.0 5.9L502.0 5.9L497.9 5.9L493.9 5.9L489.9 5.8L485.8 5.8L481.8 5.7L477.7 5.7L473.6 5.6L469.5 5.6L465.5 5.6L461.4 5.5L457.3 5.5L453.2 5.4L449.1 5.4L445.0 5.3L440.9 5.3L436.8 5.2L432.6 5.2L428.5 5.1L424.4 5.1L420.2 5.0L416.1 4.9L412.0 4.9L407.8 4.8L403.7 4.7L399.5 4.7L395.4 4.6L391.2 4.6L387.1 4.5L382.9 4.5L378.7 4.5L374.6 4.5L370.4 4.4L366.2 4.4L362.1 4.4L357.9 4.4L353.7 4.3L349.6 4.3L345.4 4.3L341.2 4.3L337.0 4.3L332.9 4.3L328.7 4.3L324.5 4.4L320.3 4.4L316.2 4.5L312.0 4.5L307.8 4.6L303.6 4.6L299.5 4.6L295.3 4.6L291.1 4.6L287.0 4.6L282.8 4.5L278.6 4.4L274.5 4.3L270.3 4.3L266.1 4.2L262.0 4.1L257.8 4.1L253.7 4.0L249.5 4.0L245.4 4.0L241.3 4.0L237.1 4.0L233.0 4.0L228.9 4.0L224.7 3.9L220.6 3.9L216.5 3.9L212.4 3.9L208.3 3.9L204.2 3.9L200.1 3.9L196.0 4.0L191.9 4.1L187.8 4.2L183.7 4.3L179.7 4.4L175.6 4.5L171.6 4.6L167.5 4.8L163.5 4.9L159.4 5.0L155.4 5.1L151.4 5.2L147.4 5.3L143.4 5.4L139.4 5.5L135.4 5.6L131.4 5.7L127.4 5.9L123.5 6.0L119.5 6.1L115.5 6.3L111.6 6.4L107.7 6.6L103.8 6.7L99.8 6.9L95.9 7.1L92.1 7.3L88.2 7.5L84.3 7.7L80.4 7.9L76.6 8.2L72.8 8.4L68.9 8.7L65.1 8.9L61.3 9.2L57.5 9.4L53.7 9.7L50.0 10.0L46.2 10.3L42.5 10.7L38.7 11.0L35.0 11.4L31.3 11.9L27.6 12.4L24.0 13.0L20.3 14.1Z" fill="currentColor"/>
+      <g stroke="var(--paper)" fill="none" stroke-linecap="round"><path d="M395.4 13.2L399.3 13.2L403.1 13.1L406.9 13.1L410.8 13.0L414.6 13.0L418.4 12.9L422.2 12.9L426.1 12.8L429.9 12.8L433.7 12.7L437.5 12.7L441.3 12.6L445.1 12.6L448.9 12.5L452.7 12.5L456.5 12.4L460.3 12.4L464.1 12.3L467.8 12.3L471.6 12.2L475.4 12.2L479.2 12.1L482.9 12.1L486.7 12.0L490.4 12.0L494.1 11.9L497.9 11.9L501.6 11.8L505.3 11.8L509.0 11.7L512.8 11.7L516.5 11.6L520.2 11.6L523.8 11.5L527.5 11.5L531.2 11.4L534.9 11.3L538.5 11.3L542.2 11.2L545.8 11.1L549.5 11.0L553.1 10.9L556.7 10.8L560.3 10.7L563.9 10.7L567.5 10.6L571.1 10.5L574.7 10.4L578.3 10.3L581.8 10.2L585.4 10.1L588.9 10.1L592.5 10.0L596.0 9.9L599.5 9.8L603.0 9.7L606.5 9.6L610.0 9.5L613.5 9.4L617.0 9.3" stroke-width="1.4" stroke-dasharray="9 5 3 8 2 12"/><path d="M457.3 8.8L460.1 8.8L462.8 8.8L465.6 8.8L468.3 8.8L471.1 8.8L473.8 8.8L476.6 8.8L479.3 8.8L482.1 8.8L484.8 8.8L487.5 8.8L490.3 8.8L493.0 8.8L495.7 8.8L498.5 8.8L501.2 8.8L503.9 8.7L506.6 8.7L509.3 8.7L512.0 8.7L514.7 8.7L517.4 8.7L520.1 8.7L522.8 8.7L525.5 8.6L528.2 8.6L530.9 8.6L533.6 8.6L536.2 8.6L538.9 8.6L541.6 8.6L544.2 8.6L546.9 8.6L549.5 8.6L552.2 8.6L554.8 8.6L557.5 8.6L560.1 8.6L562.8 8.6L565.4 8.5L568.0 8.5L570.6 8.5L573.2 8.5L575.8 8.5L578.5 8.5L581.1 8.5L583.7 8.4L586.2 8.4L588.8 8.4L591.4 8.4L594.0 8.3L596.6 8.3L599.1 8.3L601.7 8.3L604.2 8.2L606.8 8.2L609.3 8.2L611.9 8.2L614.4 8.1L616.9 8.1" stroke-width="1.1" stroke-dasharray="5 6 3 9"/></g>
+      </g>
+      </g>
+    </svg>
+      </div>
+      <span class="note">Past the reading measure; reads as a rule under the whole block.</span>
+    </div>
+    <div class="rung">
+      <span class="len">46rem</span>
+      <div class="mark">
+        <h3 class="wordmark">Michael <span class="mid">Toshiro</span> Omoto</h3>
+        <span class="reading" lang="ja">大本　マイケル　敏郎</span>
+        <svg class="brush" width="736" height="26" viewBox="0 0 736 26" aria-hidden="true">
+      <g transform="translate(-22.4 0)">
+      <g style="mix-blend-mode:var(--wash-blend)" filter="url(#f-tucked-3)" opacity=".82">
+      <path d="M23.5 16.9L27.7 17.8L32.0 18.1L36.2 18.4L40.5 18.6L44.8 18.7L49.1 18.8L53.4 19.0L57.7 19.1L62.1 19.1L66.4 19.2L70.8 19.3L75.2 19.3L79.5 19.4L84.0 19.4L88.4 19.5L92.8 19.5L97.2 19.5L101.7 19.6L106.1 19.6L110.6 19.6L115.1 19.6L119.6 19.7L124.1 19.7L128.6 19.7L133.1 19.7L137.7 19.7L142.2 19.6L146.8 19.6L151.3 19.6L155.9 19.6L160.5 19.6L165.1 19.6L169.7 19.5L174.3 19.5L178.9 19.5L183.6 19.5L188.2 19.5L192.8 19.5L197.5 19.5L202.2 19.5L206.8 19.6L211.5 19.6L216.2 19.6L220.9 19.6L225.6 19.6L230.3 19.5L235.0 19.5L239.7 19.4L244.4 19.4L249.1 19.3L253.8 19.2L258.6 19.1L263.3 19.0L268.1 18.9L272.8 18.8L277.6 18.7L282.3 18.6L287.1 18.6L291.8 18.5L296.6 18.4L301.4 18.3L306.2 18.2L310.9 18.0L315.7 17.9L320.5 17.8L325.3 17.6L330.1 17.5L334.9 17.4L339.7 17.4L344.5 17.3L349.2 17.3L354.0 17.3L358.8 17.3L363.6 17.3L368.4 17.3L373.2 17.3L378.0 17.4L382.8 17.4L387.6 17.3L392.4 17.3L397.2 17.2L402.0 17.2L406.8 17.1L411.6 17.1L416.4 17.0L421.2 16.9L426.0 16.9L430.8 16.8L435.6 16.8L440.4 16.7L445.2 16.6L450.0 16.6L454.7 16.5L459.5 16.4L464.3 16.3L469.1 16.2L473.8 16.1L478.6 16.0L483.3 15.9L488.1 15.8L492.8 15.7L497.6 15.6L502.3 15.5L507.1 15.4L511.8 15.3L516.5 15.2L521.2 15.1L525.9 15.1L530.6 15.0L535.3 14.9L540.0 14.8L544.7 14.7L549.4 14.6L554.1 14.5L558.7 14.4L563.4 14.3L568.0 14.2L572.7 14.1L577.3 14.1L581.9 14.0L586.6 13.9L591.2 13.8L595.8 13.8L600.4 13.7L605.0 13.6L609.5 13.5L614.1 13.4L618.6 13.2L623.2 13.1L627.7 12.9L632.2 12.8L636.8 12.6L641.3 12.5L645.7 12.3L650.2 12.1L654.7 12.0L659.2 11.8L663.6 11.7L668.0 11.6L672.5 11.4L676.9 11.3L681.3 11.2L685.6 11.0L690.0 10.9L694.4 10.7L698.7 10.6L703.0 10.5L707.4 10.3L711.7 10.1L716.0 9.9L715.9 7.1L711.6 7.0L707.3 7.0L703.0 7.0L698.7 6.9L694.3 6.9L690.0 6.9L685.6 6.9L681.2 6.9L676.8 6.8L672.4 6.8L668.0 6.8L663.5 6.8L659.1 6.7L654.6 6.7L650.2 6.6L645.7 6.5L641.2 6.5L636.7 6.4L632.2 6.3L627.7 6.3L623.1 6.2L618.6 6.1L614.0 6.1L609.5 6.0L604.9 6.0L600.3 6.0L595.7 5.9L591.1 5.9L586.5 5.9L581.9 5.9L577.3 5.9L572.6 5.9L568.0 5.9L563.3 5.8L558.7 5.8L554.0 5.7L549.3 5.7L544.7 5.6L540.0 5.6L535.3 5.6L530.6 5.5L525.9 5.5L521.2 5.4L516.5 5.4L511.7 5.3L507.0 5.3L502.3 5.2L497.5 5.2L492.8 5.1L488.0 5.1L483.3 5.0L478.5 4.9L473.8 4.9L469.0 4.8L464.2 4.7L459.5 4.7L454.7 4.6L449.9 4.6L445.1 4.5L440.3 4.5L435.6 4.5L430.8 4.5L426.0 4.4L421.2 4.4L416.4 4.4L411.6 4.4L406.8 4.3L402.0 4.3L397.2 4.3L392.4 4.3L387.6 4.3L382.8 4.3L378.0 4.3L373.2 4.4L368.4 4.4L363.6 4.5L358.8 4.5L354.0 4.6L349.2 4.6L344.4 4.6L339.6 4.6L334.8 4.6L330.0 4.6L325.2 4.5L320.4 4.4L315.6 4.3L310.9 4.3L306.1 4.2L301.3 4.1L296.5 4.1L291.8 4.0L287.0 4.0L282.2 4.0L277.5 4.0L272.7 4.0L267.9 4.0L263.2 4.0L258.5 3.9L253.7 3.9L249.0 3.9L244.3 3.9L239.5 3.9L234.8 3.9L230.1 3.9L225.4 4.0L220.7 4.1L216.0 4.2L211.3 4.3L206.7 4.4L202.0 4.5L197.3 4.6L192.7 4.8L188.0 4.9L183.4 5.0L178.7 5.1L174.1 5.2L169.5 5.3L164.9 5.4L160.3 5.5L155.7 5.6L151.1 5.7L146.6 5.9L142.0 6.0L137.5 6.1L132.9 6.3L128.4 6.4L123.9 6.6L119.4 6.7L114.9 6.9L110.4 7.1L105.9 7.3L101.4 7.5L97.0 7.7L92.5 7.9L88.1 8.2L83.7 8.4L79.3 8.7L74.9 8.9L70.5 9.2L66.2 9.4L61.8 9.7L57.5 10.0L53.2 10.3L48.9 10.7L44.6 11.0L40.3 11.4L36.0 11.9L31.8 12.4L27.6 13.0L23.4 14.1Z" fill="currentColor"/>
+      <g stroke="var(--paper)" fill="none" stroke-linecap="round"><path d="M454.7 13.2L459.1 13.2L463.6 13.1L468.0 13.1L472.4 13.0L476.8 13.0L481.2 12.9L485.6 12.9L490.0 12.8L494.4 12.8L498.8 12.7L503.1 12.7L507.5 12.6L511.9 12.6L516.3 12.5L520.6 12.5L525.0 12.4L529.3 12.4L533.7 12.3L538.0 12.3L542.4 12.2L546.7 12.2L551.0 12.1L555.3 12.1L559.7 12.0L564.0 12.0L568.3 11.9L572.6 11.9L576.8 11.8L581.1 11.8L585.4 11.7L589.7 11.7L593.9 11.6L598.2 11.6L602.4 11.5L606.7 11.5L610.9 11.4L615.1 11.3L619.3 11.3L623.5 11.2L627.7 11.1L631.9 11.0L636.1 10.9L640.2 10.8L644.4 10.7L648.5 10.7L652.7 10.6L656.8 10.5L660.9 10.4L665.0 10.3L669.1 10.2L673.2 10.1L677.3 10.1L681.4 10.0L685.4 9.9L689.5 9.8L693.5 9.7L697.5 9.6L701.5 9.5L705.5 9.4L709.5 9.3" stroke-width="1.4" stroke-dasharray="9 5 3 8 2 12"/><path d="M525.9 8.8L529.1 8.8L532.3 8.8L535.4 8.8L538.6 8.8L541.8 8.8L544.9 8.8L548.1 8.8L551.2 8.8L554.4 8.8L557.5 8.8L560.7 8.8L563.8 8.8L567.0 8.8L570.1 8.8L573.2 8.8L576.4 8.8L579.5 8.7L582.6 8.7L585.7 8.7L588.8 8.7L591.9 8.7L595.1 8.7L598.2 8.7L601.2 8.7L604.3 8.6L607.4 8.6L610.5 8.6L613.6 8.6L616.7 8.6L619.7 8.6L622.8 8.6L625.9 8.6L628.9 8.6L632.0 8.6L635.0 8.6L638.1 8.6L641.1 8.6L644.1 8.6L647.2 8.6L650.2 8.5L653.2 8.5L656.2 8.5L659.2 8.5L662.2 8.5L665.2 8.5L668.2 8.5L671.2 8.4L674.2 8.4L677.2 8.4L680.1 8.4L683.1 8.3L686.0 8.3L689.0 8.3L691.9 8.3L694.9 8.2L697.8 8.2L700.7 8.2L703.7 8.2L706.6 8.1L709.5 8.1" stroke-width="1.1" stroke-dasharray="5 6 3 9"/></g>
+      </g>
+      </g>
+    </svg>
+      </div>
+      <span class="note">Well past the name — the mark becomes the horizontal of the page.</span>
+    </div>
+    <div class="rung">
+      <span class="len">55rem — full column</span>
+      <div class="mark">
+        <h3 class="wordmark">Michael <span class="mid">Toshiro</span> Omoto</h3>
+        <span class="reading" lang="ja">大本　マイケル　敏郎</span>
+        <svg class="brush" width="880" height="26" viewBox="0 0 880 26" aria-hidden="true">
+      <g transform="translate(-27.0 0)">
+      <g style="mix-blend-mode:var(--wash-blend)" filter="url(#f-tucked-4)" opacity=".82">
+      <path d="M28.0 16.9L33.1 17.8L38.2 18.1L43.3 18.4L48.4 18.6L53.5 18.7L58.6 18.8L63.8 19.0L69.0 19.1L74.2 19.1L79.4 19.2L84.6 19.3L89.8 19.3L95.1 19.4L100.3 19.4L105.6 19.5L110.9 19.5L116.2 19.5L121.5 19.6L126.9 19.6L132.2 19.6L137.6 19.6L142.9 19.7L148.3 19.7L153.7 19.7L159.1 19.7L164.6 19.7L170.0 19.6L175.5 19.6L180.9 19.6L186.4 19.6L191.9 19.6L197.4 19.6L202.9 19.5L208.4 19.5L213.9 19.5L219.4 19.5L225.0 19.5L230.5 19.5L236.1 19.5L241.7 19.5L247.3 19.6L252.8 19.6L258.4 19.6L264.0 19.6L269.7 19.6L275.3 19.5L280.9 19.5L286.5 19.4L292.2 19.4L297.8 19.3L303.5 19.2L309.1 19.1L314.8 19.0L320.5 18.9L326.2 18.8L331.8 18.7L337.5 18.6L343.2 18.6L348.9 18.5L354.6 18.4L360.3 18.3L366.0 18.2L371.8 18.0L377.5 17.9L383.2 17.8L388.9 17.6L394.6 17.5L400.4 17.4L406.1 17.4L411.8 17.3L417.6 17.3L423.3 17.3L429.0 17.3L434.8 17.3L440.5 17.3L446.3 17.3L452.0 17.4L457.7 17.4L463.5 17.3L469.2 17.3L475.0 17.2L480.7 17.2L486.4 17.1L492.2 17.1L497.9 17.0L503.6 16.9L509.4 16.9L515.1 16.8L520.8 16.8L526.5 16.7L532.3 16.6L538.0 16.6L543.7 16.5L549.4 16.4L555.1 16.3L560.8 16.2L566.5 16.1L572.2 16.0L577.9 15.9L583.6 15.8L589.3 15.7L594.9 15.6L600.6 15.5L606.2 15.4L611.9 15.3L617.5 15.2L623.2 15.1L628.8 15.1L634.5 15.0L640.1 14.9L645.7 14.8L651.3 14.7L656.9 14.6L662.5 14.5L668.0 14.4L673.6 14.3L679.2 14.2L684.7 14.1L690.3 14.1L695.8 14.0L701.3 13.9L706.8 13.8L712.3 13.8L717.8 13.7L723.3 13.6L728.8 13.5L734.2 13.4L739.7 13.2L745.1 13.1L750.5 12.9L755.9 12.8L761.3 12.6L766.7 12.5L772.1 12.3L777.4 12.1L782.8 12.0L788.1 11.8L793.4 11.7L798.7 11.6L804.0 11.4L809.3 11.3L814.5 11.2L819.8 11.0L825.0 10.9L830.2 10.7L835.4 10.6L840.6 10.5L845.7 10.3L850.9 10.1L856.0 9.9L856.0 7.1L850.9 7.0L845.7 7.0L840.5 7.0L835.4 6.9L830.2 6.9L825.0 6.9L819.7 6.9L814.5 6.9L809.2 6.8L804.0 6.8L798.7 6.8L793.4 6.8L788.1 6.7L782.7 6.7L777.4 6.6L772.0 6.5L766.7 6.5L761.3 6.4L755.9 6.3L750.5 6.3L745.1 6.2L739.6 6.1L734.2 6.1L728.7 6.0L723.3 6.0L717.8 6.0L712.3 5.9L706.8 5.9L701.3 5.9L695.8 5.9L690.2 5.9L684.7 5.9L679.1 5.9L673.6 5.8L668.0 5.8L662.4 5.7L656.8 5.7L651.2 5.6L645.6 5.6L640.0 5.6L634.4 5.5L628.8 5.5L623.2 5.4L617.5 5.4L611.9 5.3L606.2 5.3L600.6 5.2L594.9 5.2L589.2 5.1L583.5 5.1L577.9 5.0L572.2 4.9L566.5 4.9L560.8 4.8L555.1 4.7L549.4 4.7L543.7 4.6L537.9 4.6L532.2 4.5L526.5 4.5L520.8 4.5L515.1 4.5L509.3 4.4L503.6 4.4L497.9 4.4L492.1 4.4L486.4 4.3L480.7 4.3L474.9 4.3L469.2 4.3L463.4 4.3L457.7 4.3L452.0 4.3L446.2 4.4L440.5 4.4L434.7 4.5L429.0 4.5L423.3 4.6L417.5 4.6L411.8 4.6L406.1 4.6L400.3 4.6L394.6 4.6L388.9 4.5L383.1 4.4L377.4 4.3L371.7 4.3L366.0 4.2L360.3 4.1L354.6 4.1L348.9 4.0L343.1 4.0L337.5 4.0L331.8 4.0L326.1 4.0L320.4 4.0L314.7 4.0L309.0 3.9L303.4 3.9L297.7 3.9L292.1 3.9L286.4 3.9L280.8 3.9L275.2 3.9L269.5 4.0L263.9 4.1L258.3 4.2L252.7 4.3L247.1 4.4L241.5 4.5L236.0 4.6L230.4 4.8L224.8 4.9L219.3 5.0L213.8 5.1L208.2 5.2L202.7 5.3L197.2 5.4L191.7 5.5L186.2 5.6L180.7 5.7L175.3 5.9L169.8 6.0L164.4 6.1L159.0 6.3L153.5 6.4L148.1 6.6L142.8 6.7L137.4 6.9L132.0 7.1L126.7 7.3L121.3 7.5L116.0 7.7L110.7 7.9L105.4 8.2L100.1 8.4L94.9 8.7L89.6 8.9L84.4 9.2L79.2 9.4L74.0 9.7L68.8 10.0L63.6 10.3L58.5 10.7L53.3 11.0L48.2 11.4L43.1 11.9L38.0 12.4L33.0 13.0L28.0 14.1Z" fill="currentColor"/>
+      <g stroke="var(--paper)" fill="none" stroke-linecap="round"><path d="M543.7 13.2L549.0 13.2L554.2 13.1L559.5 13.1L564.8 13.0L570.1 13.0L575.3 12.9L580.6 12.9L585.8 12.8L591.1 12.8L596.3 12.7L601.6 12.7L606.8 12.6L612.0 12.6L617.3 12.5L622.5 12.5L627.7 12.4L632.9 12.4L638.1 12.3L643.3 12.3L648.5 12.2L653.7 12.2L658.8 12.1L664.0 12.1L669.1 12.0L674.3 12.0L679.4 11.9L684.6 11.9L689.7 11.8L694.8 11.8L699.9 11.7L705.0 11.7L710.1 11.6L715.2 11.6L720.3 11.5L725.3 11.5L730.4 11.4L735.4 11.3L740.5 11.3L745.5 11.2L750.5 11.1L755.5 11.0L760.5 10.9L765.5 10.8L770.5 10.7L775.4 10.7L780.4 10.6L785.3 10.5L790.2 10.4L795.1 10.3L800.0 10.2L804.9 10.1L809.8 10.1L814.7 10.0L819.5 9.9L824.3 9.8L829.2 9.7L834.0 9.6L838.8 9.5L843.5 9.4L848.3 9.3" stroke-width="1.4" stroke-dasharray="9 5 3 8 2 12"/><path d="M628.8 8.8L632.6 8.8L636.4 8.8L640.2 8.8L644.0 8.8L647.8 8.8L651.5 8.8L655.3 8.8L659.1 8.8L662.9 8.8L666.6 8.8L670.4 8.8L674.1 8.8L677.9 8.8L681.6 8.8L685.4 8.8L689.1 8.8L692.9 8.7L696.6 8.7L700.3 8.7L704.0 8.7L707.8 8.7L711.5 8.7L715.2 8.7L718.9 8.7L722.6 8.6L726.3 8.6L730.0 8.6L733.6 8.6L737.3 8.6L741.0 8.6L744.7 8.6L748.3 8.6L752.0 8.6L755.6 8.6L759.3 8.6L762.9 8.6L766.5 8.6L770.2 8.6L773.8 8.6L777.4 8.5L781.0 8.5L784.6 8.5L788.2 8.5L791.8 8.5L795.4 8.5L799.0 8.5L802.5 8.4L806.1 8.4L809.6 8.4L813.2 8.4L816.7 8.3L820.3 8.3L823.8 8.3L827.3 8.3L830.8 8.2L834.3 8.2L837.8 8.2L841.3 8.2L844.8 8.1L848.3 8.1" stroke-width="1.1" stroke-dasharray="5 6 3 9"/></g>
+      </g>
+      </g>
+    </svg>
+      </div>
+      <span class="note">The whole text column, stopping at the seal.</span>
+    </div>
+  </section>
+
+  <section class="study">
+    <h2>Doubled back</h2>
+    
+    <div class="rung">
+      <span class="len">Current — 28rem</span>
+      <div class="mark">
+        <h3 class="wordmark">Michael <span class="mid">Toshiro</span> Omoto</h3>
+        <span class="reading" lang="ja">大本　マイケル　敏郎</span>
+        <svg class="brush" width="448" height="26" viewBox="0 0 448 26" aria-hidden="true">
+      <g transform="translate(-13.3 0)">
+      <g style="mix-blend-mode:var(--wash-blend)" filter="url(#f-doubled-0)" opacity=".82">
+      <path d="M14.3 13.9L16.9 14.0L19.4 14.2L22.0 14.3L24.6 14.4L27.2 14.6L29.9 14.7L32.5 14.8L35.1 15.0L37.8 15.1L40.4 15.2L43.1 15.3L45.7 15.4L48.4 15.4L51.1 15.4L53.8 15.5L56.5 15.5L59.2 15.4L61.9 15.4L64.6 15.4L67.3 15.4L70.0 15.4L72.8 15.4L75.5 15.4L78.2 15.5L81.0 15.6L83.8 15.6L86.5 15.7L89.3 15.8L92.1 16.0L94.9 16.1L97.7 16.2L100.5 16.3L103.3 16.4L106.1 16.4L108.9 16.5L111.7 16.5L114.5 16.5L117.3 16.5L120.2 16.5L123.0 16.4L125.8 16.3L128.7 16.3L131.5 16.2L134.4 16.2L137.2 16.2L140.1 16.2L142.9 16.2L145.8 16.3L148.7 16.4L151.5 16.6L154.4 16.7L157.3 16.8L160.2 17.0L163.0 17.1L165.9 17.3L168.8 17.4L171.7 17.4L174.6 17.5L177.5 17.5L180.4 17.4L183.3 17.3L186.2 17.2L189.1 17.1L192.0 17.0L194.9 16.9L197.8 16.8L200.7 16.7L203.6 16.6L206.5 16.6L209.4 16.6L212.4 16.7L215.3 16.8L218.2 16.9L221.1 17.0L224.0 17.2L226.9 17.3L229.8 17.5L232.7 17.6L235.6 17.7L238.6 17.7L241.5 17.8L244.4 17.7L247.3 17.7L250.2 17.7L253.1 17.7L256.0 17.6L258.9 17.6L261.8 17.6L264.7 17.5L267.6 17.5L270.5 17.4L273.4 17.4L276.3 17.4L279.2 17.3L282.1 17.3L285.0 17.2L287.9 17.2L290.7 17.1L293.6 17.1L296.5 17.0L299.4 17.0L302.2 16.9L305.1 16.8L308.0 16.8L310.8 16.7L313.7 16.7L316.5 16.6L319.4 16.6L322.2 16.5L325.1 16.5L327.9 16.4L330.7 16.4L333.6 16.3L336.4 16.2L339.2 16.2L342.0 16.1L344.8 16.0L347.6 15.9L350.4 15.7L353.2 15.6L356.0 15.4L358.8 15.3L361.5 15.1L364.3 15.0L367.1 14.8L369.8 14.7L372.6 14.6L375.3 14.5L378.1 14.4L380.8 14.3L383.5 14.2L386.2 14.2L388.9 14.1L391.6 14.0L394.3 13.9L397.0 13.8L399.7 13.6L402.4 13.5L405.0 13.4L407.7 13.2L410.3 13.0L413.0 12.8L415.6 12.7L418.2 12.5L420.9 12.3L423.5 12.1L426.1 11.9L428.6 11.6L431.2 11.4L433.8 11.1L433.7 7.9L431.1 7.7L428.6 7.6L426.0 7.5L423.4 7.4L420.8 7.3L418.1 7.2L415.5 7.1L412.9 7.0L410.2 6.9L407.6 6.9L404.9 6.8L402.3 6.7L399.6 6.7L396.9 6.6L394.2 6.6L391.5 6.6L388.8 6.5L386.1 6.5L383.4 6.5L380.7 6.5L378.0 6.5L375.2 6.5L372.5 6.4L369.7 6.4L367.0 6.3L364.2 6.2L361.5 6.1L358.7 6.0L355.9 5.9L353.1 5.8L350.3 5.7L347.5 5.6L344.7 5.5L341.9 5.4L339.1 5.4L336.3 5.3L333.5 5.3L330.7 5.3L327.8 5.2L325.0 5.2L322.2 5.2L319.3 5.2L316.5 5.1L313.6 5.1L310.8 5.1L307.9 5.0L305.1 5.0L302.2 5.0L299.3 4.9L296.5 4.9L293.6 4.8L290.7 4.8L287.8 4.7L285.0 4.7L282.1 4.7L279.2 4.6L276.3 4.6L273.4 4.6L270.5 4.5L267.6 4.5L264.7 4.5L261.8 4.4L258.9 4.4L256.0 4.4L253.1 4.3L250.2 4.3L247.3 4.3L244.4 4.3L241.5 4.2L238.6 4.2L235.6 4.3L232.7 4.4L229.8 4.5L226.9 4.7L224.0 4.8L221.1 5.0L218.2 5.1L215.3 5.2L212.4 5.3L209.4 5.4L206.5 5.4L203.6 5.4L200.7 5.3L197.8 5.2L194.9 5.1L192.0 5.0L189.1 4.9L186.2 4.8L183.3 4.7L180.4 4.6L177.5 4.6L174.6 4.6L171.7 4.6L168.8 4.7L165.9 4.8L163.0 4.9L160.1 5.1L157.3 5.2L154.4 5.4L151.5 5.6L148.6 5.7L145.8 5.8L142.9 5.9L140.0 6.0L137.2 6.0L134.3 6.0L131.5 6.0L128.6 6.0L125.8 5.9L122.9 5.9L120.1 5.9L117.3 5.9L114.4 5.9L111.6 5.9L108.8 6.0L106.0 6.0L103.2 6.2L100.4 6.3L97.6 6.4L94.8 6.6L92.0 6.7L89.2 6.9L86.5 7.0L83.7 7.2L80.9 7.3L78.2 7.5L75.4 7.6L72.7 7.7L69.9 7.7L67.2 7.8L64.5 7.8L61.8 7.9L59.1 7.9L56.4 8.0L53.7 8.1L51.0 8.2L48.3 8.3L45.6 8.4L43.0 8.6L40.3 8.8L37.7 9.0L35.0 9.2L32.4 9.4L29.8 9.6L27.1 9.9L24.5 10.1L22.0 10.4L19.4 10.6L16.8 10.8L14.2 11.1Z" fill="currentColor"/>
+      <path d="M40.7 16.4L43.2 16.5L45.6 16.5L48.1 16.6L50.6 16.6L53.0 16.7L55.5 16.7L58.0 16.7L60.5 16.8L63.0 16.8L65.4 16.8L67.9 16.8L70.4 16.9L72.9 16.9L75.4 16.9L78.0 17.0L80.5 17.0L83.0 17.0L85.5 17.1L88.0 17.1L90.6 17.2L93.1 17.2L95.6 17.2L98.2 17.3L100.7 17.3L103.3 17.3L105.8 17.3L108.3 17.2L110.9 17.2L113.5 17.1L116.0 17.1L118.6 17.0L121.1 17.0L123.7 17.0L126.2 17.0L128.8 17.0L131.4 17.0L134.0 17.1L136.5 17.2L139.1 17.3L141.7 17.5L144.2 17.6L146.8 17.7L149.4 17.8L152.0 17.9L154.5 18.0L157.1 18.1L159.7 18.1L162.3 18.1L164.9 18.1L167.4 18.0L170.0 18.0L172.6 18.0L175.2 17.9L177.7 17.9L180.3 17.8L182.9 17.8L185.5 17.8L188.1 17.8L190.6 17.8L193.2 17.8L195.8 17.8L198.4 17.8L200.9 17.7L203.5 17.7L206.1 17.7L208.6 17.7L211.2 17.6L213.8 17.6L216.3 17.6L218.9 17.6L221.4 17.7L224.0 17.7L226.5 17.7L229.1 17.7L231.6 17.7L234.2 17.7L236.7 17.7L239.3 17.7L241.8 17.7L244.3 17.7L246.9 17.7L249.4 17.7L251.9 17.7L254.4 17.7L256.9 17.7L259.4 17.8L262.0 17.8L264.5 17.8L267.0 17.9L269.4 17.9L271.9 17.9L274.4 17.9L276.9 17.9L279.4 17.8L281.9 17.8L284.3 17.8L286.8 17.8L289.2 17.8L291.7 17.8L294.1 17.8L296.6 17.8L299.0 17.8L301.5 17.7L303.9 17.7L306.3 17.7L308.7 17.7L311.1 17.7L313.5 17.7L315.9 17.7L318.3 17.7L320.7 17.7L323.1 17.7L325.4 17.6L327.8 17.6L330.1 17.6L332.5 17.5L334.8 17.4L337.2 17.3L339.5 17.2L341.8 17.1L344.1 16.9L346.4 16.8L348.7 16.6L351.0 16.5L353.3 16.4L355.5 16.3L357.8 16.2L360.1 16.2L362.3 16.1L364.5 16.1L366.8 16.0L369.0 16.0L371.2 16.0L373.4 15.9L375.6 15.9L377.8 15.8L379.9 15.8L382.1 15.7L384.3 15.6L386.4 15.5L388.5 15.4L390.7 15.3L392.8 15.2L394.9 15.1L397.0 15.0L399.1 14.9L401.1 14.8L403.2 14.6L405.3 14.5L407.3 14.3L407.3 12.7L405.2 12.6L403.2 12.6L401.1 12.5L399.0 12.5L396.9 12.5L394.8 12.5L392.7 12.4L390.6 12.4L388.5 12.4L386.4 12.4L384.2 12.3L382.1 12.3L379.9 12.3L377.7 12.3L375.5 12.3L373.4 12.3L371.2 12.3L368.9 12.4L366.7 12.4L364.5 12.4L362.3 12.4L360.0 12.4L357.8 12.4L355.5 12.4L353.2 12.3L351.0 12.2L348.7 12.1L346.4 12.0L344.1 11.9L341.8 11.8L339.4 11.7L337.1 11.6L334.8 11.5L332.5 11.4L330.1 11.4L327.8 11.4L325.4 11.4L323.0 11.4L320.7 11.4L318.3 11.4L315.9 11.4L313.5 11.4L311.1 11.4L308.7 11.4L306.3 11.4L303.9 11.4L301.4 11.4L299.0 11.4L296.6 11.4L294.1 11.3L291.7 11.3L289.2 11.3L286.8 11.3L284.3 11.3L281.9 11.3L279.4 11.3L276.9 11.3L274.4 11.3L271.9 11.3L269.5 11.3L267.0 11.3L264.5 11.3L262.0 11.3L259.5 11.3L256.9 11.3L254.4 11.4L251.9 11.4L249.4 11.4L246.9 11.4L244.3 11.4L241.8 11.4L239.3 11.4L236.7 11.3L234.2 11.3L231.6 11.3L229.1 11.3L226.5 11.3L224.0 11.3L221.4 11.3L218.9 11.3L216.3 11.3L213.8 11.3L211.2 11.3L208.6 11.2L206.1 11.2L203.5 11.2L200.9 11.1L198.4 11.1L195.8 11.1L193.2 11.1L190.6 11.0L188.1 11.1L185.5 11.1L182.9 11.0L180.3 11.0L177.8 11.0L175.2 10.9L172.6 10.9L170.0 10.8L167.4 10.8L164.9 10.8L162.3 10.8L159.7 10.8L157.1 10.8L154.5 10.8L152.0 10.9L149.4 11.0L146.8 11.2L144.2 11.3L141.7 11.5L139.1 11.6L136.5 11.7L133.9 11.9L131.4 12.0L128.8 12.0L126.2 12.1L123.7 12.1L121.1 12.1L118.5 12.1L116.0 12.1L113.4 12.0L110.9 12.0L108.3 12.0L105.8 12.0L103.2 12.0L100.7 12.1L98.1 12.1L95.6 12.2L93.1 12.3L90.5 12.4L88.0 12.5L85.5 12.6L82.9 12.6L80.4 12.7L77.9 12.8L75.4 12.9L72.9 13.0L70.4 13.1L67.9 13.2L65.4 13.3L62.9 13.4L60.4 13.5L57.9 13.6L55.5 13.8L53.0 13.9L50.5 14.0L48.1 14.1L45.6 14.3L43.2 14.4L40.7 14.6Z" fill="currentColor" opacity="0.55"/>
+      <g stroke="var(--paper)" fill="none" stroke-linecap="round"><path d="M267.6 13.6L270.4 13.6L273.3 13.6L276.1 13.5L278.9 13.5L281.7 13.5L284.5 13.5L287.3 13.5L290.2 13.4L293.0 13.4L295.8 13.4L298.6 13.4L301.4 13.3L304.2 13.3L307.0 13.3L309.7 13.2L312.5 13.2L315.3 13.2L318.1 13.2L320.9 13.1L323.6 13.1L326.4 13.1L329.2 13.1L331.9 13.0L334.7 13.0L337.4 13.0L340.2 12.9L342.9 12.9L345.6 12.8L348.4 12.8L351.1 12.7L353.8 12.6L356.5 12.5L359.2 12.5L361.9 12.4L364.6 12.3L367.3 12.3L370.0 12.2L372.7 12.1L375.4 12.1L378.0 12.0L380.7 12.0L383.4 11.9L386.0 11.9L388.6 11.8L391.3 11.8L393.9 11.7L396.5 11.6L399.1 11.6L401.7 11.5L404.3 11.4L406.9 11.3L409.5 11.2L412.1 11.1L414.7 11.0L417.2 10.9L419.8 10.8L422.3 10.7L424.9 10.6L427.4 10.5L429.9 10.4" stroke-width="1.3" stroke-dasharray="8 5 3 9"/></g>
+      </g>
+      </g>
+    </svg>
+      </div>
+      <span class="note">Ends about 100px past the name.</span>
+    </div>
+    <div class="rung">
+      <span class="len">34rem</span>
+      <div class="mark">
+        <h3 class="wordmark">Michael <span class="mid">Toshiro</span> Omoto</h3>
+        <span class="reading" lang="ja">大本　マイケル　敏郎</span>
+        <svg class="brush" width="544" height="26" viewBox="0 0 544 26" aria-hidden="true">
+      <g transform="translate(-16.3 0)">
+      <g style="mix-blend-mode:var(--wash-blend)" filter="url(#f-doubled-1)" opacity=".82">
+      <path d="M17.3 13.9L20.5 14.0L23.6 14.2L26.7 14.3L29.9 14.4L33.1 14.6L36.2 14.7L39.4 14.8L42.6 15.0L45.8 15.1L49.0 15.2L52.3 15.3L55.5 15.4L58.7 15.4L62.0 15.4L65.3 15.5L68.5 15.5L71.8 15.4L75.1 15.4L78.4 15.4L81.7 15.4L85.0 15.4L88.3 15.4L91.7 15.4L95.0 15.5L98.3 15.6L101.7 15.6L105.1 15.7L108.4 15.8L111.8 16.0L115.2 16.1L118.6 16.2L122.0 16.3L125.4 16.4L128.8 16.4L132.2 16.5L135.6 16.5L139.0 16.5L142.5 16.5L145.9 16.5L149.3 16.4L152.8 16.3L156.2 16.3L159.7 16.2L163.1 16.2L166.6 16.2L170.1 16.2L173.6 16.2L177.0 16.3L180.5 16.4L184.0 16.6L187.5 16.7L191.0 16.8L194.5 17.0L198.0 17.1L201.5 17.3L205.0 17.4L208.5 17.4L212.0 17.5L215.5 17.5L219.0 17.4L222.6 17.3L226.1 17.2L229.6 17.1L233.1 17.0L236.7 16.9L240.2 16.8L243.7 16.7L247.3 16.6L250.8 16.6L254.3 16.6L257.9 16.7L261.4 16.8L264.9 16.9L268.5 17.0L272.0 17.2L275.5 17.3L279.1 17.5L282.6 17.6L286.1 17.7L289.7 17.7L293.2 17.8L296.7 17.7L300.3 17.7L303.8 17.7L307.3 17.7L310.9 17.6L314.4 17.6L317.9 17.6L321.4 17.5L325.0 17.5L328.5 17.4L332.0 17.4L335.5 17.4L339.0 17.3L342.5 17.3L346.0 17.2L349.5 17.2L353.0 17.1L356.5 17.1L360.0 17.0L363.5 17.0L367.0 16.9L370.5 16.8L374.0 16.8L377.4 16.7L380.9 16.7L384.4 16.6L387.8 16.6L391.3 16.5L394.7 16.5L398.2 16.4L401.6 16.4L405.0 16.3L408.5 16.2L411.9 16.2L415.3 16.1L418.7 16.0L422.1 15.9L425.5 15.7L428.9 15.6L432.3 15.4L435.6 15.3L439.0 15.1L442.4 15.0L445.7 14.8L449.1 14.7L452.4 14.6L455.7 14.5L459.1 14.4L462.4 14.3L465.7 14.2L469.0 14.2L472.3 14.1L475.5 14.0L478.8 13.9L482.1 13.8L485.3 13.6L488.6 13.5L491.8 13.4L495.0 13.2L498.3 13.0L501.5 12.8L504.7 12.7L507.8 12.5L511.0 12.3L514.2 12.1L517.3 11.9L520.5 11.6L523.6 11.4L526.7 11.1L526.7 7.9L523.5 7.7L520.4 7.6L517.3 7.5L514.1 7.4L510.9 7.3L507.8 7.2L504.6 7.1L501.4 7.0L498.2 6.9L495.0 6.9L491.7 6.8L488.5 6.7L485.3 6.7L482.0 6.6L478.7 6.6L475.5 6.6L472.2 6.5L468.9 6.5L465.6 6.5L462.3 6.5L459.0 6.5L455.7 6.5L452.3 6.4L449.0 6.4L445.7 6.3L442.3 6.2L438.9 6.1L435.6 6.0L432.2 5.9L428.8 5.8L425.4 5.7L422.0 5.6L418.6 5.5L415.2 5.4L411.8 5.4L408.4 5.3L405.0 5.3L401.5 5.3L398.1 5.2L394.7 5.2L391.2 5.2L387.8 5.2L384.3 5.1L380.9 5.1L377.4 5.1L373.9 5.0L370.4 5.0L367.0 5.0L363.5 4.9L360.0 4.9L356.5 4.8L353.0 4.8L349.5 4.7L346.0 4.7L342.5 4.7L339.0 4.6L335.5 4.6L332.0 4.6L328.5 4.5L325.0 4.5L321.4 4.5L317.9 4.4L314.4 4.4L310.9 4.4L307.3 4.3L303.8 4.3L300.3 4.3L296.7 4.3L293.2 4.2L289.7 4.2L286.1 4.3L282.6 4.4L279.1 4.5L275.5 4.7L272.0 4.8L268.5 5.0L264.9 5.1L261.4 5.2L257.9 5.3L254.3 5.4L250.8 5.4L247.3 5.4L243.7 5.3L240.2 5.2L236.7 5.1L233.1 5.0L229.6 4.9L226.1 4.8L222.6 4.7L219.0 4.6L215.5 4.6L212.0 4.6L208.5 4.6L205.0 4.7L201.5 4.8L198.0 4.9L194.5 5.1L191.0 5.2L187.5 5.4L184.0 5.6L180.5 5.7L177.0 5.8L173.5 5.9L170.1 6.0L166.6 6.0L163.1 6.0L159.6 6.0L156.2 6.0L152.7 5.9L149.3 5.9L145.8 5.9L142.4 5.9L139.0 5.9L135.5 5.9L132.1 6.0L128.7 6.0L125.3 6.2L121.9 6.3L118.5 6.4L115.1 6.6L111.7 6.7L108.4 6.9L105.0 7.0L101.6 7.2L98.3 7.3L94.9 7.5L91.6 7.6L88.3 7.7L84.9 7.7L81.6 7.8L78.3 7.8L75.0 7.9L71.7 7.9L68.4 8.0L65.2 8.1L61.9 8.2L58.7 8.3L55.4 8.4L52.2 8.6L49.0 8.8L45.7 9.0L42.5 9.2L39.3 9.4L36.2 9.6L33.0 9.9L29.8 10.1L26.7 10.4L23.5 10.6L20.4 10.8L17.3 11.1Z" fill="currentColor"/>
+      <path d="M49.5 16.4L52.4 16.5L55.4 16.5L58.4 16.6L61.4 16.6L64.4 16.7L67.4 16.7L70.4 16.7L73.4 16.8L76.4 16.8L79.5 16.8L82.5 16.8L85.5 16.9L88.6 16.9L91.6 16.9L94.7 17.0L97.7 17.0L100.8 17.0L103.8 17.1L106.9 17.1L110.0 17.2L113.0 17.2L116.1 17.2L119.2 17.3L122.3 17.3L125.4 17.3L128.5 17.3L131.6 17.2L134.7 17.2L137.8 17.1L140.9 17.1L144.0 17.0L147.1 17.0L150.2 17.0L153.3 17.0L156.4 17.0L159.5 17.0L162.7 17.1L165.8 17.2L168.9 17.3L172.0 17.5L175.1 17.6L178.3 17.7L181.4 17.8L184.5 17.9L187.7 18.0L190.8 18.1L193.9 18.1L197.1 18.1L200.2 18.1L203.3 18.0L206.4 18.0L209.6 18.0L212.7 17.9L215.8 17.9L219.0 17.8L222.1 17.8L225.2 17.8L228.4 17.8L231.5 17.8L234.6 17.8L237.7 17.8L240.9 17.8L244.0 17.7L247.1 17.7L250.2 17.7L253.3 17.7L256.4 17.6L259.6 17.6L262.7 17.6L265.8 17.6L268.9 17.7L272.0 17.7L275.1 17.7L278.2 17.7L281.3 17.7L284.4 17.7L287.4 17.7L290.5 17.7L293.6 17.7L296.7 17.7L299.7 17.7L302.8 17.7L305.9 17.7L308.9 17.7L312.0 17.7L315.0 17.8L318.1 17.8L321.1 17.8L324.2 17.9L327.2 17.9L330.2 17.9L333.2 17.9L336.2 17.9L339.3 17.8L342.3 17.8L345.3 17.8L348.2 17.8L351.2 17.8L354.2 17.8L357.2 17.8L360.1 17.8L363.1 17.8L366.0 17.7L369.0 17.7L371.9 17.7L374.9 17.7L377.8 17.7L380.7 17.7L383.6 17.7L386.5 17.7L389.4 17.7L392.3 17.7L395.2 17.6L398.0 17.6L400.9 17.6L403.7 17.5L406.6 17.4L409.4 17.3L412.2 17.2L415.0 17.1L417.8 16.9L420.6 16.8L423.4 16.6L426.2 16.5L429.0 16.4L431.7 16.3L434.5 16.2L437.2 16.2L439.9 16.1L442.6 16.1L445.4 16.0L448.0 16.0L450.7 16.0L453.4 15.9L456.1 15.9L458.7 15.8L461.4 15.8L464.0 15.7L466.6 15.6L469.2 15.5L471.8 15.4L474.4 15.3L476.9 15.2L479.5 15.1L482.0 15.0L484.6 14.9L487.1 14.8L489.6 14.6L492.1 14.5L494.6 14.3L494.5 12.7L492.0 12.6L489.6 12.6L487.0 12.5L484.5 12.5L482.0 12.5L479.5 12.5L476.9 12.4L474.3 12.4L471.8 12.4L469.2 12.4L466.6 12.3L463.9 12.3L461.3 12.3L458.7 12.3L456.0 12.3L453.4 12.3L450.7 12.3L448.0 12.4L445.3 12.4L442.6 12.4L439.9 12.4L437.2 12.4L434.4 12.4L431.7 12.4L428.9 12.3L426.2 12.2L423.4 12.1L420.6 12.0L417.8 11.9L415.0 11.8L412.2 11.7L409.4 11.6L406.5 11.5L403.7 11.4L400.9 11.4L398.0 11.4L395.1 11.4L392.3 11.4L389.4 11.4L386.5 11.4L383.6 11.4L380.7 11.4L377.8 11.4L374.8 11.4L371.9 11.4L369.0 11.4L366.0 11.4L363.1 11.4L360.1 11.4L357.2 11.3L354.2 11.3L351.2 11.3L348.2 11.3L345.3 11.3L342.3 11.3L339.3 11.3L336.2 11.3L333.2 11.3L330.2 11.3L327.2 11.3L324.2 11.3L321.1 11.3L318.1 11.3L315.0 11.3L312.0 11.3L308.9 11.4L305.9 11.4L302.8 11.4L299.8 11.4L296.7 11.4L293.6 11.4L290.5 11.4L287.5 11.3L284.4 11.3L281.3 11.3L278.2 11.3L275.1 11.3L272.0 11.3L268.9 11.3L265.8 11.3L262.7 11.3L259.6 11.3L256.5 11.3L253.3 11.2L250.2 11.2L247.1 11.2L244.0 11.1L240.9 11.1L237.7 11.1L234.6 11.1L231.5 11.0L228.4 11.1L225.2 11.1L222.1 11.0L219.0 11.0L215.8 11.0L212.7 10.9L209.6 10.9L206.4 10.8L203.3 10.8L200.2 10.8L197.0 10.8L193.9 10.8L190.8 10.8L187.7 10.8L184.5 10.9L181.4 11.0L178.3 11.2L175.1 11.3L172.0 11.5L168.9 11.6L165.8 11.7L162.6 11.9L159.5 12.0L156.4 12.0L153.3 12.1L150.2 12.1L147.1 12.1L143.9 12.1L140.8 12.1L137.7 12.0L134.6 12.0L131.5 12.0L128.4 12.0L125.3 12.0L122.2 12.1L119.2 12.1L116.1 12.2L113.0 12.3L109.9 12.4L106.9 12.5L103.8 12.6L100.7 12.6L97.7 12.7L94.6 12.8L91.6 12.9L88.5 13.0L85.5 13.1L82.4 13.2L79.4 13.3L76.4 13.4L73.4 13.5L70.4 13.6L67.4 13.8L64.4 13.9L61.4 14.0L58.4 14.1L55.4 14.3L52.4 14.4L49.4 14.6Z" fill="currentColor" opacity="0.55"/>
+      <g stroke="var(--paper)" fill="none" stroke-linecap="round"><path d="M325.0 13.6L328.4 13.6L331.8 13.6L335.2 13.5L338.7 13.5L342.1 13.5L345.5 13.5L348.9 13.5L352.3 13.4L355.7 13.4L359.1 13.4L362.5 13.4L365.9 13.3L369.3 13.3L372.7 13.3L376.1 13.2L379.5 13.2L382.9 13.2L386.2 13.2L389.6 13.1L393.0 13.1L396.3 13.1L399.7 13.1L403.0 13.0L406.4 13.0L409.7 13.0L413.1 12.9L416.4 12.9L419.7 12.8L423.0 12.8L426.3 12.7L429.6 12.6L432.9 12.5L436.2 12.5L439.5 12.4L442.8 12.3L446.0 12.3L449.3 12.2L452.6 12.1L455.8 12.1L459.0 12.0L462.3 12.0L465.5 11.9L468.7 11.9L471.9 11.8L475.1 11.8L478.3 11.7L481.5 11.6L484.7 11.6L487.8 11.5L491.0 11.4L494.1 11.3L497.3 11.2L500.4 11.1L503.5 11.0L506.6 10.9L509.7 10.8L512.8 10.7L515.9 10.6L519.0 10.5L522.0 10.4" stroke-width="1.3" stroke-dasharray="8 5 3 9"/></g>
+      </g>
+      </g>
+    </svg>
+      </div>
+      <span class="note">Clears the ruby reading beneath the name.</span>
+    </div>
+    <div class="rung">
+      <span class="len">40rem</span>
+      <div class="mark">
+        <h3 class="wordmark">Michael <span class="mid">Toshiro</span> Omoto</h3>
+        <span class="reading" lang="ja">大本　マイケル　敏郎</span>
+        <svg class="brush" width="640" height="26" viewBox="0 0 640 26" aria-hidden="true">
+      <g transform="translate(-19.4 0)">
+      <g style="mix-blend-mode:var(--wash-blend)" filter="url(#f-doubled-2)" opacity=".82">
+      <path d="M20.4 13.9L24.1 14.0L27.7 14.2L31.4 14.3L35.2 14.4L38.9 14.6L42.6 14.7L46.4 14.8L50.1 15.0L53.9 15.1L57.7 15.2L61.5 15.3L65.3 15.4L69.1 15.4L72.9 15.4L76.8 15.5L80.6 15.5L84.5 15.4L88.3 15.4L92.2 15.4L96.1 15.4L100.0 15.4L103.9 15.4L107.8 15.4L111.8 15.5L115.7 15.6L119.6 15.6L123.6 15.7L127.5 15.8L131.5 16.0L135.5 16.1L139.5 16.2L143.5 16.3L147.5 16.4L151.5 16.4L155.5 16.5L159.5 16.5L163.5 16.5L167.6 16.5L171.6 16.5L175.7 16.4L179.7 16.3L183.8 16.3L187.9 16.2L191.9 16.2L196.0 16.2L200.1 16.2L204.2 16.2L208.3 16.3L212.4 16.4L216.5 16.6L220.6 16.7L224.7 16.8L228.8 17.0L232.9 17.1L237.0 17.3L241.2 17.4L245.3 17.4L249.4 17.5L253.6 17.5L257.7 17.4L261.8 17.3L266.0 17.2L270.1 17.1L274.3 17.0L278.4 16.9L282.6 16.8L286.7 16.7L290.9 16.6L295.0 16.6L299.2 16.6L303.4 16.7L307.5 16.8L311.7 16.9L315.8 17.0L320.0 17.2L324.2 17.3L328.3 17.5L332.5 17.6L336.6 17.7L340.8 17.7L345.0 17.8L349.1 17.7L353.3 17.7L357.4 17.7L361.6 17.7L365.7 17.6L369.9 17.6L374.0 17.6L378.2 17.5L382.3 17.5L386.4 17.4L390.6 17.4L394.7 17.4L398.8 17.3L403.0 17.3L407.1 17.2L411.2 17.2L415.3 17.1L419.4 17.1L423.6 17.0L427.7 17.0L431.8 16.9L435.8 16.8L439.9 16.8L444.0 16.7L448.1 16.7L452.2 16.6L456.2 16.6L460.3 16.5L464.4 16.5L468.4 16.4L472.5 16.4L476.5 16.3L480.5 16.2L484.5 16.2L488.6 16.1L492.6 16.0L496.6 15.9L500.6 15.7L504.6 15.6L508.5 15.4L512.5 15.3L516.5 15.1L520.4 15.0L524.4 14.8L528.3 14.7L532.2 14.6L536.1 14.5L540.1 14.4L544.0 14.3L547.8 14.2L551.7 14.2L555.6 14.1L559.5 14.0L563.3 13.9L567.1 13.8L571.0 13.6L574.8 13.5L578.6 13.4L582.4 13.2L586.2 13.0L589.9 12.8L593.7 12.7L597.4 12.5L601.2 12.3L604.9 12.1L608.6 11.9L612.3 11.6L616.0 11.4L619.7 11.1L619.6 7.9L615.9 7.7L612.2 7.6L608.5 7.5L604.8 7.4L601.1 7.3L597.4 7.2L593.6 7.1L589.9 7.0L586.1 6.9L582.3 6.9L578.5 6.8L574.7 6.7L570.9 6.7L567.1 6.6L563.2 6.6L559.4 6.6L555.5 6.5L551.7 6.5L547.8 6.5L543.9 6.5L540.0 6.5L536.1 6.5L532.2 6.4L528.2 6.4L524.3 6.3L520.4 6.2L516.4 6.1L512.4 6.0L508.5 5.9L504.5 5.8L500.5 5.7L496.5 5.6L492.5 5.5L488.5 5.4L484.5 5.4L480.5 5.3L476.5 5.3L472.4 5.3L468.4 5.2L464.3 5.2L460.3 5.2L456.2 5.2L452.1 5.1L448.1 5.1L444.0 5.1L439.9 5.0L435.8 5.0L431.7 5.0L427.6 4.9L423.5 4.9L419.4 4.8L415.3 4.8L411.2 4.7L407.1 4.7L403.0 4.7L398.8 4.6L394.7 4.6L390.6 4.6L386.4 4.5L382.3 4.5L378.2 4.5L374.0 4.4L369.9 4.4L365.7 4.4L361.6 4.3L357.4 4.3L353.3 4.3L349.1 4.3L345.0 4.2L340.8 4.2L336.6 4.3L332.5 4.4L328.3 4.5L324.2 4.7L320.0 4.8L315.8 5.0L311.7 5.1L307.5 5.2L303.4 5.3L299.2 5.4L295.0 5.4L290.9 5.4L286.7 5.3L282.6 5.2L278.4 5.1L274.3 5.0L270.1 4.9L266.0 4.8L261.8 4.7L257.7 4.6L253.6 4.6L249.4 4.6L245.3 4.6L241.2 4.7L237.0 4.8L232.9 4.9L228.8 5.1L224.7 5.2L220.6 5.4L216.4 5.6L212.3 5.7L208.2 5.8L204.2 5.9L200.1 6.0L196.0 6.0L191.9 6.0L187.8 6.0L183.8 6.0L179.7 5.9L175.6 5.9L171.6 5.9L167.5 5.9L163.5 5.9L159.5 5.9L155.5 6.0L151.4 6.0L147.4 6.2L143.4 6.3L139.4 6.4L135.4 6.6L131.5 6.7L127.5 6.9L123.5 7.0L119.6 7.2L115.6 7.3L111.7 7.5L107.8 7.6L103.9 7.7L99.9 7.7L96.0 7.8L92.2 7.8L88.3 7.9L84.4 7.9L80.5 8.0L76.7 8.1L72.9 8.2L69.0 8.3L65.2 8.4L61.4 8.6L57.6 8.8L53.8 9.0L50.1 9.2L46.3 9.4L42.6 9.6L38.8 9.9L35.1 10.1L31.4 10.4L27.7 10.6L24.0 10.8L20.3 11.1Z" fill="currentColor"/>
+      <path d="M58.2 16.4L61.7 16.5L65.2 16.5L68.7 16.6L72.2 16.6L75.7 16.7L79.3 16.7L82.8 16.7L86.4 16.8L89.9 16.8L93.5 16.8L97.0 16.8L100.6 16.9L104.2 16.9L107.8 16.9L111.3 17.0L114.9 17.0L118.5 17.0L122.1 17.1L125.7 17.1L129.4 17.2L133.0 17.2L136.6 17.2L140.2 17.3L143.9 17.3L147.5 17.3L151.1 17.3L154.8 17.2L158.4 17.2L162.1 17.1L165.7 17.1L169.4 17.0L173.0 17.0L176.7 17.0L180.3 17.0L184.0 17.0L187.7 17.0L191.4 17.1L195.0 17.2L198.7 17.3L202.4 17.5L206.1 17.6L209.7 17.7L213.4 17.8L217.1 17.9L220.8 18.0L224.5 18.1L228.1 18.1L231.8 18.1L235.5 18.1L239.2 18.0L242.9 18.0L246.6 18.0L250.2 17.9L253.9 17.9L257.6 17.8L261.3 17.8L265.0 17.8L268.7 17.8L272.3 17.8L276.0 17.8L279.7 17.8L283.4 17.8L287.0 17.7L290.7 17.7L294.4 17.7L298.0 17.7L301.7 17.6L305.4 17.6L309.0 17.6L312.7 17.6L316.3 17.7L320.0 17.7L323.6 17.7L327.3 17.7L330.9 17.7L334.5 17.7L338.2 17.7L341.8 17.7L345.4 17.7L349.0 17.7L352.6 17.7L356.3 17.7L359.9 17.7L363.5 17.7L367.0 17.7L370.6 17.8L374.2 17.8L377.8 17.8L381.4 17.9L384.9 17.9L388.5 17.9L392.0 17.9L395.6 17.9L399.1 17.8L402.7 17.8L406.2 17.8L409.7 17.8L413.2 17.8L416.7 17.8L420.2 17.8L423.7 17.8L427.2 17.8L430.6 17.7L434.1 17.7L437.6 17.7L441.0 17.7L444.4 17.7L447.9 17.7L451.3 17.7L454.7 17.7L458.1 17.7L461.5 17.7L464.9 17.6L468.3 17.6L471.6 17.6L475.0 17.5L478.3 17.4L481.6 17.3L485.0 17.2L488.3 17.1L491.6 16.9L494.9 16.8L498.1 16.6L501.4 16.5L504.7 16.4L507.9 16.3L511.1 16.2L514.4 16.2L517.6 16.1L520.8 16.1L523.9 16.0L527.1 16.0L530.3 16.0L533.4 15.9L536.5 15.9L539.7 15.8L542.8 15.8L545.9 15.7L548.9 15.6L552.0 15.5L555.0 15.4L558.1 15.3L561.1 15.2L564.1 15.1L567.1 15.0L570.1 14.9L573.0 14.8L576.0 14.6L578.9 14.5L581.8 14.3L581.8 12.7L578.9 12.6L576.0 12.6L573.0 12.5L570.0 12.5L567.1 12.5L564.1 12.5L561.1 12.4L558.0 12.4L555.0 12.4L552.0 12.4L548.9 12.3L545.8 12.3L542.7 12.3L539.6 12.3L536.5 12.3L533.4 12.3L530.2 12.3L527.1 12.4L523.9 12.4L520.7 12.4L517.5 12.4L514.3 12.4L511.1 12.4L507.9 12.4L504.6 12.3L501.4 12.2L498.1 12.1L494.8 12.0L491.5 11.9L488.3 11.8L484.9 11.7L481.6 11.6L478.3 11.5L474.9 11.4L471.6 11.4L468.2 11.4L464.9 11.4L461.5 11.4L458.1 11.4L454.7 11.4L451.3 11.4L447.9 11.4L444.4 11.4L441.0 11.4L437.6 11.4L434.1 11.4L430.6 11.4L427.2 11.4L423.7 11.4L420.2 11.3L416.7 11.3L413.2 11.3L409.7 11.3L406.2 11.3L402.7 11.3L399.1 11.3L395.6 11.3L392.0 11.3L388.5 11.3L384.9 11.3L381.4 11.3L377.8 11.3L374.2 11.3L370.6 11.3L367.1 11.3L363.5 11.4L359.9 11.4L356.3 11.4L352.7 11.4L349.0 11.4L345.4 11.4L341.8 11.4L338.2 11.3L334.5 11.3L330.9 11.3L327.3 11.3L323.6 11.3L320.0 11.3L316.3 11.3L312.7 11.3L309.0 11.3L305.4 11.3L301.7 11.3L298.0 11.2L294.4 11.2L290.7 11.2L287.0 11.1L283.4 11.1L279.7 11.1L276.0 11.1L272.3 11.0L268.7 11.1L265.0 11.1L261.3 11.0L257.6 11.0L253.9 11.0L250.2 10.9L246.6 10.9L242.9 10.8L239.2 10.8L235.5 10.8L231.8 10.8L228.1 10.8L224.5 10.8L220.8 10.8L217.1 10.9L213.4 11.0L209.7 11.2L206.0 11.3L202.4 11.5L198.7 11.6L195.0 11.7L191.3 11.9L187.7 12.0L184.0 12.0L180.3 12.1L176.7 12.1L173.0 12.1L169.3 12.1L165.7 12.1L162.0 12.0L158.4 12.0L154.7 12.0L151.1 12.0L147.5 12.0L143.8 12.1L140.2 12.1L136.6 12.2L132.9 12.3L129.3 12.4L125.7 12.5L122.1 12.6L118.5 12.6L114.9 12.7L111.3 12.8L107.7 12.9L104.1 13.0L100.6 13.1L97.0 13.2L93.4 13.3L89.9 13.4L86.3 13.5L82.8 13.6L79.2 13.8L75.7 13.9L72.2 14.0L68.7 14.1L65.2 14.3L61.7 14.4L58.2 14.6Z" fill="currentColor" opacity="0.55"/>
+      <g stroke="var(--paper)" fill="none" stroke-linecap="round"><path d="M382.3 13.6L386.3 13.6L390.4 13.6L394.4 13.5L398.4 13.5L402.5 13.5L406.5 13.5L410.5 13.5L414.5 13.4L418.5 13.4L422.5 13.4L426.5 13.4L430.5 13.3L434.5 13.3L438.5 13.3L442.5 13.2L446.5 13.2L450.4 13.2L454.4 13.2L458.4 13.1L462.3 13.1L466.3 13.1L470.2 13.1L474.2 13.0L478.1 13.0L482.0 13.0L485.9 12.9L489.9 12.9L493.8 12.8L497.7 12.8L501.6 12.7L505.4 12.6L509.3 12.5L513.2 12.5L517.0 12.4L520.9 12.3L524.7 12.3L528.6 12.2L532.4 12.1L536.2 12.1L540.0 12.0L543.8 12.0L547.6 11.9L551.4 11.9L555.2 11.8L559.0 11.8L562.7 11.7L566.5 11.6L570.2 11.6L573.9 11.5L577.6 11.4L581.3 11.3L585.0 11.2L588.7 11.1L592.4 11.0L596.0 10.9L599.7 10.8L603.3 10.7L606.9 10.6L610.5 10.5L614.1 10.4" stroke-width="1.3" stroke-dasharray="8 5 3 9"/></g>
+      </g>
+      </g>
+    </svg>
+      </div>
+      <span class="note">Past the reading measure; reads as a rule under the whole block.</span>
+    </div>
+    <div class="rung">
+      <span class="len">46rem</span>
+      <div class="mark">
+        <h3 class="wordmark">Michael <span class="mid">Toshiro</span> Omoto</h3>
+        <span class="reading" lang="ja">大本　マイケル　敏郎</span>
+        <svg class="brush" width="736" height="26" viewBox="0 0 736 26" aria-hidden="true">
+      <g transform="translate(-22.4 0)">
+      <g style="mix-blend-mode:var(--wash-blend)" filter="url(#f-doubled-3)" opacity=".82">
+      <path d="M23.4 13.9L27.7 14.0L31.9 14.2L36.2 14.3L40.4 14.4L44.7 14.6L49.0 14.7L53.3 14.8L57.6 15.0L62.0 15.1L66.3 15.2L70.7 15.3L75.1 15.4L79.5 15.4L83.9 15.4L88.3 15.5L92.7 15.5L97.1 15.4L101.6 15.4L106.0 15.4L110.5 15.4L115.0 15.4L119.5 15.4L124.0 15.4L128.5 15.5L133.0 15.6L137.6 15.6L142.1 15.7L146.7 15.8L151.2 16.0L155.8 16.1L160.4 16.2L165.0 16.3L169.6 16.4L174.2 16.4L178.8 16.5L183.4 16.5L188.1 16.5L192.7 16.5L197.4 16.5L202.0 16.4L206.7 16.3L211.4 16.3L216.0 16.2L220.7 16.2L225.4 16.2L230.1 16.2L234.8 16.2L239.5 16.3L244.2 16.4L248.9 16.6L253.7 16.7L258.4 16.8L263.1 17.0L267.9 17.1L272.6 17.3L277.3 17.4L282.1 17.4L286.8 17.5L291.6 17.5L296.4 17.4L301.1 17.3L305.9 17.2L310.7 17.1L315.4 17.0L320.2 16.9L325.0 16.8L329.7 16.7L334.5 16.6L339.3 16.6L344.1 16.6L348.9 16.7L353.6 16.8L358.4 16.9L363.2 17.0L368.0 17.2L372.8 17.3L377.6 17.5L382.4 17.6L387.1 17.7L391.9 17.7L396.7 17.8L401.5 17.7L406.3 17.7L411.0 17.7L415.8 17.7L420.6 17.6L425.4 17.6L430.1 17.6L434.9 17.5L439.6 17.5L444.4 17.4L449.2 17.4L453.9 17.4L458.7 17.3L463.4 17.3L468.2 17.2L472.9 17.2L477.6 17.1L482.4 17.1L487.1 17.0L491.8 17.0L496.5 16.9L501.2 16.8L505.9 16.8L510.6 16.7L515.3 16.7L520.0 16.6L524.7 16.6L529.3 16.5L534.0 16.5L538.7 16.4L543.3 16.4L548.0 16.3L552.6 16.2L557.2 16.2L561.8 16.1L566.5 16.0L571.1 15.9L575.6 15.7L580.2 15.6L584.8 15.4L589.4 15.3L593.9 15.1L598.5 15.0L603.0 14.8L607.5 14.7L612.1 14.6L616.6 14.5L621.1 14.4L625.5 14.3L630.0 14.2L634.5 14.2L638.9 14.1L643.4 14.0L647.8 13.9L652.2 13.8L656.6 13.6L661.0 13.5L665.4 13.4L669.7 13.2L674.1 13.0L678.4 12.8L682.7 12.7L687.1 12.5L691.4 12.3L695.6 12.1L699.9 11.9L704.1 11.6L708.4 11.4L712.6 11.1L712.6 7.9L708.3 7.7L704.1 7.6L699.8 7.5L695.6 7.4L691.3 7.3L687.0 7.2L682.7 7.1L678.4 7.0L674.0 6.9L669.7 6.9L665.3 6.8L660.9 6.7L656.5 6.7L652.1 6.6L647.7 6.6L643.3 6.6L638.9 6.5L634.4 6.5L630.0 6.5L625.5 6.5L621.0 6.5L616.5 6.5L612.0 6.4L607.5 6.4L603.0 6.3L598.4 6.2L593.9 6.1L589.3 6.0L584.8 5.9L580.2 5.8L575.6 5.7L571.0 5.6L566.4 5.5L561.8 5.4L557.2 5.4L552.6 5.3L547.9 5.3L543.3 5.3L538.6 5.2L534.0 5.2L529.3 5.2L524.6 5.2L520.0 5.1L515.3 5.1L510.6 5.1L505.9 5.0L501.2 5.0L496.5 5.0L491.8 4.9L487.1 4.9L482.3 4.8L477.6 4.8L472.9 4.7L468.1 4.7L463.4 4.7L458.7 4.6L453.9 4.6L449.2 4.6L444.4 4.5L439.6 4.5L434.9 4.5L430.1 4.4L425.3 4.4L420.6 4.4L415.8 4.3L411.0 4.3L406.3 4.3L401.5 4.3L396.7 4.2L391.9 4.2L387.1 4.3L382.4 4.4L377.6 4.5L372.8 4.7L368.0 4.8L363.2 5.0L358.4 5.1L353.6 5.2L348.9 5.3L344.1 5.4L339.3 5.4L334.5 5.4L329.7 5.3L325.0 5.2L320.2 5.1L315.4 5.0L310.6 4.9L305.9 4.8L301.1 4.7L296.4 4.6L291.6 4.6L286.8 4.6L282.1 4.6L277.3 4.7L272.6 4.8L267.8 4.9L263.1 5.1L258.4 5.2L253.6 5.4L248.9 5.6L244.2 5.7L239.5 5.8L234.8 5.9L230.1 6.0L225.4 6.0L220.7 6.0L216.0 6.0L211.3 6.0L206.7 5.9L202.0 5.9L197.3 5.9L192.7 5.9L188.0 5.9L183.4 5.9L178.8 6.0L174.2 6.0L169.5 6.2L164.9 6.3L160.4 6.4L155.8 6.6L151.2 6.7L146.6 6.9L142.1 7.0L137.5 7.2L133.0 7.3L128.5 7.5L123.9 7.6L119.4 7.7L114.9 7.7L110.5 7.8L106.0 7.8L101.5 7.9L97.1 7.9L92.6 8.0L88.2 8.1L83.8 8.2L79.4 8.3L75.0 8.4L70.6 8.6L66.3 8.8L61.9 9.0L57.6 9.2L53.3 9.4L48.9 9.6L44.7 9.9L40.4 10.1L36.1 10.4L31.9 10.6L27.6 10.8L23.4 11.1Z" fill="currentColor"/>
+      <path d="M66.9 16.4L70.9 16.5L75.0 16.5L79.0 16.6L83.1 16.6L87.1 16.7L91.2 16.7L95.2 16.7L99.3 16.8L103.4 16.8L107.5 16.8L111.6 16.8L115.7 16.9L119.8 16.9L123.9 16.9L128.0 17.0L132.2 17.0L136.3 17.0L140.5 17.1L144.6 17.1L148.8 17.2L152.9 17.2L157.1 17.2L161.3 17.3L165.4 17.3L169.6 17.3L173.8 17.3L178.0 17.2L182.2 17.2L186.4 17.1L190.6 17.1L194.8 17.0L199.0 17.0L203.2 17.0L207.4 17.0L211.6 17.0L215.8 17.0L220.1 17.1L224.3 17.2L228.5 17.3L232.7 17.5L237.0 17.6L241.2 17.7L245.4 17.8L249.7 17.9L253.9 18.0L258.1 18.1L262.4 18.1L266.6 18.1L270.8 18.1L275.1 18.0L279.3 18.0L283.5 18.0L287.8 17.9L292.0 17.9L296.3 17.8L300.5 17.8L304.7 17.8L309.0 17.8L313.2 17.8L317.4 17.8L321.6 17.8L325.9 17.8L330.1 17.7L334.3 17.7L338.5 17.7L342.7 17.7L347.0 17.6L351.2 17.6L355.4 17.6L359.6 17.6L363.8 17.7L368.0 17.7L372.2 17.7L376.4 17.7L380.5 17.7L384.7 17.7L388.9 17.7L393.1 17.7L397.2 17.7L401.4 17.7L405.5 17.7L409.7 17.7L413.8 17.7L418.0 17.7L422.1 17.7L426.2 17.8L430.4 17.8L434.5 17.8L438.6 17.9L442.7 17.9L446.8 17.9L450.8 17.9L454.9 17.9L459.0 17.8L463.1 17.8L467.1 17.8L471.1 17.8L475.2 17.8L479.2 17.8L483.2 17.8L487.2 17.8L491.2 17.8L495.2 17.7L499.2 17.7L503.2 17.7L507.2 17.7L511.1 17.7L515.1 17.7L519.0 17.7L522.9 17.7L526.8 17.7L530.7 17.7L534.6 17.6L538.5 17.6L542.4 17.6L546.2 17.5L550.1 17.4L553.9 17.3L557.7 17.2L561.5 17.1L565.3 16.9L569.1 16.8L572.9 16.6L576.6 16.5L580.4 16.4L584.1 16.3L587.8 16.2L591.5 16.2L595.2 16.1L598.9 16.1L602.5 16.0L606.2 16.0L609.8 16.0L613.4 15.9L617.0 15.9L620.6 15.8L624.2 15.8L627.7 15.7L631.3 15.6L634.8 15.5L638.3 15.4L641.8 15.3L645.3 15.2L648.7 15.1L652.2 15.0L655.6 14.9L659.0 14.8L662.4 14.6L665.8 14.5L669.1 14.3L669.1 12.7L665.7 12.6L662.4 12.6L659.0 12.5L655.6 12.5L652.1 12.5L648.7 12.5L645.2 12.4L641.8 12.4L638.3 12.4L634.8 12.4L631.2 12.3L627.7 12.3L624.1 12.3L620.6 12.3L617.0 12.3L613.4 12.3L609.8 12.3L606.1 12.4L602.5 12.4L598.8 12.4L595.2 12.4L591.5 12.4L587.8 12.4L584.1 12.4L580.3 12.3L576.6 12.2L572.8 12.1L569.1 12.0L565.3 11.9L561.5 11.8L557.7 11.7L553.9 11.6L550.0 11.5L546.2 11.4L542.3 11.4L538.5 11.4L534.6 11.4L530.7 11.4L526.8 11.4L522.9 11.4L519.0 11.4L515.0 11.4L511.1 11.4L507.1 11.4L503.2 11.4L499.2 11.4L495.2 11.4L491.2 11.4L487.2 11.4L483.2 11.3L479.2 11.3L475.2 11.3L471.1 11.3L467.1 11.3L463.1 11.3L459.0 11.3L454.9 11.3L450.8 11.3L446.8 11.3L442.7 11.3L438.6 11.3L434.5 11.3L430.4 11.3L426.2 11.3L422.1 11.3L418.0 11.4L413.8 11.4L409.7 11.4L405.6 11.4L401.4 11.4L397.2 11.4L393.1 11.4L388.9 11.3L384.7 11.3L380.5 11.3L376.4 11.3L372.2 11.3L368.0 11.3L363.8 11.3L359.6 11.3L355.4 11.3L351.2 11.3L347.0 11.3L342.8 11.2L338.5 11.2L334.3 11.2L330.1 11.1L325.9 11.1L321.6 11.1L317.4 11.1L313.2 11.0L309.0 11.1L304.7 11.1L300.5 11.0L296.3 11.0L292.0 11.0L287.8 10.9L283.5 10.9L279.3 10.8L275.1 10.8L270.8 10.8L266.6 10.8L262.4 10.8L258.1 10.8L253.9 10.8L249.6 10.9L245.4 11.0L241.2 11.2L236.9 11.3L232.7 11.5L228.5 11.6L224.3 11.7L220.0 11.9L215.8 12.0L211.6 12.0L207.4 12.1L203.2 12.1L199.0 12.1L194.8 12.1L190.5 12.1L186.3 12.0L182.2 12.0L178.0 12.0L173.8 12.0L169.6 12.0L165.4 12.1L161.2 12.1L157.1 12.2L152.9 12.3L148.7 12.4L144.6 12.5L140.4 12.6L136.3 12.6L132.1 12.7L128.0 12.8L123.9 12.9L119.8 13.0L115.7 13.1L111.6 13.2L107.5 13.3L103.4 13.4L99.3 13.5L95.2 13.6L91.1 13.8L87.1 13.9L83.0 14.0L79.0 14.1L74.9 14.3L70.9 14.4L66.9 14.6Z" fill="currentColor" opacity="0.55"/>
+      <g stroke="var(--paper)" fill="none" stroke-linecap="round"><path d="M439.6 13.6L444.3 13.6L448.9 13.6L453.6 13.5L458.2 13.5L462.8 13.5L467.4 13.5L472.1 13.5L476.7 13.4L481.3 13.4L485.9 13.4L490.5 13.4L495.1 13.3L499.7 13.3L504.3 13.3L508.9 13.2L513.4 13.2L518.0 13.2L522.6 13.2L527.1 13.1L531.7 13.1L536.2 13.1L540.8 13.1L545.3 13.0L549.8 13.0L554.3 13.0L558.8 12.9L563.3 12.9L567.8 12.8L572.3 12.8L576.8 12.7L581.2 12.6L585.7 12.5L590.2 12.5L594.6 12.4L599.0 12.3L603.5 12.3L607.9 12.2L612.3 12.1L616.7 12.1L621.0 12.0L625.4 12.0L629.8 11.9L634.1 11.9L638.5 11.8L642.8 11.8L647.1 11.7L651.4 11.6L655.7 11.6L660.0 11.5L664.3 11.4L668.5 11.3L672.8 11.2L677.0 11.1L681.2 11.0L685.4 10.9L689.6 10.8L693.8 10.7L698.0 10.6L702.1 10.5L706.3 10.4" stroke-width="1.3" stroke-dasharray="8 5 3 9"/></g>
+      </g>
+      </g>
+    </svg>
+      </div>
+      <span class="note">Well past the name — the mark becomes the horizontal of the page.</span>
+    </div>
+    <div class="rung">
+      <span class="len">55rem — full column</span>
+      <div class="mark">
+        <h3 class="wordmark">Michael <span class="mid">Toshiro</span> Omoto</h3>
+        <span class="reading" lang="ja">大本　マイケル　敏郎</span>
+        <svg class="brush" width="880" height="26" viewBox="0 0 880 26" aria-hidden="true">
+      <g transform="translate(-27.0 0)">
+      <g style="mix-blend-mode:var(--wash-blend)" filter="url(#f-doubled-4)" opacity=".82">
+      <path d="M28.0 13.9L33.1 14.0L38.1 14.2L43.2 14.3L48.3 14.4L53.4 14.6L58.6 14.7L63.7 14.8L68.9 15.0L74.1 15.1L79.3 15.2L84.5 15.3L89.7 15.4L95.0 15.4L100.3 15.4L105.5 15.5L110.8 15.5L116.1 15.4L121.4 15.4L126.8 15.4L132.1 15.4L137.5 15.4L142.9 15.4L148.2 15.4L153.6 15.5L159.1 15.6L164.5 15.6L169.9 15.7L175.4 15.8L180.8 16.0L186.3 16.1L191.8 16.2L197.3 16.3L202.8 16.4L208.3 16.4L213.8 16.5L219.3 16.5L224.9 16.5L230.4 16.5L236.0 16.5L241.5 16.4L247.1 16.3L252.7 16.3L258.3 16.2L263.9 16.2L269.5 16.2L275.1 16.2L280.7 16.2L286.4 16.3L292.0 16.4L297.6 16.6L303.3 16.7L308.9 16.8L314.6 17.0L320.3 17.1L325.9 17.3L331.6 17.4L337.3 17.4L343.0 17.5L348.6 17.5L354.3 17.4L360.0 17.3L365.7 17.2L371.4 17.1L377.1 17.0L382.8 16.9L388.6 16.8L394.3 16.7L400.0 16.6L405.7 16.6L411.4 16.6L417.1 16.7L422.8 16.8L428.6 16.9L434.3 17.0L440.0 17.2L445.7 17.3L451.4 17.5L457.2 17.6L462.9 17.7L468.6 17.7L474.3 17.8L480.0 17.7L485.7 17.7L491.5 17.7L497.2 17.7L502.9 17.6L508.6 17.6L514.3 17.6L520.0 17.5L525.7 17.5L531.4 17.4L537.0 17.4L542.7 17.4L548.4 17.3L554.1 17.3L559.8 17.2L565.4 17.2L571.1 17.1L576.7 17.1L582.4 17.0L588.0 17.0L593.7 16.9L599.3 16.8L604.9 16.8L610.5 16.7L616.1 16.7L621.7 16.6L627.3 16.6L632.9 16.5L638.5 16.5L644.1 16.4L649.6 16.4L655.2 16.3L660.7 16.2L666.2 16.2L671.8 16.1L677.3 16.0L682.8 15.9L688.3 15.7L693.7 15.6L699.2 15.4L704.7 15.3L710.1 15.1L715.6 15.0L721.0 14.8L726.4 14.7L731.8 14.6L737.2 14.5L742.6 14.4L747.9 14.3L753.3 14.2L758.6 14.2L763.9 14.1L769.2 14.0L774.5 13.9L779.8 13.8L785.1 13.6L790.3 13.5L795.5 13.4L800.8 13.2L806.0 13.0L811.1 12.8L816.3 12.7L821.5 12.5L826.6 12.3L831.7 12.1L836.8 11.9L841.9 11.6L847.0 11.4L852.0 11.1L852.0 7.9L846.9 7.7L841.9 7.6L836.8 7.5L831.7 7.4L826.6 7.3L821.4 7.2L816.3 7.1L811.1 7.0L805.9 6.9L800.7 6.9L795.5 6.8L790.3 6.7L785.0 6.7L779.7 6.6L774.5 6.6L769.2 6.6L763.9 6.5L758.6 6.5L753.2 6.5L747.9 6.5L742.5 6.5L737.1 6.5L731.8 6.4L726.4 6.4L720.9 6.3L715.5 6.2L710.1 6.1L704.6 6.0L699.2 5.9L693.7 5.8L688.2 5.7L682.7 5.6L677.2 5.5L671.7 5.4L666.2 5.4L660.7 5.3L655.1 5.3L649.6 5.3L644.0 5.2L638.5 5.2L632.9 5.2L627.3 5.2L621.7 5.1L616.1 5.1L610.5 5.1L604.9 5.0L599.3 5.0L593.6 5.0L588.0 4.9L582.4 4.9L576.7 4.8L571.1 4.8L565.4 4.7L559.7 4.7L554.1 4.7L548.4 4.6L542.7 4.6L537.0 4.6L531.4 4.5L525.7 4.5L520.0 4.5L514.3 4.4L508.6 4.4L502.9 4.4L497.2 4.3L491.4 4.3L485.7 4.3L480.0 4.3L474.3 4.2L468.6 4.2L462.9 4.3L457.2 4.4L451.4 4.5L445.7 4.7L440.0 4.8L434.3 5.0L428.6 5.1L422.8 5.2L417.1 5.3L411.4 5.4L405.7 5.4L400.0 5.4L394.3 5.3L388.5 5.2L382.8 5.1L377.1 5.0L371.4 4.9L365.7 4.8L360.0 4.7L354.3 4.6L348.6 4.6L343.0 4.6L337.3 4.6L331.6 4.7L325.9 4.8L320.2 4.9L314.6 5.1L308.9 5.2L303.3 5.4L297.6 5.6L292.0 5.7L286.3 5.8L280.7 5.9L275.1 6.0L269.5 6.0L263.9 6.0L258.3 6.0L252.7 6.0L247.1 5.9L241.5 5.9L235.9 5.9L230.4 5.9L224.8 5.9L219.3 5.9L213.8 6.0L208.2 6.0L202.7 6.2L197.2 6.3L191.7 6.4L186.3 6.6L180.8 6.7L175.3 6.9L169.9 7.0L164.4 7.2L159.0 7.3L153.6 7.5L148.2 7.6L142.8 7.7L137.4 7.7L132.1 7.8L126.7 7.8L121.4 7.9L116.1 7.9L110.8 8.0L105.5 8.1L100.2 8.2L94.9 8.3L89.7 8.4L84.5 8.6L79.2 8.8L74.0 9.0L68.9 9.2L63.7 9.4L58.5 9.6L53.4 9.9L48.3 10.1L43.2 10.4L38.1 10.6L33.0 10.8L28.0 11.1Z" fill="currentColor"/>
+      <path d="M80.0 16.4L84.8 16.5L89.6 16.5L94.5 16.6L99.3 16.6L104.1 16.7L109.0 16.7L113.9 16.7L118.7 16.8L123.6 16.8L128.5 16.8L133.4 16.8L138.3 16.9L143.2 16.9L148.2 16.9L153.1 17.0L158.0 17.0L163.0 17.0L167.9 17.1L172.9 17.1L177.9 17.2L182.8 17.2L187.8 17.2L192.8 17.3L197.8 17.3L202.8 17.3L207.8 17.3L212.8 17.2L217.8 17.2L222.8 17.1L227.8 17.1L232.9 17.0L237.9 17.0L242.9 17.0L248.0 17.0L253.0 17.0L258.1 17.0L263.1 17.1L268.2 17.2L273.2 17.3L278.3 17.5L283.3 17.6L288.4 17.7L293.4 17.8L298.5 17.9L303.6 18.0L308.6 18.1L313.7 18.1L318.8 18.1L323.8 18.1L328.9 18.0L334.0 18.0L339.0 18.0L344.1 17.9L349.2 17.9L354.2 17.8L359.3 17.8L364.3 17.8L369.4 17.8L374.5 17.8L379.5 17.8L384.6 17.8L389.6 17.8L394.7 17.7L399.7 17.7L404.8 17.7L409.8 17.7L414.8 17.6L419.9 17.6L424.9 17.6L429.9 17.6L435.0 17.7L440.0 17.7L445.0 17.7L450.0 17.7L455.0 17.7L460.0 17.7L465.0 17.7L470.0 17.7L475.0 17.7L479.9 17.7L484.9 17.7L489.9 17.7L494.8 17.7L499.8 17.7L504.7 17.7L509.6 17.8L514.6 17.8L519.5 17.8L524.4 17.9L529.3 17.9L534.2 17.9L539.1 17.9L543.9 17.9L548.8 17.8L553.6 17.8L558.5 17.8L563.3 17.8L568.2 17.8L573.0 17.8L577.8 17.8L582.6 17.8L587.4 17.8L592.1 17.7L596.9 17.7L601.6 17.7L606.4 17.7L611.1 17.7L615.8 17.7L620.5 17.7L625.2 17.7L629.9 17.7L634.6 17.7L639.2 17.6L643.8 17.6L648.5 17.6L653.1 17.5L657.7 17.4L662.3 17.3L666.8 17.2L671.4 17.1L675.9 16.9L680.4 16.8L684.9 16.6L689.4 16.5L693.9 16.4L698.4 16.3L702.8 16.2L707.2 16.2L711.6 16.1L716.0 16.1L720.4 16.0L724.8 16.0L729.1 16.0L733.4 15.9L737.7 15.9L742.0 15.8L746.3 15.8L750.5 15.7L754.8 15.6L759.0 15.5L763.2 15.4L767.3 15.3L771.5 15.2L775.6 15.1L779.8 15.0L783.8 14.9L787.9 14.8L792.0 14.6L796.0 14.5L800.0 14.3L800.0 12.7L796.0 12.6L791.9 12.6L787.9 12.5L783.8 12.5L779.7 12.5L775.6 12.5L771.5 12.4L767.3 12.4L763.1 12.4L759.0 12.4L754.7 12.3L750.5 12.3L746.3 12.3L742.0 12.3L737.7 12.3L733.4 12.3L729.1 12.3L724.7 12.4L720.4 12.4L716.0 12.4L711.6 12.4L707.2 12.4L702.8 12.4L698.3 12.4L693.9 12.3L689.4 12.2L684.9 12.1L680.4 12.0L675.9 11.9L671.4 11.8L666.8 11.7L662.2 11.6L657.7 11.5L653.1 11.4L648.5 11.4L643.8 11.4L639.2 11.4L634.5 11.4L629.9 11.4L625.2 11.4L620.5 11.4L615.8 11.4L611.1 11.4L606.4 11.4L601.6 11.4L596.9 11.4L592.1 11.4L587.4 11.4L582.6 11.4L577.8 11.3L573.0 11.3L568.2 11.3L563.3 11.3L558.5 11.3L553.6 11.3L548.8 11.3L543.9 11.3L539.1 11.3L534.2 11.3L529.3 11.3L524.4 11.3L519.5 11.3L514.6 11.3L509.6 11.3L504.7 11.3L499.8 11.4L494.8 11.4L489.9 11.4L484.9 11.4L479.9 11.4L475.0 11.4L470.0 11.4L465.0 11.3L460.0 11.3L455.0 11.3L450.0 11.3L445.0 11.3L440.0 11.3L435.0 11.3L429.9 11.3L424.9 11.3L419.9 11.3L414.9 11.3L409.8 11.2L404.8 11.2L399.7 11.2L394.7 11.1L389.6 11.1L384.6 11.1L379.5 11.1L374.5 11.0L369.4 11.1L364.3 11.1L359.3 11.0L354.2 11.0L349.2 11.0L344.1 10.9L339.0 10.9L334.0 10.8L328.9 10.8L323.8 10.8L318.8 10.8L313.7 10.8L308.6 10.8L303.6 10.8L298.5 10.9L293.4 11.0L288.4 11.2L283.3 11.3L278.3 11.5L273.2 11.6L268.1 11.7L263.1 11.9L258.0 12.0L253.0 12.0L248.0 12.1L242.9 12.1L237.9 12.1L232.9 12.1L227.8 12.1L222.8 12.0L217.8 12.0L212.8 12.0L207.8 12.0L202.8 12.0L197.8 12.1L192.8 12.1L187.8 12.2L182.8 12.3L177.8 12.4L172.9 12.5L167.9 12.6L163.0 12.6L158.0 12.7L153.1 12.8L148.1 12.9L143.2 13.0L138.3 13.1L133.4 13.2L128.5 13.3L123.6 13.4L118.7 13.5L113.8 13.6L109.0 13.8L104.1 13.9L99.3 14.0L94.4 14.1L89.6 14.3L84.8 14.4L80.0 14.6Z" fill="currentColor" opacity="0.55"/>
+      <g stroke="var(--paper)" fill="none" stroke-linecap="round"><path d="M525.7 13.6L531.2 13.6L536.8 13.6L542.3 13.5L547.8 13.5L553.4 13.5L558.9 13.5L564.4 13.5L569.9 13.4L575.5 13.4L581.0 13.4L586.5 13.4L592.0 13.3L597.5 13.3L602.9 13.3L608.4 13.2L613.9 13.2L619.3 13.2L624.8 13.2L630.2 13.1L635.7 13.1L641.1 13.1L646.5 13.1L652.0 13.0L657.4 13.0L662.8 13.0L668.2 12.9L673.5 12.9L678.9 12.8L684.3 12.8L689.6 12.7L695.0 12.6L700.3 12.5L705.6 12.5L710.9 12.4L716.2 12.3L721.5 12.3L726.8 12.2L732.1 12.1L737.3 12.1L742.5 12.0L747.8 12.0L753.0 11.9L758.2 11.9L763.4 11.8L768.6 11.8L773.7 11.7L778.9 11.6L784.0 11.6L789.1 11.5L794.2 11.4L799.3 11.3L804.4 11.2L809.4 11.1L814.5 11.0L819.5 10.9L824.5 10.8L829.5 10.7L834.5 10.6L839.5 10.5L844.4 10.4" stroke-width="1.3" stroke-dasharray="8 5 3 9"/></g>
+      </g>
+      </g>
+    </svg>
+      </div>
+      <span class="note">The whole text column, stopping at the seal.</span>
+    </div>
+  </section>
+</div>
+</body></html>

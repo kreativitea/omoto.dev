@@ -7,10 +7,12 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 
   {# Dry brush. Displacement scale must stay small relative to the stroke's
-     height, or the mark dissolves into fuzz rather than fraying. #}
+     height, or the mark dissolves into fuzz rather than fraying — and the
+     longer, finer stroke this now roughens needs less of it than the old one
+     did, since the same displacement eats a larger share of a thinner mark. #}
   <filter id="dry1" x="-20%" y="-70%" width="140%" height="240%">
-    <feTurbulence type="fractalNoise" baseFrequency=".055 .012" numOctaves="4" seed="5" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
+    <feTurbulence type="fractalNoise" baseFrequency=".06 .014" numOctaves="4" seed="5" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
 
   {# Carved stone edge, for the seal and the practice row. #}
