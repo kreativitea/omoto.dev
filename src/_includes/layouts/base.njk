@@ -7,8 +7,17 @@
 <title>{% if title %}{{ title }} — {{ site.name }}{% else %}{{ site.name }}{% endif %}</title>
 <meta name="description" content="{{ description or site.description }}">
 <link rel="canonical" href="{{ site.url }}{{ page.url }}">
-<link rel="alternate" type="application/atom+xml" title="{{ site.name }}" href="{{ '/feed.xml' | rel }}">
-<link rel="stylesheet" href="{{ '/assets/css/site.css' | rel }}">
+<link rel="alternate" type="application/atom+xml" title="{{ site.name }}" href="{{ '/feed.xml' | rel(absoluteAssets) }}">
+<link rel="stylesheet" href="{{ '/assets/css/site.css' | rel(absoluteAssets) }}">
+{%- if absoluteAssets %}
+{# A 404's absolute stylesheet path only resolves at the apex, so this keeps
+   the page presentable under any other mount. #}
+<style>
+  body{margin:0;background:#faf7f1;color:#2b2926;
+    font:17px/1.85 'Hoefler Text',Baskerville,Georgia,serif}
+  .page{max-width:36rem;margin:0 auto;padding:6rem 2rem}
+</style>
+{%- endif %}
 <meta property="og:type" content="{% if layout == 'layouts/post.njk' %}article{% else %}website{% endif %}">
 <meta property="og:title" content="{{ title or site.name }}">
 <meta property="og:description" content="{{ description or site.description }}">
@@ -26,7 +35,7 @@
   <header class="masthead">
     <div>
       <h1 class="wordmark">
-        <a class="np" href="{{ '/' | rel }}">
+        <a class="np" href="{{ '/' | rel(absoluteAssets) }}">
           {# Western: a loose wet wash under the name — pooled edge, and one
              highlight where the paint is still shining. #}
           <svg class="name-wash" width="340" height="48" viewBox="0 0 340 48" preserveAspectRatio="none" aria-hidden="true">
@@ -74,7 +83,7 @@
 
   <nav class="rail" aria-label="Primary">
     {%- for item in site.nav %}
-    <a href="{{ item.url | rel }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.label }}</a>
+    <a href="{{ item.url | rel(absoluteAssets) }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.label }}</a>
     {%- endfor %}
   </nav>
 

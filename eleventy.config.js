@@ -50,7 +50,13 @@ export default function (eleventyConfig) {
    *   page /about/           →  ../assets/css/site.css
    *   page /writing/slug/    →  ../../assets/css/site.css
    */
-  eleventyConfig.addFilter('rel', function (target) {
+  eleventyConfig.addFilter('rel', function (target, absolute) {
+    // A 404 is served at whatever URL failed rather than at its own permalink,
+    // so its depth is unknowable and relative paths cannot be computed. Those
+    // pages pass `absoluteAssets` and get site-absolute paths, which are
+    // correct at the apex domain.
+    if (absolute) return String(target);
+
     const here = (this.page && this.page.url) || '/';
     const segs = here.split('/').filter(Boolean);
     // a trailing slash means we're in a directory; otherwise the last segment
