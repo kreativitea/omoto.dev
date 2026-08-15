@@ -331,8 +331,12 @@ body{
   .cv-when time{padding-top:0}
 }
 
-/* ----------------------------------------------------------------- RAIL -- */
-/* The detail column is the page; the rail is orientation beside it. It sticks
+
+/* ----------------------------------------------------------------- WORK TRACK -- */
+/* The detail column is the page; the rail is orientation beside it.
+   Named .worktrack/.track-*, never .rail: the site nav is already
+   <nav class="rail">, and that collision silently pointed both this
+   block's sticky positioning and querySelector('.rail') at the navigation. It sticks
    while you read and highlights whichever entry is in view, so the overlap
    between the two careers stays visible without competing for reading width. */
 .work{display:grid;grid-template-columns:minmax(0,1fr) 15rem;gap:2.5rem;align-items:start}
@@ -340,62 +344,62 @@ body{
 .work-summary{font-size:1.05rem}
 .cv-intro{color:var(--ink-soft);font-size:.95rem;margin:-1rem 0 1.6rem;max-width:32rem}
 
-.rail{position:sticky;top:2.5rem;align-self:start;font-family:var(--sans)}
-.rail-key{display:flex;justify-content:space-between;gap:.5rem;margin:0 0 .7rem;
+.worktrack{position:sticky;top:2.5rem;align-self:start;font-family:var(--sans)}
+.track-key{display:flex;justify-content:space-between;gap:.5rem;margin:0 0 .7rem;
   font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
-.rail-key--career{color:var(--indigo)}
-.rail-key--community{color:var(--vermilion)}
+.track-key--career{color:var(--indigo)}
+.track-key--community{color:var(--vermilion)}
 
-.rail-body{--rail-h:26rem;position:relative;height:var(--rail-h);
+.track-body{--track-h:26rem;position:relative;height:var(--track-h);
   display:grid;grid-template-columns:1fr 2.2rem 1fr}
-.rail-bars{list-style:none;margin:0;padding:0;position:relative;height:100%}
-.rail-bar{position:absolute;
-  top:calc(var(--from) * var(--rail-h));
-  height:calc((var(--to) - var(--from)) * var(--rail-h));
+.track-bars{list-style:none;margin:0;padding:0;position:relative;height:100%}
+.track-bar{position:absolute;
+  top:calc(var(--from) * var(--track-h));
+  height:calc((var(--to) - var(--from)) * var(--track-h));
   width:calc(100% / var(--lanes));
 }
-.rail-bars--career .rail-bar{right:calc(var(--lane) * 100% / var(--lanes))}
-.rail-bars--community .rail-bar{left:calc(var(--lane) * 100% / var(--lanes))}
-.rail-line{position:absolute;top:0;bottom:0;width:3px;border-radius:2px;
+.track-bars--career .track-bar{right:calc(var(--lane) * 100% / var(--lanes))}
+.track-bars--community .track-bar{left:calc(var(--lane) * 100% / var(--lanes))}
+.track-line{position:absolute;top:0;bottom:0;width:3px;border-radius:2px;
   background:var(--indigo);opacity:.28;transition:opacity .2s ease,width .2s ease}
-.rail-bars--career .rail-line{right:.35rem}
-.rail-bars--community .rail-line{left:.35rem}
-.rail-bars--community .rail-line{background:var(--vermilion)}
-.rail-bar.is-ongoing .rail-line{
+.track-bars--career .track-line{right:.35rem}
+.track-bars--community .track-line{left:.35rem}
+.track-bars--community .track-line{background:var(--vermilion)}
+.track-bar.is-ongoing .track-line{
   -webkit-mask-image:linear-gradient(to bottom,#000 72%,transparent);
   mask-image:linear-gradient(to bottom,#000 72%,transparent)}
 
 /* Only the entry you are reading is named. */
-.rail-label{position:absolute;top:-.1rem;font-size:.66rem;line-height:1.35;
+.track-label{position:absolute;top:-.1rem;font-size:.66rem;line-height:1.35;
   color:var(--ink);opacity:0;transition:opacity .2s ease;pointer-events:none}
-.rail-label i{display:block;font-style:normal;color:var(--faint);font-size:.58rem;
+.track-label i{display:block;font-style:normal;color:var(--faint);font-size:.58rem;
   letter-spacing:.06em;margin-top:.05rem}
-.rail-bars--career .rail-label{right:1rem;text-align:right}
-.rail-bars--community .rail-label{left:1rem}
-.rail-bar.is-current .rail-label{opacity:1}
-.rail-bar.is-current .rail-line{opacity:1;width:4px}
+.track-bars--career .track-label{right:1rem;text-align:right}
+.track-bars--community .track-label{left:1rem}
+.track-bar.is-current .track-label{opacity:1}
+.track-bar.is-current .track-line{opacity:1;width:4px}
 
 /* A role that is honestly both sits on the centre line. */
-.rail-bars--both{position:absolute;left:0;right:0;top:0;height:100%}
-.rail-bars--both .rail-bar{left:50%;transform:translateX(-50%);width:auto}
-.rail-bars--both .rail-line{left:50%;transform:translateX(-50%);
+.track-bars--both{position:absolute;left:0;right:0;top:0;height:100%}
+.track-bars--both .track-bar{left:50%;transform:translateX(-50%);width:auto}
+.track-bars--both .track-line{left:50%;transform:translateX(-50%);
   background:linear-gradient(to bottom,var(--indigo),var(--vermilion));opacity:.4}
-.rail-bars--both .rail-label{left:50%;transform:translateX(-50%);text-align:center;
+.track-bars--both .track-label{left:50%;transform:translateX(-50%);text-align:center;
   background:var(--paper);padding:0 .2rem}
-.rail-bars--both .rail-bar.is-current .rail-line{opacity:.95}
+.track-bars--both .track-bar.is-current .track-line{opacity:.95}
 
-.rail-ticks{list-style:none;margin:0;padding:0;position:relative;height:100%}
-.rail-ticks::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
+.track-ticks{list-style:none;margin:0;padding:0;position:relative;height:100%}
+.track-ticks::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
   background:var(--hairline)}
-.rail-ticks li{position:absolute;left:0;right:0;top:calc(var(--at) * var(--rail-h));
+.track-ticks li{position:absolute;left:0;right:0;top:calc(var(--at) * var(--track-h));
   text-align:center}
-.rail-ticks span{font-size:.56rem;letter-spacing:.06em;color:var(--faint);
+.track-ticks span{font-size:.56rem;letter-spacing:.06em;color:var(--faint);
   background:var(--paper);padding:.05rem .15rem}
 
 /* The reading column carries everything; the rail is an extra. */
 @media (max-width:900px){
   .work{grid-template-columns:1fr}
-  .rail{display:none}
+  .worktrack{display:none}
 }
 
 /* ------------------------------------------------------------------- CV -- */
