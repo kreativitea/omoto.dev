@@ -28,4 +28,4 @@ through university programmes. That is still the part that shows up most in how 
 
 I write here about privacy, about how teams learn, and occasionally in Japanese.
 
-[mike@omoto.dev](mailto:mike@omoto.dev)
+[admin@omoto.dev](mailto:admin@omoto.dev)
