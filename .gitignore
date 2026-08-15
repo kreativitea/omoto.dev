@@ -3,3 +3,6 @@ node_modules/
 .DS_Store
 .cache/
 *.log
+
+# agent worktrees — separate git repos, never part of this one
+.claude/worktrees/

@@ -96,7 +96,7 @@ body{
   background-blend-mode:multiply,multiply;
 }
 
-/* The practice grid (米字格) is anchored to the CONTENT column, not to the
+/* The practice grid (十字格) is anchored to the CONTENT column, not to the
    viewport. Tiles start exactly --grid-reach to the left of where the text
    begins; because that's a whole number of tiles, a grid line always lands
    on the text edge and stays there at every window width. The sheet still
@@ -105,23 +105,19 @@ body{
    `position:relative` with no z-index is deliberate — it avoids creating a
    stacking context, so washes inside can still multiply against the paper
    colour painted on <body>. */
-/* The three line kinds carry different weights on purpose. At one flat
-   opacity nobody read the sheet as 米字格 — it looked like stray rules. The
-   cell box is the loudest and solid, because the square is what says
-   "practice sheet" at a glance; the centre cross follows; the diagonals are
-   faintest but still plainly there, since the 米 they trace is the cue that
-   names the thing. Every dash gap was tightened too — the old 3/9 spacing
-   was sparse enough to dissolve into the paper grain at any real size.
+/* Box and centre cross only. The 米 diagonals this started with are the
+   Chinese convention — they belong to sheets for learners of 漢字 as Chinese,
+   and a Japanese eye reads them as the wrong classroom. 十字 alone is what
+   Japanese practice paper rules.
 
-   The tighter dashes lay down more ink per line, so these opacities buy far
-   more presence than the same numbers would have before. They are set at
-   the point where the diagonals survive and the serif still wins the page;
-   a few points higher and the ruling starts reading as foreground.
+   The two line kinds carry different weights on purpose. At one flat opacity
+   nobody read the sheet as a practice sheet at all — it looked like stray
+   rules. The dash gap was tightened as well: the old 3/9 spacing left more
+   gap than ink, so the guide dissolved into the paper grain at any real size.
 
-   The box sits BELOW the cross numerically and still reads above it, because
-   it is the only unbroken line here — a solid rule at .16 carries more weight
-   on the page than a 6/6 dash at .17. Compare the drawn result, not the
-   numbers, if these are ever retuned. */
+   Note the box sits BELOW the cross numerically and still reads at the same
+   weight, because it is the only unbroken line here — solid rule versus 6/6
+   dash. Compare the drawn result, not the numbers, if these are retuned. */
 .page{
   max-width:var(--page-max);margin:0 auto;
   padding:0 var(--page-pad) 7rem;position:relative;
@@ -131,7 +127,7 @@ body{
   left:calc(var(--page-pad) - var(--grid-reach));
   right:calc(var(--page-pad) - var(--grid-reach));
   background-position:0 0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112'%3E%3Cg fill='none' stroke='%238a7f6d' stroke-width='1'%3E%3Crect x='.5' y='.5' width='111' height='111' stroke-opacity='.16'/%3E%3Cpath d='M56 0V112M0 56H112' stroke-dasharray='6 6' stroke-opacity='.17'/%3E%3Cpath d='M0 0L112 112M112 0L0 112' stroke-dasharray='4 6' stroke-opacity='.13'/%3E%3C/g%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112'%3E%3Cg fill='none' stroke='%238a7f6d' stroke-width='1'%3E%3Crect x='.5' y='.5' width='111' height='111' stroke-opacity='.16'/%3E%3Cpath d='M56 0V112M0 56H112' stroke-dasharray='6 6' stroke-opacity='.21'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 .col{max-width:var(--measure)}
