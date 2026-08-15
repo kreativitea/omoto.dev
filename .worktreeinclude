@@ -1,0 +1,4 @@
+# Untracked/ignored paths copied into every new worktree.
+# node_modules is ~22M / 1650 files — cheaper to copy than to npm install per worktree,
+# and it means `npm run dev` works the moment a worktree is created.
+node_modules/
