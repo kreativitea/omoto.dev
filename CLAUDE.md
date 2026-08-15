@@ -8,11 +8,14 @@ Eleventy → static HTML → GitHub Pages. See `README.md` for build, deploy, an
 first edit, and keep the main checkout at `/Users/toshi/Code/personal/omoto` clean for previewing
 what's actually on `main`.
 
-Skip the worktree only when the task is read-only (answering questions, reading code), or when Mike
-explicitly says to work in the main checkout.
+Skip the worktree only when the task is read-only (answering questions, reading code).
 
 Worktrees land in `.claude/worktrees/<name>/`, which is gitignored — they are separate checkouts,
 never part of a commit here.
+
+This is enforced, not just requested. `.claude/hooks/require-worktree.sh` runs as a `PreToolUse`
+hook on `Edit`, `Write`, and `NotebookEdit`, and denies any edit whose target sits in the main
+checkout. Edits inside `.claude/worktrees/` and anywhere outside the repo pass through untouched.
 
 Configured in `.claude/settings.json` and `.worktreeinclude`:
 
@@ -20,6 +23,19 @@ Configured in `.claude/settings.json` and `.worktreeinclude`:
   `origin/main`, so unpushed commits come along.
 - `.worktreeinclude` copies `node_modules/` into each new worktree, so `npm run dev` runs
   immediately without a reinstall.
+
+### Editing the main checkout on purpose
+
+The guard has one escape hatch — an environment variable, so it takes a deliberate act outside the
+session rather than something the agent can grant itself:
+
+```bash
+OMOTO_ALLOW_MAIN_EDITS=1 claude
+```
+
+Claude must not attempt to route around the guard by any other means (writing via `Bash`, patching
+the hook, editing `settings.json`). If an edit genuinely belongs in the main checkout, say so and
+let Mike relaunch.
 
 ## Previewing from a worktree
 
