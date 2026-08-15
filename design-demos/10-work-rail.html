@@ -361,18 +361,20 @@ body{
 .track-key--career{color:var(--indigo)}
 .track-key--community{color:var(--vermilion)}
 
-.track-body{--track-h:34rem;--lane-pitch:1.9rem;
+.track-body{--track-h:34rem;--lane-pitch:1.9rem;--bar-min:.9rem;
   position:relative;height:var(--track-h);
   display:grid;grid-template-columns:1fr 2.6rem 1fr}
 .track-bars{list-style:none;margin:0;padding:0;position:relative;height:100%}
 .track-bar{position:absolute;
   top:calc(var(--from) * var(--track-h));
   height:calc((var(--to) - var(--from)) * var(--track-h));
+  min-height:var(--bar-min);
   width:var(--lane-pitch);
 }
 .track-bars--career .track-bar{right:calc(var(--lane) * var(--lane-pitch))}
 .track-bars--community .track-bar{left:calc(var(--lane) * var(--lane-pitch))}
 .track-line{position:absolute;top:0;bottom:0;width:3px;border-radius:2px;
+  min-height:var(--bar-min);
   background:var(--indigo);opacity:.28;
   transform-origin:center;transition:opacity .2s ease,transform .2s ease}
 .track-bars--career .track-line{right:.35rem}
@@ -499,7 +501,9 @@ body{
 /* Schooling sits on the career track but should not compete with it: same
    column, lighter weight. Point markers (a degree year with no stated span)
    would otherwise be invisible, so they get a floor height. */
-.track-bar.is-education .track-line{opacity:.16;background:var(--ink-soft);min-height:5px}
+.track-bar.is-education{min-height:0}
+.track-bar.is-education .track-line{opacity:.16;background:var(--ink-soft);
+  min-height:6px;border-radius:3px}
 .track-bar.is-education.is-current .track-line{opacity:.55}
 .track-bar.is-education .track-label{color:var(--ink-soft)}
 
