@@ -105,35 +105,6 @@
     {{ content | safe }}
   </main>
 
-  {# 青海波 (seigaiha) — overlapping wave scales, the oldest of the wagara
-     patterns. Two offset rows is enough to read as the pattern; more becomes
-     wallpaper. The upper row is inset by half a scale, which is what makes the
-     interlock work. #}
-  <svg class="motif-seigaiha" width="224" height="38" viewBox="0 0 224 38" aria-hidden="true">
-    <defs>
-      <g id="seigaiha-rows" fill="none" stroke="#4a7098" stroke-width="1.3">
-        <g transform="translate(-16,-16)">
-          {%- for i in range(0, 9) %}
-          <g transform="translate({{ i * 32 }},0)"><path d="M0 34 A16 16 0 0 1 32 34"/><path d="M6 34 A10 10 0 0 1 26 34"/><path d="M12 34 A4 4 0 0 1 20 34"/></g>
-          {%- endfor %}
-        </g>
-        <g transform="translate(0,4)">
-          {%- for i in range(0, 7) %}
-          <g transform="translate({{ i * 32 }},0)"><path d="M0 34 A16 16 0 0 1 32 34"/><path d="M6 34 A10 10 0 0 1 26 34"/><path d="M12 34 A4 4 0 0 1 20 34"/></g>
-          {%- endfor %}
-        </g>
-      </g>
-    </defs>
-    {# Waves are the one motif on the sheet that has an excuse to move. Three
-       passes over the whole pattern, authored once and stamped three times —
-       repeating fifty arcs per frame instead would be absurd for a footer. #}
-    <g class="boil" opacity=".55" style="mix-blend-mode:var(--wash-blend)">
-      {%- for f in ["wet-line","wet-line2","wet-line3"] %}
-      <g><use href="#seigaiha-rows" filter="url(#{{ f }})"/></g>
-      {%- endfor %}
-    </g>
-  </svg>
-
   {# The same character, five times, getting better. #}
   <div class="practice-row" aria-hidden="true">
     {%- for a in [
@@ -158,6 +129,14 @@
       {%- endfor %}
     </ul>
   </footer>
+
+  {# 青海波 (seigaiha) — overlapping wave scales, the oldest of the wagara
+     patterns, closing the page as a border. A tiling background rather than a
+     wide inline SVG: a displacement filter stretched the full width of the
+     viewport is the exact shape that makes Chromium give up rasterising, and
+     seigaiha is a stencil pattern, so a regular repeat is truer to it than a
+     hand-wobbled one would be. #}
+  <div class="wave-border" aria-hidden="true"></div>
 
 </div>
 </body>
