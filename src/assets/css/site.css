@@ -295,7 +295,7 @@ body{
 .cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
 .cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
 .cv-entry:last-child::after{display:none}
-.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--ink-soft);
   display:block;padding-top:.4rem;text-transform:uppercase}
 .cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
 .cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
@@ -317,7 +317,7 @@ body{
 .cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
 .cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
 .cv-entry:last-child::after{display:none}
-.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--ink-soft);
   display:block;padding-top:.4rem;text-transform:uppercase}
 .cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
 .cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
@@ -339,7 +339,7 @@ body{
    block's sticky positioning and querySelector('.rail') at the navigation. It sticks
    while you read and highlights whichever entry is in view, so the overlap
    between the two careers stays visible without competing for reading width. */
-.work{display:grid;grid-template-columns:minmax(0,1fr) 15rem;gap:2.5rem;align-items:start}
+.work{display:grid;grid-template-columns:minmax(0,1fr) 19rem;gap:3rem;align-items:start}
 .work-main .article{max-width:var(--measure)}
 .work-summary{font-size:1.05rem}
 .cv-intro{color:var(--ink-soft);font-size:.95rem;margin:-1rem 0 1.6rem;max-width:32rem}
@@ -350,8 +350,8 @@ body{
 .track-key--career{color:var(--indigo)}
 .track-key--community{color:var(--vermilion)}
 
-.track-body{--track-h:26rem;position:relative;height:var(--track-h);
-  display:grid;grid-template-columns:1fr 2.2rem 1fr}
+.track-body{--track-h:34rem;position:relative;height:var(--track-h);
+  display:grid;grid-template-columns:1fr 2.6rem 1fr}
 .track-bars{list-style:none;margin:0;padding:0;position:relative;height:100%}
 .track-bar{position:absolute;
   top:calc(var(--from) * var(--track-h));
@@ -361,13 +361,14 @@ body{
 .track-bars--career .track-bar{right:calc(var(--lane) * 100% / var(--lanes))}
 .track-bars--community .track-bar{left:calc(var(--lane) * 100% / var(--lanes))}
 .track-line{position:absolute;top:0;bottom:0;width:3px;border-radius:2px;
-  background:var(--indigo);opacity:.28;transition:opacity .2s ease,width .2s ease}
+  background:var(--indigo);opacity:.28;
+  transform-origin:center;transition:opacity .2s ease,transform .2s ease}
 .track-bars--career .track-line{right:.35rem}
 .track-bars--community .track-line{left:.35rem}
 .track-bars--community .track-line{background:var(--vermilion)}
 .track-bar.is-ongoing .track-line{
-  -webkit-mask-image:linear-gradient(to bottom,#000 72%,transparent);
-  mask-image:linear-gradient(to bottom,#000 72%,transparent)}
+  -webkit-mask-image:linear-gradient(to top,#000 72%,transparent);
+  mask-image:linear-gradient(to top,#000 72%,transparent)}
 
 /* Only the entry you are reading is named. */
 .track-label{position:absolute;top:-.1rem;font-size:.66rem;line-height:1.35;
@@ -379,7 +380,7 @@ body{
 /* Lit = in view, so the bars keep showing concurrency. Named = nearest the
    middle, and only that one carries a label — which is why three overlapping
    commitments can never produce three overlapping labels. */
-.track-bar.is-current .track-line{opacity:1;width:4px}
+.track-bar.is-current .track-line{opacity:1;transform:scaleX(1.8)}
 .track-bar.is-named .track-label{opacity:1}
 
 /* A role that is honestly both sits on the centre line. */
@@ -413,7 +414,7 @@ body{
 .cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
 .cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
 .cv-entry:last-child::after{display:none}
-.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--ink-soft);
   display:block;padding-top:.4rem;text-transform:uppercase}
 .cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
 .cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
@@ -482,3 +483,10 @@ body{
   .page::before,.brush,.practice-row{display:none}
   body{background:#fff;color:#000}
 }
+
+/* Schooling sits on the career track but should not compete with it: same
+   column, lighter weight. Point markers (a degree year with no stated span)
+   would otherwise be invisible, so they get a floor height. */
+.track-bar.is-education .track-line{opacity:.16;background:var(--ink-soft);min-height:5px}
+.track-bar.is-education.is-current .track-line{opacity:.55}
+.track-bar.is-education .track-label{color:var(--ink-soft)}

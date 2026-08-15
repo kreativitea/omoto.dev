@@ -175,17 +175,29 @@
       "school": "University of California, Irvine",
       "credential": "B.A. Psychology, Minor in Philosophy",
       "year": "2006",
-      "note": "Senior thesis in mathematical psychology: a Bayesian model predicting individual strength from team results."
+      "note": "Senior thesis in mathematical psychology: a Bayesian model predicting individual strength from team results.",
+      "start": "2006",
+      "end": "2006",
+      "kind": "education",
+      "key": "university-of-california-irvine"
     },
     {
       "school": "Santa Monica College",
       "credential": "A.A. General Science, graduated with honours",
-      "year": "2001 – 2004"
+      "year": "2001 – 2004",
+      "start": "2001",
+      "end": "2004",
+      "kind": "education",
+      "key": "santa-monica-college"
     },
     {
       "school": "TESOL Express",
       "credential": "TEFL/TESOL Certificate",
-      "year": "2012"
+      "year": "2012",
+      "start": "2012",
+      "end": "2012",
+      "kind": "education",
+      "key": "tesol-express"
     }
   ],
   "languages": "English (native) · Japanese (near-native)"
