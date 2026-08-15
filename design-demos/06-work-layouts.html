@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Work page — volunteer layouts</title>
+<style>
+:root{
+  --paper:#faf7f1;--ink:#2b2926;--ink-soft:#7a746c;--faint:#b4ada2;
+  --vermilion:#c2452f;--indigo:#5a6f8c;--hairline:rgba(180,173,162,.34);
+  --serif:'Hoefler Text',Baskerville,'Times New Roman',serif;
+  --sans:Optima,'Avenir Next',system-ui,sans-serif;
+  --row:42px;              /* one year */
+  --y0:2013;               /* top of the axis */
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:16px;line-height:1.8;padding:3rem 2rem 6rem}
+.wrap{max-width:60rem;margin:0 auto}
+h1{font-size:.72rem;font-family:var(--sans);letter-spacing:.24em;text-transform:uppercase;
+  color:var(--faint);font-weight:400;margin:0 0 .4rem}
+h2{font-size:1.3rem;font-weight:400;margin:0 0 .3rem}
+.lede{color:var(--ink-soft);font-size:.95rem;max-width:34rem;margin:0 0 2.4rem}
+section{margin:0 0 5.5rem}
+
+/* ---------- A. parallel timeline ---------- */
+.tl{position:relative;display:grid;grid-template-columns:1fr 4.5rem 1fr;gap:0;
+  margin-top:1.5rem}
+.tl-axis{position:relative}
+.tl-axis::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
+  background:var(--hairline);transform:translateX(-.5px)}
+.tl-year{position:absolute;left:0;right:0;text-align:center;font-family:var(--sans);
+  font-size:.62rem;letter-spacing:.1em;color:var(--faint);background:var(--paper);
+  padding:.15rem 0}
+.tl-col{position:relative;min-height:620px}
+.tl-head{font-family:var(--sans);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:.8rem}
+.tl-col.right .tl-head{text-align:left}
+.tl-col.left .tl-head{text-align:right}
+.bar{position:absolute;padding:.3rem .7rem;border-radius:2px;font-size:.82rem;line-height:1.35}
+.tl-col.left .bar{right:1.1rem;text-align:right;border-right:2px solid var(--ink)}
+.tl-col.right .bar{left:1.1rem;border-left:2px solid var(--vermilion)}
+.bar b{font-weight:400;display:block}
+.bar span{color:var(--ink-soft);font-size:.74rem}
+.tl-col.left .bar{background:linear-gradient(to left,rgba(90,111,140,.10),transparent)}
+.tl-col.right .bar{background:linear-gradient(to right,rgba(194,69,47,.09),transparent)}
+
+/* ---------- B. interleaved single stream ---------- */
+.stream{margin-top:1.5rem;max-width:38rem}
+.ev{display:grid;grid-template-columns:7rem 1fr;gap:1.4rem;padding:.9rem 0;
+  border-bottom:1px solid var(--hairline)}
+.ev time{font-family:var(--sans);font-size:.68rem;letter-spacing:.1em;color:var(--faint);
+  padding-top:.35rem;text-transform:uppercase}
+.ev h3{margin:0;font-size:1rem;font-weight:400}
+.ev .org{color:var(--ink-soft);font-size:.86rem}
+.ev .tag{display:inline-block;width:.5rem;height:.5rem;border-radius:50%;margin-right:.5rem;
+  vertical-align:.05em}
+.tag--career{background:var(--indigo)}
+.tag--community{background:var(--vermilion)}
+.key{font-family:var(--sans);font-size:.68rem;letter-spacing:.12em;color:var(--faint);
+  text-transform:uppercase;margin-top:1rem}
+.key i{display:inline-block;width:.5rem;height:.5rem;border-radius:50%;margin:0 .35rem 0 1.2rem}
+.key i:first-of-type{margin-left:0}
+
+/* ---------- C. stacked (what's live now) ---------- */
+.stack{max-width:38rem;margin-top:1.5rem;opacity:.75}
+.stack h3{margin:1.2rem 0 0;font-size:1rem;font-weight:400}
+.stack .org{color:var(--ink-soft);font-size:.86rem}
+.stack time{font-family:var(--sans);font-size:.68rem;letter-spacing:.1em;color:var(--faint)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============================ A ============================ -->
+<section>
+  <h1>Option A — parallel tracks, shared time axis</h1>
+  <h2>The overlap is the point</h2>
+  <p class="lede">Career on the left, community on the right, both plotted against the same years.
+  You can see at a glance that Discover Nikkei has run continuously through Google, Mercari and
+  two other jobs — which a pair of lists cannot show.</p>
+
+  <div class="tl">
+    <div class="tl-col left">
+      <div class="tl-head">Career</div>
+      <div class="bar" style="top:calc((2026 - var(--y0)) * var(--row))"><b>VP of Engineering</b><span>Third Intelligence</span></div>
+      <div class="bar" style="top:calc((2025.2 - var(--y0)) * var(--row))"><b>COO</b><span>TIFIN Japan</span></div>
+      <div class="bar" style="top:calc((2019.9 - var(--y0)) * var(--row))"><b>Engineering Manager</b><span>Google Maps · 6 yrs</span></div>
+      <div class="bar" style="top:calc((2018.4 - var(--y0)) * var(--row))"><b>Engineering Manager</b><span>Mercari</span></div>
+      <div class="bar" style="top:calc((2013 - var(--y0)) * var(--row))"><b>Engineer → Director</b><span>Presto · 5 yrs</span></div>
+    </div>
+
+    <div class="tl-axis">
+      <div class="tl-year" style="top:calc((2026 - var(--y0)) * var(--row))">2026</div>
+      <div class="tl-year" style="top:calc((2023 - var(--y0)) * var(--row))">2023</div>
+      <div class="tl-year" style="top:calc((2020 - var(--y0)) * var(--row))">2020</div>
+      <div class="tl-year" style="top:calc((2017 - var(--y0)) * var(--row))">2017</div>
+      <div class="tl-year" style="top:calc((2013 - var(--y0)) * var(--row))">2013</div>
+    </div>
+
+    <div class="tl-col right">
+      <div class="tl-head">Community</div>
+      <div class="bar" style="top:calc((2023 - var(--y0)) * var(--row))"><b>Vice Chair, Education</b><span>ACCJ · ongoing</span></div>
+      <div class="bar" style="top:calc((2019.8 - var(--y0)) * var(--row))"><b>Advisor</b><span>Waffle · 4 yrs</span></div>
+      <div class="bar" style="top:calc((2018 - var(--y0)) * var(--row))"><b>Technical Lead</b><span>Discover Nikkei · ongoing</span></div>
+      <div class="bar" style="top:calc((2016.6 - var(--y0)) * var(--row))"><b>VP Emeritus</b><span>COPANI</span></div>
+      <div class="bar" style="top:calc((2015.2 - var(--y0)) * var(--row))"><b>Mentor</b><span>Hackbright · 7 cohorts</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ B ============================ -->
+<section>
+  <h1>Option B — one stream, two colours</h1>
+  <h2>Strictly chronological, both tracks interleaved</h2>
+  <p class="lede">Simpler and it collapses to mobile without changing shape, but the overlap is
+  something you infer from the dates rather than see.</p>
+
+  <div class="stream">
+    <div class="ev"><time>2026 –</time><div><h3><i class="tag tag--career"></i>VP of Engineering</h3><div class="org">Third Intelligence</div></div></div>
+    <div class="ev"><time>2025 – 2026</time><div><h3><i class="tag tag--career"></i>Chief Operating Officer</h3><div class="org">TIFIN Japan</div></div></div>
+    <div class="ev"><time>2023 –</time><div><h3><i class="tag tag--community"></i>Vice Chair, Education Committee</h3><div class="org">ACCJ</div></div></div>
+    <div class="ev"><time>2019 – 2023</time><div><h3><i class="tag tag--community"></i>Advisor</h3><div class="org">Waffle</div></div></div>
+    <div class="ev"><time>2019 – 2025</time><div><h3><i class="tag tag--career"></i>Engineering Manager</h3><div class="org">Google Maps</div></div></div>
+    <div class="ev"><time>2018 –</time><div><h3><i class="tag tag--community"></i>Technical Lead</h3><div class="org">Discover Nikkei</div></div></div>
+    <div class="ev"><time>2018 – 2019</time><div><h3><i class="tag tag--career"></i>Engineering Manager</h3><div class="org">Mercari</div></div></div>
+    <div class="ev"><time>2015 – 2018</time><div><h3><i class="tag tag--community"></i>Mentor</h3><div class="org">Hackbright Academy</div></div></div>
+    <div class="ev"><time>2013 – 2018</time><div><h3><i class="tag tag--career"></i>Engineer → Director</h3><div class="org">Presto</div></div></div>
+  </div>
+  <p class="key"><i class="tag--career"></i>Career<i class="tag--community"></i>Community</p>
+</section>
+
+<!-- ============================ C ============================ -->
+<section>
+  <h1>Option C — two stacked sections (what is live now)</h1>
+  <h2>Cleanest, and hides the thing you care about</h2>
+  <p class="lede">Community sits below Experience as its own list. Easy to read, but it reads as an
+  appendix — the reader has no way to see that it ran alongside everything above it.</p>
+  <div class="stack">
+    <time>Experience</time>
+    <h3>VP of Engineering <span class="org">· Third Intelligence</span></h3>
+    <h3>Engineering Manager <span class="org">· Google Maps</span></h3>
+    <h3>Engineer → Director <span class="org">· Presto</span></h3>
+    <p style="margin-top:2rem"><time>Community</time></p>
+    <h3>Vice Chair <span class="org">· ACCJ</span></h3>
+    <h3>Technical Lead <span class="org">· Discover Nikkei</span></h3>
+    <h3>Advisor <span class="org">· Waffle</span></h3>
+  </div>
+</section>
+
+</div>
+</body>
+</html>

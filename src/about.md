@@ -15,7 +15,7 @@ description: Michael Toshiro Omoto — engineering and product leader in Tokyo, 
 I am an engineering and product leader in Tokyo, currently VP of Engineering at Third
 Intelligence, a frontier AI research lab, where I bootstrapped the product engineering team.
 
-Before that I founded the Japan entity for TIFIN, spent six years at Google leading engineering on
+Before that I was COO of TIFIN Japan, founding the company's Japan entity. I spent six years at Google leading engineering on
 Google Maps — twenty-one engineers across four subteams owning every user-generated-content
 solicitation surface — and was the first English-speaking engineering manager at Mercari, where I
 was directly involved in hiring over a hundred engineers. Earlier still I was the fourth

@@ -242,6 +242,28 @@ body{
 
 /* ------------------------------------------- FOOTER: the practice row -- */
 /* The same character, five times, getting better. */
+/* ------------------------------------------------------------------- CV -- */
+/* Dates in a left rail, the entry beside them — the same two-column rhythm as
+   the writing index, so Work reads as part of the same sheet. */
+.cv{margin:3.5rem 0 0}
+.cv .section-head{margin-bottom:1.6rem}
+.cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
+.cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
+.cv-entry:last-child::after{display:none}
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+  display:block;padding-top:.4rem;text-transform:uppercase}
+.cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
+.cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
+.cv-note{margin:.35rem 0 0;font-family:var(--sans);font-size:.72rem;letter-spacing:.08em;
+  color:var(--faint);text-transform:uppercase}
+.cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
+.cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
+.cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
+@media (max-width:620px){
+  .cv-entry{grid-template-columns:1fr;gap:.5rem}
+  .cv-when time{padding-top:0}
+}
+
 /* Motifs — Japanese patterns kept small and pale, so they read as marks on the
    sheet rather than decoration competing with the type. */
 .motif-asanoha{width:1.15rem;height:1.15rem;flex:none}

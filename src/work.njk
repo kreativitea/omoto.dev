@@ -1,0 +1,75 @@
+---
+layout: layouts/base.njk
+title: Work
+permalink: /work/
+description: Engineering and product leadership in Tokyo — Third Intelligence, TIFIN Japan, Google Maps, Mercari, Presto.
+---
+
+{# Rendered entirely from _data/cv.json. Update that file from the CV; don't
+   edit roles into this template. #}
+
+<article class="article col">
+
+  <h1>Work</h1>
+  <p class="byline">Tokyo &middot; {{ cv.languages }}</p>
+
+  <p>{{ cv.summary }}</p>
+
+  <section class="cv">
+    <h2 class="section-head">Experience</h2>
+    {%- for job in cv.experience %}
+    <div class="cv-entry">
+      <div class="cv-when"><time>{{ job.dates }}</time></div>
+      <div class="cv-what">
+        <h3>{{ job.role }}<span class="cv-org">{{ job.org }}</span></h3>
+        {%- if job.note %}<p class="cv-note">{{ job.note }}</p>{% endif %}
+        <ul>
+          {%- for b in job.bullets %}
+          <li>{{ b }}</li>
+          {%- endfor %}
+        </ul>
+      </div>
+    </div>
+    {%- endfor %}
+  </section>
+
+  <section class="cv">
+    <h2 class="section-head">Earlier</h2>
+    <div class="cv-entry">
+      <div class="cv-when"><time>{{ cv.earlier.range }}</time></div>
+      <div class="cv-what"><p>{{ cv.earlier.text }}</p></div>
+    </div>
+  </section>
+
+  <section class="cv">
+    <h2 class="section-head">Community</h2>
+    {%- for job in cv.community %}
+    <div class="cv-entry">
+      <div class="cv-when"><time>{{ job.dates }}</time></div>
+      <div class="cv-what">
+        <h3>{{ job.role }}<span class="cv-org">{{ job.org }}</span></h3>
+        {%- if job.note %}<p class="cv-note">{{ job.note }}</p>{% endif %}
+        <ul>
+          {%- for b in job.bullets %}
+          <li>{{ b }}</li>
+          {%- endfor %}
+        </ul>
+      </div>
+    </div>
+    {%- endfor %}
+  </section>
+
+  <section class="cv">
+    <h2 class="section-head">Education</h2>
+    {%- for e in cv.education %}
+    <div class="cv-entry">
+      <div class="cv-when"><time>{{ e.year }}</time></div>
+      <div class="cv-what">
+        <h3>{{ e.credential }}<span class="cv-org">{{ e.school }}</span></h3>
+        {%- if e.note %}<p class="cv-note">{{ e.note }}</p>{% endif %}
+      </div>
+    </div>
+    {%- endfor %}
+  </section>
+
+</article>
