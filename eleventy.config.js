@@ -81,7 +81,9 @@ export default function (eleventyConfig) {
   /* -------------------------------------------------------- timeline --- */
 
   // Shared id between a rail bar and its detail entry.
-  eleventyConfig.addFilter('key', (org) => keyOf({ org }));
+  // Takes the whole entry, not just the org — entries may carry an explicit
+  // `key`, which is what keeps two Code Chrysalis roles distinct.
+  eleventyConfig.addFilter('key', (entry) => keyOf(entry));
 
   // "now" is resolved at build time, so ongoing roles keep extending.
   eleventyConfig.addShortcode('timeline', (cv) => {

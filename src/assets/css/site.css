@@ -298,6 +298,7 @@ body{
 
 /* ------------------------------------------- FOOTER: the practice row -- */
 /* The same character, five times, getting better. */
+
 /* ------------------------------------------------------------------- CV -- */
 /* Dates in a left rail, the entry beside them — the same two-column rhythm as
    the writing index, so Work reads as part of the same sheet. */
@@ -306,7 +307,7 @@ body{
 .cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
 .cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
 .cv-entry:last-child::after{display:none}
-.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--indigo);
   display:block;padding-top:.4rem;text-transform:uppercase}
 .cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
 .cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
@@ -315,9 +316,24 @@ body{
 .cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
 .cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
 .cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
-@media (max-width:620px){
-  .cv-entry{grid-template-columns:1fr;gap:.5rem}
-  .cv-when time{padding-top:0}
+@media (min-width:621px) and (max-width:900px){
+  /* Only in this band. Below 900 the rail is hidden and the page is one
+     column, so the 9rem date
+     column is the most expensive thing on the row. Set on its side it keeps the
+     date beside the content rather than stacked above it, at a fifteenth of the
+     width. Vertical setting is already this design's vocabulary — the pull
+     quote does it — so it reads as intentional rather than as a trick.
+
+     text-orientation:mixed rotates the Latin run as a unit; `upright` would
+     stack every glyph and make "Dec 2019 – Dec 2025" taller than its entry. */
+  .cv-entry{grid-template-columns:1.4rem 1fr;gap:1rem}
+  .cv-when time{
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    white-space:nowrap;
+    padding-top:.3rem;
+    letter-spacing:.12em;
+  }
 }
 
 /* ------------------------------------------------------------------- CV -- */
@@ -328,7 +344,7 @@ body{
 .cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
 .cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
 .cv-entry:last-child::after{display:none}
-.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--indigo);
   display:block;padding-top:.4rem;text-transform:uppercase}
 .cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
 .cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
@@ -337,76 +353,133 @@ body{
 .cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
 .cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
 .cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
-@media (max-width:620px){
-  .cv-entry{grid-template-columns:1fr;gap:.5rem}
-  .cv-when time{padding-top:0}
+@media (min-width:621px) and (max-width:900px){
+  /* Only in this band. Below 900 the rail is hidden and the page is one
+     column, so the 9rem date
+     column is the most expensive thing on the row. Set on its side it keeps the
+     date beside the content rather than stacked above it, at a fifteenth of the
+     width. Vertical setting is already this design's vocabulary — the pull
+     quote does it — so it reads as intentional rather than as a trick.
+
+     text-orientation:mixed rotates the Latin run as a unit; `upright` would
+     stack every glyph and make "Dec 2019 – Dec 2025" taller than its entry. */
+  .cv-entry{grid-template-columns:1.4rem 1fr;gap:1rem}
+  .cv-when time{
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    white-space:nowrap;
+    padding-top:.3rem;
+    letter-spacing:.12em;
+  }
 }
 
-/* ----------------------------------------------------------------- RAIL -- */
-/* The detail column is the page; the rail is orientation beside it. It sticks
+
+/* ----------------------------------------------------------------- WORK TRACK -- */
+/* The detail column is the page; the rail is orientation beside it.
+   Named .worktrack/.track-*, never .rail: the site nav is already
+   <nav class="rail">, and that collision silently pointed both this
+   block's sticky positioning and querySelector('.rail') at the navigation. It sticks
    while you read and highlights whichever entry is in view, so the overlap
    between the two careers stays visible without competing for reading width. */
-.work{display:grid;grid-template-columns:minmax(0,1fr) 15rem;gap:2.5rem;align-items:start}
+.work{display:grid;grid-template-columns:minmax(0,1fr) 19rem;gap:3rem;align-items:start}
 .work-main .article{max-width:var(--measure)}
 .work-summary{font-size:1.05rem}
 .cv-intro{color:var(--ink-soft);font-size:.95rem;margin:-1rem 0 1.6rem;max-width:32rem}
 
-.rail{position:sticky;top:2.5rem;align-self:start;font-family:var(--sans)}
-.rail-key{display:flex;justify-content:space-between;gap:.5rem;margin:0 0 .7rem;
+.worktrack{position:sticky;top:2.5rem;align-self:start;font-family:var(--sans)}
+.track-key{display:flex;justify-content:space-between;gap:.5rem;margin:0 0 .7rem;
   font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
-.rail-key--career{color:var(--indigo)}
-.rail-key--community{color:var(--vermilion)}
+.track-key--career{color:var(--indigo)}
+.track-key--community{color:var(--vermilion)}
 
-.rail-body{--rail-h:26rem;position:relative;height:var(--rail-h);
-  display:grid;grid-template-columns:1fr 2.2rem 1fr}
-.rail-bars{list-style:none;margin:0;padding:0;position:relative;height:100%}
-.rail-bar{position:absolute;
-  top:calc(var(--from) * var(--rail-h));
-  height:calc((var(--to) - var(--from)) * var(--rail-h));
-  width:calc(100% / var(--lanes));
+.track-body{--track-h:34rem;--lane-pitch:1.9rem;--bar-min:.9rem;
+  position:relative;height:var(--track-h);
+  display:grid;grid-template-columns:1fr 2.6rem 1fr}
+.track-bars{list-style:none;margin:0;padding:0;position:relative;height:100%}
+/* A bar is a set of segments, not one line: it steps inward whenever an
+   overlap clears, so it may occupy several lanes over its life. The <li> now
+   spans the whole track and is inert; only the segments take pointer events, so
+   bars can share space without stealing each other's clicks. */
+.track-bar{position:absolute;inset:0;pointer-events:none}
+.track-hit{position:absolute;inset:0;display:block;pointer-events:none}
+.track-hit:focus-visible{outline:none}
+.track-bar:focus-within .track-seg{outline:2px solid var(--indigo);outline-offset:2px}
+
+/* Each segment: a 3px mark centred in a lane-pitch-wide hit target, so the
+   click area is comfortable while the drawn line stays hairline. */
+.track-seg{
+  position:absolute;
+  top:calc(var(--top) * var(--track-h));
+  height:calc((var(--bot) - var(--top)) * var(--track-h));
+  min-height:var(--bar-min);
+  width:var(--lane-pitch);
+  pointer-events:auto;
 }
-.rail-bars--career .rail-bar{right:calc(var(--lane) * 100% / var(--lanes))}
-.rail-bars--community .rail-bar{left:calc(var(--lane) * 100% / var(--lanes))}
-.rail-line{position:absolute;top:0;bottom:0;width:3px;border-radius:2px;
-  background:var(--indigo);opacity:.28;transition:opacity .2s ease,width .2s ease}
-.rail-bars--career .rail-line{right:.35rem}
-.rail-bars--community .rail-line{left:.35rem}
-.rail-bars--community .rail-line{background:var(--vermilion)}
-.rail-bar.is-ongoing .rail-line{
-  -webkit-mask-image:linear-gradient(to bottom,#000 72%,transparent);
-  mask-image:linear-gradient(to bottom,#000 72%,transparent)}
+.track-seg::before{
+  content:"";position:absolute;top:0;bottom:0;width:3px;border-radius:2px;
+  background:var(--indigo);opacity:.28;
+  transform-origin:center;transition:opacity .2s ease,transform .2s ease;
+}
+.track-bars--career .track-seg{right:calc(var(--lane) * var(--lane-pitch))}
+.track-bars--community .track-seg{left:calc(var(--lane) * var(--lane-pitch))}
+.track-bars--career .track-seg::before{right:.35rem}
+.track-bars--community .track-seg::before{left:.35rem}
+.track-bars--community .track-seg::before{background:var(--vermilion)}
 
-/* Only the entry you are reading is named. */
-.rail-label{position:absolute;top:-.1rem;font-size:.66rem;line-height:1.35;
-  color:var(--ink);opacity:0;transition:opacity .2s ease;pointer-events:none}
-.rail-label i{display:block;font-style:normal;color:var(--faint);font-size:.58rem;
+/* The horizontal run that joins two lanes, so a step reads as one mark. */
+.track-jog{
+  position:absolute;
+  top:calc(var(--at) * var(--track-h));
+  height:3px;border-radius:2px;
+  width:calc(var(--width) * var(--lane-pitch) + 3px);
+  background:var(--indigo);opacity:.28;
+  transition:opacity .2s ease;
+  pointer-events:none;
+}
+.track-bars--career .track-jog{right:calc(var(--lane) * var(--lane-pitch) + .35rem)}
+.track-bars--community .track-jog{left:calc(var(--lane) * var(--lane-pitch) + .35rem)}
+.track-bars--community .track-jog{background:var(--vermilion)}
+
+.track-bar.is-ongoing .track-seg:first-of-type::before{
+  -webkit-mask-image:linear-gradient(to top,#000 72%,transparent);
+  mask-image:linear-gradient(to top,#000 72%,transparent)}
+
+.track-label{
+  position:absolute;
+  top:calc(var(--label-at) * var(--track-h));
+  font-size:.66rem;line-height:1.35;color:var(--ink);
+  opacity:0;transition:opacity .2s ease;pointer-events:none}
+.track-label i{display:block;font-style:normal;color:var(--faint);font-size:.58rem;
   letter-spacing:.06em;margin-top:.05rem}
-.rail-bars--career .rail-label{right:1rem;text-align:right}
-.rail-bars--community .rail-label{left:1rem}
-.rail-bar.is-current .rail-label{opacity:1}
-.rail-bar.is-current .rail-line{opacity:1;width:4px}
+.track-bars--career .track-label{
+  right:calc(var(--label-lane) * var(--lane-pitch) + 1rem);text-align:right}
+.track-bars--community .track-label{
+  left:calc(var(--label-lane) * var(--lane-pitch) + 1rem)}
 
-/* A role that is honestly both sits on the centre line. */
-.rail-bars--both{position:absolute;left:0;right:0;top:0;height:100%}
-.rail-bars--both .rail-bar{left:50%;transform:translateX(-50%);width:auto}
-.rail-bars--both .rail-line{left:50%;transform:translateX(-50%);
-  background:linear-gradient(to bottom,var(--indigo),var(--vermilion));opacity:.4}
-.rail-bars--both .rail-label{left:50%;transform:translateX(-50%);text-align:center;
-  background:var(--paper);padding:0 .2rem}
-.rail-bars--both .rail-bar.is-current .rail-line{opacity:.95}
+/* Lit = in view, so the bars keep showing concurrency. Named = nearest the
+   middle, and only that one carries a label. */
+.track-bar.is-current .track-seg::before{opacity:1;transform:scaleX(1.8)}
+.track-bar.is-current .track-jog{opacity:1}
+.track-bar.is-named .track-label{opacity:1}
+.track-bar:hover .track-seg::before{opacity:.85;transform:scaleX(1.6)}
 
-.rail-ticks{list-style:none;margin:0;padding:0;position:relative;height:100%}
-.rail-ticks::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
+/* Schooling sits on the career track but should not compete with it. */
+.track-bar.is-education .track-seg::before{opacity:.16;background:var(--ink-soft);min-height:6px}
+.track-bar.is-education.is-current .track-seg::before{opacity:.55}
+.track-bar.is-education .track-label{color:var(--ink-soft)}
+
+.track-ticks{list-style:none;margin:0;padding:0;position:relative;height:100%}
+.track-ticks::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
   background:var(--hairline)}
-.rail-ticks li{position:absolute;left:0;right:0;top:calc(var(--at) * var(--rail-h));
+.track-ticks li{position:absolute;left:0;right:0;top:calc(var(--at) * var(--track-h));
   text-align:center}
-.rail-ticks span{font-size:.56rem;letter-spacing:.06em;color:var(--faint);
+.track-ticks span{font-size:.56rem;letter-spacing:.06em;color:var(--faint);
   background:var(--paper);padding:.05rem .15rem}
 
 /* The reading column carries everything; the rail is an extra. */
 @media (max-width:900px){
   .work{grid-template-columns:1fr}
-  .rail{display:none}
+  .worktrack{display:none}
 }
 
 /* ------------------------------------------------------------------- CV -- */
@@ -417,7 +490,7 @@ body{
 .cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
 .cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
 .cv-entry:last-child::after{display:none}
-.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--indigo);
   display:block;padding-top:.4rem;text-transform:uppercase}
 .cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
 .cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
@@ -426,9 +499,24 @@ body{
 .cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
 .cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
 .cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
-@media (max-width:620px){
-  .cv-entry{grid-template-columns:1fr;gap:.5rem}
-  .cv-when time{padding-top:0}
+@media (min-width:621px) and (max-width:900px){
+  /* Only in this band. Below 900 the rail is hidden and the page is one
+     column, so the 9rem date
+     column is the most expensive thing on the row. Set on its side it keeps the
+     date beside the content rather than stacked above it, at a fifteenth of the
+     width. Vertical setting is already this design's vocabulary — the pull
+     quote does it — so it reads as intentional rather than as a trick.
+
+     text-orientation:mixed rotates the Latin run as a unit; `upright` would
+     stack every glyph and make "Dec 2019 – Dec 2025" taller than its entry. */
+  .cv-entry{grid-template-columns:1.4rem 1fr;gap:1rem}
+  .cv-when time{
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    white-space:nowrap;
+    padding-top:.3rem;
+    letter-spacing:.12em;
+  }
 }
 
 /* Motifs — Japanese patterns kept small and pale, so they read as marks on the
@@ -485,4 +573,37 @@ body{
 @media print{
   .page::before,.brush,.practice-row{display:none}
   body{background:#fff;color:#000}
+}
+
+/* Schooling sits on the career track but should not compete with it: same
+   column, lighter weight. Point markers (a degree year with no stated span)
+   would otherwise be invisible, so they get a floor height. */
+.track-bar.is-education{min-height:0}
+.track-bar.is-education .track-line{opacity:.16;background:var(--ink-soft);
+  min-height:6px;border-radius:3px}
+.track-bar.is-education.is-current .track-line{opacity:.55}
+.track-bar.is-education .track-label{color:var(--ink-soft)}
+
+/* Bars are links to their own entry. The anchor covers the whole lane cell, so
+   the target is a comfortable click even though the mark itself is 3px wide;
+   the label keeps pointer-events:none so it never intercepts. */
+.track-hit{position:absolute;inset:0;display:block;border-radius:3px}
+.track-hit:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+.track-bar:hover .track-line{opacity:.85;transform:scaleX(1.6)}
+
+/* Land the entry where the highlight band is, rather than jammed against the
+   top of the viewport — so the bar you just clicked is the one that lights. */
+.cv-entry{scroll-margin-top:38vh}
+
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
+
+/* Phones stack instead. At 375px stacking gives the content 311px against 273px
+   set vertically, because there is no date column to reclaim — the row is
+   already full width and the date simply sits above it. */
+@media (max-width:620px){
+  .cv-entry{grid-template-columns:1fr;gap:.5rem}
+  .cv-when time{writing-mode:horizontal-tb;padding-top:0;letter-spacing:.1em}
 }

@@ -15,6 +15,19 @@
       "importance": 2
     },
     {
+      "role": "Advisor",
+      "org": "Code Chrysalis",
+      "key": "code-chrysalis-paid",
+      "dates": "Jul 2026 – Present",
+      "note": "Tokyo coding bootcamp · paid advisory",
+      "start": "2026-07",
+      "end": null,
+      "importance": 6,
+      "bullets": [
+        "Paid advisory work, following seven years of volunteering with the same school."
+      ]
+    },
+    {
       "role": "Chief Operating Officer",
       "org": "TIFIN Japan",
       "dates": "Dec 2025 – Apr 2026",
@@ -107,6 +120,19 @@
       "importance": 1
     },
     {
+      "role": "Advisor (volunteer)",
+      "org": "Code Chrysalis",
+      "key": "code-chrysalis-volunteer",
+      "dates": "2018 – Present",
+      "note": "Tokyo coding bootcamp",
+      "start": "2018-01",
+      "end": null,
+      "importance": 4,
+      "bullets": [
+        "Fireside chats, a solutions panel, and continuing volunteer involvement with the bootcamp since 2018."
+      ]
+    },
+    {
       "role": "Advisor",
       "org": "Waffle",
       "dates": "Oct 2019 – Oct 2023",
@@ -142,20 +168,6 @@
       "start": "2015-09",
       "end": "2018-12",
       "importance": 6
-    },
-    {
-      "role": "Advisor",
-      "org": "Code Chrysalis",
-      "dates": "2019 – Present",
-      "track": "both",
-      "start": "2019-01",
-      "end": null,
-      "note": "Tokyo coding bootcamp",
-      "_verify": "Start year is a guess from the 2019 panel in the CV — confirm.",
-      "bullets": [
-        "Working advisor to the bootcamp, after earlier fireside chats and a solutions panel."
-      ],
-      "importance": 4
     }
   ],
   "education": [
@@ -163,17 +175,29 @@
       "school": "University of California, Irvine",
       "credential": "B.A. Psychology, Minor in Philosophy",
       "year": "2006",
-      "note": "Senior thesis in mathematical psychology: a Bayesian model predicting individual strength from team results."
+      "note": "Senior thesis in mathematical psychology: a Bayesian model predicting individual strength from team results.",
+      "start": "2006",
+      "end": "2006",
+      "kind": "education",
+      "key": "university-of-california-irvine"
     },
     {
       "school": "Santa Monica College",
       "credential": "A.A. General Science, graduated with honours",
-      "year": "2001 – 2004"
+      "year": "2001 – 2004",
+      "start": "2001",
+      "end": "2004",
+      "kind": "education",
+      "key": "santa-monica-college"
     },
     {
       "school": "TESOL Express",
       "credential": "TEFL/TESOL Certificate",
-      "year": "2012"
+      "year": "2012",
+      "start": "2012",
+      "end": "2012",
+      "kind": "education",
+      "key": "tesol-express"
     }
   ],
   "languages": "English (native) · Japanese (near-native)"
