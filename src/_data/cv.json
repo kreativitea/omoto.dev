@@ -120,6 +120,19 @@
       "importance": 1
     },
     {
+      "role": "Advisor (volunteer)",
+      "org": "Code Chrysalis",
+      "key": "code-chrysalis-volunteer",
+      "dates": "2018 – Present",
+      "note": "Tokyo coding bootcamp",
+      "start": "2018-01",
+      "end": null,
+      "importance": 4,
+      "bullets": [
+        "Fireside chats, a solutions panel, and continuing volunteer involvement with the bootcamp since 2018."
+      ]
+    },
+    {
       "role": "Advisor",
       "org": "Waffle",
       "dates": "Oct 2019 – Oct 2023",
@@ -155,19 +168,6 @@
       "start": "2015-09",
       "end": "2018-12",
       "importance": 6
-    },
-    {
-      "role": "Advisor (volunteer)",
-      "org": "Code Chrysalis",
-      "key": "code-chrysalis-volunteer",
-      "dates": "2019 – Present",
-      "note": "Tokyo coding bootcamp",
-      "start": "2019-01",
-      "end": null,
-      "importance": 4,
-      "bullets": [
-        "Fireside chats, a solutions panel, and continuing volunteer involvement with the bootcamp since 2019."
-      ]
     }
   ],
   "education": [
