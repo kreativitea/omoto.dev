@@ -6,3 +6,8 @@ node_modules/
 
 # agent worktrees — separate git repos, never part of this one
 .claude/worktrees/
+
+# raw writing notes — kept out of a public repo until a piece is ready.
+# Deliberately outside src/, because anything under src/ is Eleventy input and
+# would deploy. Publishing is `git mv notes/x.md src/writing/x.md`.
+notes/
