@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import rssPlugin from '@11ty/eleventy-plugin-rss';
 import { washFigure, washDab } from './lib/wash.js';
-import { timeline } from './lib/timeline.js';
+import { timeline, keyOf } from './lib/timeline.js';
 
 export default function (eleventyConfig) {
   eleventyConfig.addPlugin(rssPlugin);
@@ -79,6 +79,9 @@ export default function (eleventyConfig) {
     washDab(seed, palette, size));
 
   /* -------------------------------------------------------- timeline --- */
+
+  // Shared id between a rail bar and its detail entry.
+  eleventyConfig.addFilter('key', (org) => keyOf({ org }));
 
   // "now" is resolved at build time, so ongoing roles keep extending.
   eleventyConfig.addShortcode('timeline', (cv) => {

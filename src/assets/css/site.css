@@ -36,6 +36,21 @@
   --pencil:#6f7b96;
   --hairline:rgba(180,173,162,.3);
 
+  /* Gouache tier. The washes are tea-coloured on purpose — these are the
+     opaque marks that punctuate them. Never washed down, never blurred; they
+     are what the pale colour is pale *against*. Without something at full
+     strength on the sheet, a wash reads as a stain rather than as paint. */
+  --prussian:#1d3b5c;
+  --pine:#245049;
+  --ember:#bf6420;
+  --gold:#c08a34;
+
+  /* Boil. Hand-drawn animation cycles three drawings of the same line at
+     around eight frames a second; the eye reads the resulting shiver as a
+     living hand rather than a printing plate. One knob, because the rate is
+     the whole effect: much faster is a buzz, much slower is a glitch. */
+  --boil:.36s;
+
   --serif:'Hoefler Text',Baskerville,'Times New Roman',Times,serif;
   --sans:Optima,'Avenir Next',Avenir,'Hiragino Sans',system-ui,sans-serif;
   --jp:'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif;
@@ -91,6 +106,18 @@ body{
    `position:relative` with no z-index is deliberate — it avoids creating a
    stacking context, so washes inside can still multiply against the paper
    colour painted on <body>. */
+/* The three line kinds carry different weights on purpose. At one flat
+   opacity nobody read the sheet as 米字格 — it looked like stray rules. The
+   cell box is the loudest and solid, because the square is what says
+   "practice sheet" at a glance; the centre cross follows; the diagonals are
+   faintest but still plainly there, since the 米 they trace is the cue that
+   names the thing. Every dash gap was tightened too — the old 3/9 spacing
+   was sparse enough to dissolve into the paper grain at any real size.
+
+   The tighter dashes lay down more ink per line, so these opacities buy far
+   more presence than the same numbers would have before. They are set at
+   the point where the diagonals survive and the serif still wins the page;
+   a few points higher and the ruling starts reading as foreground. */
 .page{
   max-width:var(--page-max);margin:0 auto;
   padding:0 var(--page-pad) 7rem;position:relative;
@@ -100,12 +127,55 @@ body{
   left:calc(var(--page-pad) - var(--grid-reach));
   right:calc(var(--page-pad) - var(--grid-reach));
   background-position:0 0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112'%3E%3Cg fill='none' stroke='%238a7f6d' stroke-opacity='.07' stroke-width='1'%3E%3Crect x='.5' y='.5' width='111' height='111'/%3E%3Cpath d='M56 0V112M0 56H112' stroke-dasharray='5 7'/%3E%3Cpath d='M0 0L112 112M112 0L0 112' stroke-dasharray='3 9'/%3E%3C/g%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112'%3E%3Cg fill='none' stroke='%238a7f6d' stroke-width='1'%3E%3Crect x='.5' y='.5' width='111' height='111' stroke-opacity='.22'/%3E%3Cpath d='M56 0V112M0 56H112' stroke-dasharray='6 6' stroke-opacity='.17'/%3E%3Cpath d='M0 0L112 112M112 0L0 112' stroke-dasharray='4 6' stroke-opacity='.13'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 .col{max-width:var(--measure)}
 .skip{position:absolute;left:-9999px}
 .skip:focus{left:var(--page-pad);top:.5rem;background:var(--paper);padding:.5rem .8rem;z-index:10}
+
+/* -----------------------------------------------------------------------
+   LIVING INK
+   Two primitives, used everywhere something should look drawn rather than
+   printed.
+
+   .boil — the mark is drawn three times, each pass warped by a different
+   turbulence seed, and the three take turns at 8fps. This is how cel
+   animation has always kept a line alive, and here it happens to be the
+   sheet's own argument: three attempts, none of them thrown away.
+
+   Each frame is a bare <g> whose only job is opacity; the filter lives on a
+   child. That separation matters — filter output can be rasterised once and
+   cached, and the animation then costs a compositing flip per frame instead
+   of three full re-filters. Filtering and fading the same element is what
+   makes this technique expensive, and it is easy to do by accident.
+
+   Negative delays, not positive ones: a positive delay leaves a frame at its
+   author-set opacity until it starts, so all three would be visible at once
+   for the first tenth of a second — a thick smudge on every page load.
+   ----------------------------------------------------------------------- */
+@keyframes boil{
+  0%,33.333%   {opacity:1}
+  33.334%,100% {opacity:0}
+}
+.boil > *{animation:boil var(--boil) steps(1,end) infinite}
+.boil > *:nth-child(2){animation-delay:calc(var(--boil) / -3)}
+.boil > *:nth-child(3){animation-delay:calc(var(--boil) / -1.5)}
+
+/* .swim — colour drifting out of register with the ink that describes it, the
+   way a second plate creeps during a long print run. Sub-pixel amplitude and
+   a slow, prime-ish period: nothing should ever be caught moving, only found
+   to have moved. Applied to the colour layer alone, never to the hard shapes
+   — if both drift together the misregistration disappears. */
+@keyframes swim{
+  0%  {transform:translate(0,0)}
+  27% {transform:translate(1.6px,-1.1px)}
+  53% {transform:translate(-1.2px,1.4px)}
+  78% {transform:translate(.7px,1px)}
+  100%{transform:translate(0,0)}
+}
+.swim{animation:swim 19s ease-in-out infinite;will-change:transform}
+.swim--slow{animation-duration:31s}
 
 /* ------------------------------------------------------------ MASTHEAD - */
 .masthead{padding:5.5rem 0 0;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start}
@@ -119,8 +189,14 @@ body{
    attributes (so it degrades sanely with no CSS), which makes it a replaced
    element — and `width:auto` on a replaced element resolves to its intrinsic
    size, not to the inset box. The bleed here must match the offsets. */
+/* The translate is the misregistration: the colour plate has crept down and to
+   the right of the type it is meant to sit under. Small enough to read as a
+   press that was not quite square rather than as a mistake — and it is what
+   gives the name its edge, since a wash centred perfectly behind text just
+   looks like a highlighter. */
 .name-wash{position:absolute;left:-.85rem;top:-.3rem;
   width:calc(100% + 1.7rem);height:calc(100% + .42rem);
+  transform:translate(.3rem,.17rem);
   z-index:-1;pointer-events:none}
 /* the middle name sits a shade back — it's the one the seal carves */
 .wordmark .mid{color:var(--ink-soft)}
@@ -264,126 +340,115 @@ body{
   .cv-when time{padding-top:0}
 }
 
-/* ------------------------------------------------------------- TIMELINE -- */
-/* Two tracks, one time axis. Bars are positioned from --from/--to (fractions
-   of the whole span) and packed into lanes by lib/timeline.js so concurrent
-   roles sit side by side instead of on top of each other. */
-/* The two-track history breaks out of the reading measure — three lanes in a
-   36rem column leaves 80px per lane, which no card fits inside. Prose in this
-   section stays at the measure. */
-.cv--timeline{width:min(62rem, calc(100vw - 2 * var(--page-pad)))}
-.cv--timeline > .section-head,
-.cv-intro{max-width:34rem}
-.cv-intro{color:var(--ink-soft);font-size:.97rem;margin:0 0 2rem}
-.tl{
-  --tl-height:30rem;
-  display:grid;grid-template-columns:1fr 4rem 1fr;
-  position:relative;margin:2.5rem 0 0;
+/* ------------------------------------------------------------------- CV -- */
+/* Dates in a left rail, the entry beside them — the same two-column rhythm as
+   the writing index, so Work reads as part of the same sheet. */
+.cv{margin:3.5rem 0 0}
+.cv .section-head{margin-bottom:1.6rem}
+.cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
+.cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
+.cv-entry:last-child::after{display:none}
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+  display:block;padding-top:.4rem;text-transform:uppercase}
+.cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
+.cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
+.cv-note{margin:.35rem 0 0;font-family:var(--sans);font-size:.72rem;letter-spacing:.08em;
+  color:var(--faint);text-transform:uppercase}
+.cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
+.cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
+.cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
+@media (max-width:620px){
+  .cv-entry{grid-template-columns:1fr;gap:.5rem}
+  .cv-when time{padding-top:0}
 }
-.tl-head{font-family:var(--sans);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--faint);font-weight:400;margin:0 0 .9rem}
-.tl-col--career .tl-head{text-align:right}
-.tl-bars{list-style:none;margin:0;padding:0;position:relative;height:var(--tl-height)}
-.tl-bar{
-  position:absolute;
-  top:calc(var(--from) * var(--tl-height));
-  height:calc((var(--to) - var(--from)) * var(--tl-height));
-  /* short roles still need room for their label; the line below keeps the
-     true duration so the proportions stay honest */
-  min-height:3.2rem;
-  width:calc((100% - 1rem) / var(--lanes));
-  display:flex;align-items:flex-start;gap:.5rem;
+
+/* ----------------------------------------------------------------- RAIL -- */
+/* The detail column is the page; the rail is orientation beside it. It sticks
+   while you read and highlights whichever entry is in view, so the overlap
+   between the two careers stays visible without competing for reading width. */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 15rem;gap:2.5rem;align-items:start}
+.work-main .article{max-width:var(--measure)}
+.work-summary{font-size:1.05rem}
+.cv-intro{color:var(--ink-soft);font-size:.95rem;margin:-1rem 0 1.6rem;max-width:32rem}
+
+.rail{position:sticky;top:2.5rem;align-self:start;font-family:var(--sans)}
+.rail-key{display:flex;justify-content:space-between;gap:.5rem;margin:0 0 .7rem;
+  font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.rail-key--career{color:var(--indigo)}
+.rail-key--community{color:var(--vermilion)}
+
+.rail-body{--rail-h:26rem;position:relative;height:var(--rail-h);
+  display:grid;grid-template-columns:1fr 2.2rem 1fr}
+.rail-bars{list-style:none;margin:0;padding:0;position:relative;height:100%}
+.rail-bar{position:absolute;
+  top:calc(var(--from) * var(--rail-h));
+  height:calc((var(--to) - var(--from)) * var(--rail-h));
+  width:calc(100% / var(--lanes));
 }
-/* career grows leftward from the axis, community rightward */
-.tl-col--career .tl-bar{right:calc(var(--lane) * (100% - 1rem) / var(--lanes) + .8rem);
-  flex-direction:row-reverse;text-align:right}
-.tl-col--community .tl-bar{left:calc(var(--lane) * (100% - 1rem) / var(--lanes) + .8rem)}
-.tl-bar-line{flex:none;width:3px;min-height:6px;
-  height:calc((var(--to) - var(--from)) * var(--tl-height));border-radius:2px;background:var(--indigo);opacity:.5}
-.tl-col--community .tl-bar-line{background:var(--vermilion);opacity:.45}
-.tl-bar.is-ongoing .tl-bar-line{
-  background:linear-gradient(to bottom,currentColor,transparent);color:var(--vermilion)}
-.tl-col--career .tl-bar.is-ongoing .tl-bar-line{color:var(--indigo)}
-/* Compact by default; the detail expands on hover, keyboard focus or tap.
-   Everything is in the DOM either way — this hides it visually, it does not
-   inject it, so screen readers and ctrl-F still find it. */
-.tl-bar-body{
-  width:100%;min-width:0;padding:.25rem .45rem;margin:-.25rem -.45rem;
-  font:inherit;color:inherit;text-align:inherit;
-  background:transparent;border:0;border-radius:3px;cursor:pointer;
-  transition:background .18s ease, box-shadow .18s ease;
+.rail-bars--career .rail-bar{right:calc(var(--lane) * 100% / var(--lanes))}
+.rail-bars--community .rail-bar{left:calc(var(--lane) * 100% / var(--lanes))}
+.rail-line{position:absolute;top:0;bottom:0;width:3px;border-radius:2px;
+  background:var(--indigo);opacity:.28;transition:opacity .2s ease,width .2s ease}
+.rail-bars--career .rail-line{right:.35rem}
+.rail-bars--community .rail-line{left:.35rem}
+.rail-bars--community .rail-line{background:var(--vermilion)}
+.rail-bar.is-ongoing .rail-line{
+  -webkit-mask-image:linear-gradient(to bottom,#000 72%,transparent);
+  mask-image:linear-gradient(to bottom,#000 72%,transparent)}
+
+/* Only the entry you are reading is named. */
+.rail-label{position:absolute;top:-.1rem;font-size:.66rem;line-height:1.35;
+  color:var(--ink);opacity:0;transition:opacity .2s ease;pointer-events:none}
+.rail-label i{display:block;font-style:normal;color:var(--faint);font-size:.58rem;
+  letter-spacing:.06em;margin-top:.05rem}
+.rail-bars--career .rail-label{right:1rem;text-align:right}
+.rail-bars--community .rail-label{left:1rem}
+.rail-bar.is-current .rail-label{opacity:1}
+.rail-bar.is-current .rail-line{opacity:1;width:4px}
+
+/* A role that is honestly both sits on the centre line. */
+.rail-bars--both{position:absolute;left:0;right:0;top:0;height:100%}
+.rail-bars--both .rail-bar{left:50%;transform:translateX(-50%);width:auto}
+.rail-bars--both .rail-line{left:50%;transform:translateX(-50%);
+  background:linear-gradient(to bottom,var(--indigo),var(--vermilion));opacity:.4}
+.rail-bars--both .rail-label{left:50%;transform:translateX(-50%);text-align:center;
+  background:var(--paper);padding:0 .2rem}
+.rail-bars--both .rail-bar.is-current .rail-line{opacity:.95}
+
+.rail-ticks{list-style:none;margin:0;padding:0;position:relative;height:100%}
+.rail-ticks::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
+  background:var(--hairline)}
+.rail-ticks li{position:absolute;left:0;right:0;top:calc(var(--at) * var(--rail-h));
+  text-align:center}
+.rail-ticks span{font-size:.56rem;letter-spacing:.06em;color:var(--faint);
+  background:var(--paper);padding:.05rem .15rem}
+
+/* The reading column carries everything; the rail is an extra. */
+@media (max-width:900px){
+  .work{grid-template-columns:1fr}
+  .rail{display:none}
 }
-.tl-col--career .tl-bar-body{text-align:right}
-/* Compact: one line, clipped. Expanded: wraps freely. */
-.tl-bar-org{display:block;font-size:.86rem;line-height:1.4;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tl-bar b{display:block;font-weight:400;font-size:.92rem;line-height:1.35;
-  color:var(--ink);margin-bottom:.1rem}
-.tl-bar-body:hover .tl-bar-org,
-.tl-bar-body:focus .tl-bar-org{white-space:normal;overflow:visible;color:var(--ink-soft);
-  font-size:.8rem;order:2}
-.tl-bar-more{
-  display:block;overflow:hidden;
-  max-height:0;opacity:0;
-  transition:max-height .22s ease, opacity .18s ease;
-}
-.tl-bar-when{display:block;font-family:var(--sans);font-size:.62rem;letter-spacing:.1em;
-  color:var(--faint);margin-top:.3rem}
-/* Clamped so the rendered height is bounded rather than estimated — the build
-   decides what fits, and an unclamped paragraph could exceed its allowance and
-   collide. Hover/focus lifts the clamp, since that card is raised anyway. */
-.tl-bar-detail{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
-  overflow:hidden;color:var(--ink-soft);font-size:.78rem;line-height:1.55;margin-top:.35rem}
-.tl-bar-body:hover .tl-bar-detail,
-.tl-bar-body:focus .tl-bar-detail{-webkit-line-clamp:none;overflow:visible}
 
-/* Raised above its neighbours, so an expanded card may overlap them freely. */
-.tl-bar:hover,
-.tl-bar:focus-within{z-index:5}
-/* :focus, not :focus-visible — the latter deliberately ignores mouse clicks and
-   taps, so a touch user could never open one of these. :focus-visible is used
-   only for the keyboard ring further down. */
-.tl-bar-body:hover,
-.tl-bar-body:focus{
-  width:calc(100% + 2.5rem);
-  background:var(--paper);
-  box-shadow:0 0 0 1px var(--hairline), 0 6px 18px -10px rgba(60,50,40,.45);
-  outline:none;
-}
-.tl-bar-body:hover .tl-bar-more,
-.tl-bar-body:focus .tl-bar-more,
-.tl-bar.is-open .tl-bar-more{max-height:12rem;opacity:1}
-/* Open by default where there is room; the org then wraps like the rest. */
-.tl-bar.is-open .tl-bar-org{white-space:normal;overflow:visible;
-  color:var(--ink-soft);font-size:.8rem;order:2}
-.tl-bar.is-open .tl-bar-body{display:flex;flex-direction:column}
-/* keep a visible ring for keyboard users specifically */
-.tl-bar-body:focus-visible{box-shadow:0 0 0 2px var(--indigo), 0 6px 18px -10px rgba(60,50,40,.45)}
-
-.tl-axis{position:relative}
-.tl-axis::before{content:"";position:absolute;left:50%;top:2.1rem;height:var(--tl-height);
-  width:1px;background:var(--hairline)}
-.tl-ticks{list-style:none;margin:0;padding:0;position:relative;height:var(--tl-height);
-  margin-top:2.1rem}
-.tl-tick{position:absolute;left:0;right:0;top:calc(var(--at) * var(--tl-height));text-align:center}
-.tl-tick span{font-family:var(--sans);font-size:.6rem;letter-spacing:.08em;color:var(--faint);
-  background:var(--paper);padding:.1rem .3rem}
-
-/* Roles that are honestly both sit on the centre line. */
-.tl-bars--both{position:absolute;left:0;right:0;top:2.1rem;height:var(--tl-height);
-  pointer-events:none}
-.tl-bars--both .tl-bar{left:50%;transform:translateX(-50%);width:auto;
-  flex-direction:column;align-items:center;pointer-events:auto}
-.tl-bars--both .tl-bar-line{width:3px;
-  background:linear-gradient(to bottom,var(--indigo),var(--vermilion));opacity:.55}
-.tl-bars--both .tl-bar-body{text-align:center;background:var(--paper);padding:.15rem .5rem}
-
-.cv-detail{margin-top:3rem}
-
-@media (max-width:720px){
-  /* The two-track layout depends on horizontal room; below that it becomes a
-     single ordered list and the detail below carries the content. */
-  .tl{display:none}
+/* ------------------------------------------------------------------- CV -- */
+/* Dates in a left rail, the entry beside them — the same two-column rhythm as
+   the writing index, so Work reads as part of the same sheet. */
+.cv{margin:3.5rem 0 0}
+.cv .section-head{margin-bottom:1.6rem}
+.cv-entry{display:grid;grid-template-columns:9rem 1fr;gap:2rem;padding:1.6rem 0;position:relative}
+.cv-entry::after{content:"";position:absolute;left:.4rem;right:1.2rem;bottom:0;height:1px;background:var(--hairline)}
+.cv-entry:last-child::after{display:none}
+.cv-when time{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+  display:block;padding-top:.4rem;text-transform:uppercase}
+.cv-what h3{margin:0;font-size:1.14rem;font-weight:400;line-height:1.45}
+.cv-org{display:block;color:var(--ink-soft);font-size:.94rem;margin-top:.1rem}
+.cv-note{margin:.35rem 0 0;font-family:var(--sans);font-size:.72rem;letter-spacing:.08em;
+  color:var(--faint);text-transform:uppercase}
+.cv-what ul{margin:.85rem 0 0;padding-left:1.1rem}
+.cv-what li{margin-top:.4rem;color:var(--ink-soft);font-size:.97rem;line-height:1.72}
+.cv-what p{margin:.85rem 0 0;color:var(--ink-soft);font-size:.97rem}
+@media (max-width:620px){
+  .cv-entry{grid-template-columns:1fr;gap:.5rem}
+  .cv-when time{padding-top:0}
 }
 
 /* Motifs — Japanese patterns kept small and pale, so they read as marks on the
@@ -422,6 +487,14 @@ body{
    preference anyway. */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  /* The blanket rule above is not enough for the boil: cancelling the
+     animation returns all three frames to their author opacity, and the mark
+     would render as three overlapping strokes at once — heavier and muddier
+     than any of them alone. Cancel it by name and keep the last attempt, the
+     one the row of 敏 in the footer is walking toward anyway. */
+  .boil > *{animation-name:none;opacity:0}
+  .boil > *:last-child{opacity:1}
+  .swim{animation-name:none}
 }
 
 @media print{
