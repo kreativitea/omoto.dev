@@ -7,8 +7,8 @@
 <title>{% if title %}{{ title }} — {{ site.name }}{% else %}{{ site.name }}{% endif %}</title>
 <meta name="description" content="{{ description or site.description }}">
 <link rel="canonical" href="{{ site.url }}{{ page.url }}">
-<link rel="alternate" type="application/atom+xml" title="{{ site.name }}" href="/feed.xml">
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="alternate" type="application/atom+xml" title="{{ site.name }}" href="{{ '/feed.xml' | rel }}">
+<link rel="stylesheet" href="{{ '/assets/css/site.css' | rel }}">
 <meta property="og:type" content="{% if layout == 'layouts/post.njk' %}article{% else %}website{% endif %}">
 <meta property="og:title" content="{{ title or site.name }}">
 <meta property="og:description" content="{{ description or site.description }}">
@@ -26,7 +26,7 @@
   <header class="masthead">
     <div>
       <h1 class="wordmark">
-        <a class="np" href="/">
+        <a class="np" href="{{ '/' | rel }}">
           {# Western: a loose wet wash under the name — pooled edge, and one
              highlight where the paint is still shining. #}
           <svg class="name-wash" width="340" height="48" viewBox="0 0 340 48" preserveAspectRatio="none" aria-hidden="true">
@@ -74,7 +74,7 @@
 
   <nav class="rail" aria-label="Primary">
     {%- for item in site.nav %}
-    <a href="{{ item.url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.label }}</a>
+    <a href="{{ item.url | rel }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.label }}</a>
     {%- endfor %}
   </nav>
 

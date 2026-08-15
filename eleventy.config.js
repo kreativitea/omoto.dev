@@ -35,6 +35,32 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter('draftCount', (n) =>
     !n ? '' : (ORDINALS[n] ? `${ORDINALS[n]} draft` : `draft ${n}`));
 
+  /* -------------------------------------------------------- mount path --- */
+
+  /**
+   * Rewrite a site-absolute path to one relative to the current page, so the
+   * built site works at any mount point — the apex domain, a project page under
+   * /omoto.dev/, a preview directory, even file://.
+   *
+   * Absolute paths like /assets/css/site.css only resolve when the site sits at
+   * the domain root. Served one level down they point above the site and 404,
+   * which is exactly what happens on a GitHub project page.
+   *
+   *   page /                 →  assets/css/site.css
+   *   page /about/           →  ../assets/css/site.css
+   *   page /writing/slug/    →  ../../assets/css/site.css
+   */
+  eleventyConfig.addFilter('rel', function (target) {
+    const here = (this.page && this.page.url) || '/';
+    const segs = here.split('/').filter(Boolean);
+    // a trailing slash means we're in a directory; otherwise the last segment
+    // is a filename and doesn't count toward depth (e.g. /404.html)
+    const depth = here.endsWith('/') ? segs.length : segs.length - 1;
+    const up = '../'.repeat(Math.max(0, depth));
+    const clean = String(target).replace(/^\//, '');
+    return up + clean || './';
+  });
+
   /* ------------------------------------------------------ watercolour --- */
 
   // Seeded, deterministic. Same seed always paints the same figure, so a post

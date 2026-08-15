@@ -14,7 +14,7 @@
   font-style:normal;
   font-weight:400;
   font-display:swap;
-  src:url('/assets/fonts/yuji-syuku.woff2') format('woff2');
+  src:url('../fonts/yuji-syuku.woff2') format('woff2');   /* relative to this file */
   unicode-range:U+654F;   /* 敏 */
 }
 

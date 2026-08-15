@@ -37,7 +37,7 @@ description: Engineering leader in Tokyo. Writing on privacy, how teams learn, a
     </h2>
     {%- for post in collections.writing %}
     <li>
-      <a class="piece" href="{{ post.url }}">
+      <a class="piece" href="{{ post.url | rel }}">
         <time datetime="{{ post.date | isoDate }}">{{ post.date | monthYear }}</time>
         <div>
           <h3>{% dab post.fileSlug, (post.data.wash.palette if post.data.wash else "indigo"), 22 %}{{ post.data.title }}</h3>
