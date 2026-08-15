@@ -376,8 +376,11 @@ body{
   letter-spacing:.06em;margin-top:.05rem}
 .track-bars--career .track-label{right:1rem;text-align:right}
 .track-bars--community .track-label{left:1rem}
-.track-bar.is-current .track-label{opacity:1}
+/* Lit = in view, so the bars keep showing concurrency. Named = nearest the
+   middle, and only that one carries a label — which is why three overlapping
+   commitments can never produce three overlapping labels. */
 .track-bar.is-current .track-line{opacity:1;width:4px}
+.track-bar.is-named .track-label{opacity:1}
 
 /* A role that is honestly both sits on the centre line. */
 .track-bars--both{position:absolute;left:0;right:0;top:0;height:100%}

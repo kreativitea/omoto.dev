@@ -23,7 +23,7 @@ description: Engineering and product leadership in Tokyo — Third Intelligence,
       <section class="cv">
         <h2 class="section-head">Experience</h2>
         {%- for job in cv.experience %}
-        <div class="cv-entry" data-key="{{ job.org | key }}">
+        <div class="cv-entry" data-key="{{ job | key }}">
           <div class="cv-when"><time>{{ job.dates }}</time></div>
           <div class="cv-what">
             <h3>{{ job.role }}<span class="cv-org">{{ job.org }}</span></h3>
@@ -43,7 +43,7 @@ description: Engineering and product leadership in Tokyo — Third Intelligence,
         <p class="cv-intro">Close to a second career, and overlapping the first for most of a
         decade — Discover Nikkei alone has run through four other roles.</p>
         {%- for job in cv.community %}
-        <div class="cv-entry" data-key="{{ job.org | key }}">
+        <div class="cv-entry" data-key="{{ job | key }}">
           <div class="cv-when"><time>{{ job.dates }}</time></div>
           <div class="cv-what">
             <h3>{{ job.role }}<span class="cv-org">{{ job.org }}</span></h3>
@@ -105,12 +105,26 @@ description: Engineering and product leadership in Tokyo — Third Intelligence,
     last = Date.now();
     const mid = innerHeight / 2;
     const band = innerHeight * 0.1;          // entries crossing the middle tenth
+
+    // Two different jobs, deliberately separated. Every entry in the band is
+    // marked current, so the bars keep showing how many commitments ran at
+    // once — three deep in 2023 is a fact worth seeing. But only the entry
+    // nearest the middle is named, which makes label collision impossible
+    // however many overlap.
     const lit = new Set();
+    let nearest = null, nearestDist = Infinity;
     for (const el of entries) {
       const r = el.getBoundingClientRect();
-      if (r.top < mid + band && r.bottom > mid - band) lit.add(el.dataset.key);
+      if (r.top < mid + band && r.bottom > mid - band) {
+        lit.add(el.dataset.key);
+        const dist = Math.abs((r.top + r.bottom) / 2 - mid);
+        if (dist < nearestDist) { nearestDist = dist; nearest = el.dataset.key; }
+      }
     }
-    for (const [key, bar] of bars) bar.classList.toggle('is-current', lit.has(key));
+    for (const [key, bar] of bars) {
+      bar.classList.toggle('is-current', lit.has(key));
+      bar.classList.toggle('is-named', key === nearest);
+    }
   };
   const schedule = () => {
     const now = Date.now();

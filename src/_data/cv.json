@@ -3,6 +3,19 @@
   "summary": "Engineering and product leader bridging Silicon Valley and Japan. Cognitive scientist by training; has built and scaled teams and shipped privacy-critical, payments, and AI products at Google, Mercari, and Presto. Has also taught and designed curriculum for over a decade, from ESL classrooms and coding bootcamps to middle-school, high-school, and university programs.",
   "experience": [
     {
+      "role": "Advisor",
+      "org": "Code Chrysalis",
+      "key": "code-chrysalis-paid",
+      "dates": "Jul 2026 – Present",
+      "note": "Tokyo coding bootcamp · paid advisory",
+      "start": "2026-07",
+      "end": null,
+      "importance": 6,
+      "bullets": [
+        "Paid advisory work, following seven years of volunteering with the same school."
+      ]
+    },
+    {
       "role": "VP of Engineering",
       "org": "Third Intelligence",
       "dates": "Apr 2026 – Present",
@@ -144,18 +157,17 @@
       "importance": 6
     },
     {
-      "role": "Advisor",
+      "role": "Advisor (volunteer)",
       "org": "Code Chrysalis",
+      "key": "code-chrysalis-volunteer",
       "dates": "2019 – Present",
-      "track": "both",
+      "note": "Tokyo coding bootcamp",
       "start": "2019-01",
       "end": null,
-      "note": "Tokyo coding bootcamp",
-      "_verify": "Start year is a guess from the 2019 panel in the CV — confirm.",
+      "importance": 4,
       "bullets": [
-        "Working advisor to the bootcamp, after earlier fireside chats and a solutions panel."
-      ],
-      "importance": 4
+        "Fireside chats, a solutions panel, and continuing volunteer involvement with the bootcamp since 2019."
+      ]
     }
   ],
   "education": [
