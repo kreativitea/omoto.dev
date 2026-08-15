@@ -18,7 +18,7 @@
   "url": "https://omoto.dev",
   "description": "Engineering leader in Tokyo. Writing on privacy, how teams learn, and building in two languages.",
   "locale": "en",
-  "email": "mike@omoto.dev",
+  "email": "admin@omoto.dev",
   "_nav_note": "Only list pages that exist. Work, Talks and 日本語 were here before they were written, and every one of them 404'd in production.",
   "nav": [
     {
@@ -36,8 +36,8 @@
   ],
   "social": [
     {
-      "label": "mike@omoto.dev",
-      "url": "mailto:mike@omoto.dev"
+      "label": "admin@omoto.dev",
+      "url": "mailto:admin@omoto.dev"
     },
     {
       "label": "GitHub",
