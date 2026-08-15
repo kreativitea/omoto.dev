@@ -264,6 +264,128 @@ body{
   .cv-when time{padding-top:0}
 }
 
+/* ------------------------------------------------------------- TIMELINE -- */
+/* Two tracks, one time axis. Bars are positioned from --from/--to (fractions
+   of the whole span) and packed into lanes by lib/timeline.js so concurrent
+   roles sit side by side instead of on top of each other. */
+/* The two-track history breaks out of the reading measure — three lanes in a
+   36rem column leaves 80px per lane, which no card fits inside. Prose in this
+   section stays at the measure. */
+.cv--timeline{width:min(62rem, calc(100vw - 2 * var(--page-pad)))}
+.cv--timeline > .section-head,
+.cv-intro{max-width:34rem}
+.cv-intro{color:var(--ink-soft);font-size:.97rem;margin:0 0 2rem}
+.tl{
+  --tl-height:30rem;
+  display:grid;grid-template-columns:1fr 4rem 1fr;
+  position:relative;margin:2.5rem 0 0;
+}
+.tl-head{font-family:var(--sans);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--faint);font-weight:400;margin:0 0 .9rem}
+.tl-col--career .tl-head{text-align:right}
+.tl-bars{list-style:none;margin:0;padding:0;position:relative;height:var(--tl-height)}
+.tl-bar{
+  position:absolute;
+  top:calc(var(--from) * var(--tl-height));
+  height:calc((var(--to) - var(--from)) * var(--tl-height));
+  /* short roles still need room for their label; the line below keeps the
+     true duration so the proportions stay honest */
+  min-height:3.2rem;
+  width:calc((100% - 1rem) / var(--lanes));
+  display:flex;align-items:flex-start;gap:.5rem;
+}
+/* career grows leftward from the axis, community rightward */
+.tl-col--career .tl-bar{right:calc(var(--lane) * (100% - 1rem) / var(--lanes) + .8rem);
+  flex-direction:row-reverse;text-align:right}
+.tl-col--community .tl-bar{left:calc(var(--lane) * (100% - 1rem) / var(--lanes) + .8rem)}
+.tl-bar-line{flex:none;width:3px;min-height:6px;
+  height:calc((var(--to) - var(--from)) * var(--tl-height));border-radius:2px;background:var(--indigo);opacity:.5}
+.tl-col--community .tl-bar-line{background:var(--vermilion);opacity:.45}
+.tl-bar.is-ongoing .tl-bar-line{
+  background:linear-gradient(to bottom,currentColor,transparent);color:var(--vermilion)}
+.tl-col--career .tl-bar.is-ongoing .tl-bar-line{color:var(--indigo)}
+/* Compact by default; the detail expands on hover, keyboard focus or tap.
+   Everything is in the DOM either way — this hides it visually, it does not
+   inject it, so screen readers and ctrl-F still find it. */
+.tl-bar-body{
+  width:100%;min-width:0;padding:.25rem .45rem;margin:-.25rem -.45rem;
+  font:inherit;color:inherit;text-align:inherit;
+  background:transparent;border:0;border-radius:3px;cursor:pointer;
+  transition:background .18s ease, box-shadow .18s ease;
+}
+.tl-col--career .tl-bar-body{text-align:right}
+/* Compact: one line, clipped. Expanded: wraps freely. */
+.tl-bar-org{display:block;font-size:.86rem;line-height:1.4;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-bar b{display:block;font-weight:400;font-size:.92rem;line-height:1.35;
+  color:var(--ink);margin-bottom:.1rem}
+.tl-bar-body:hover .tl-bar-org,
+.tl-bar-body:focus .tl-bar-org{white-space:normal;overflow:visible;color:var(--ink-soft);
+  font-size:.8rem;order:2}
+.tl-bar-more{
+  display:block;overflow:hidden;
+  max-height:0;opacity:0;
+  transition:max-height .22s ease, opacity .18s ease;
+}
+.tl-bar-when{display:block;font-family:var(--sans);font-size:.62rem;letter-spacing:.1em;
+  color:var(--faint);margin-top:.3rem}
+/* Clamped so the rendered height is bounded rather than estimated — the build
+   decides what fits, and an unclamped paragraph could exceed its allowance and
+   collide. Hover/focus lifts the clamp, since that card is raised anyway. */
+.tl-bar-detail{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+  overflow:hidden;color:var(--ink-soft);font-size:.78rem;line-height:1.55;margin-top:.35rem}
+.tl-bar-body:hover .tl-bar-detail,
+.tl-bar-body:focus .tl-bar-detail{-webkit-line-clamp:none;overflow:visible}
+
+/* Raised above its neighbours, so an expanded card may overlap them freely. */
+.tl-bar:hover,
+.tl-bar:focus-within{z-index:5}
+/* :focus, not :focus-visible — the latter deliberately ignores mouse clicks and
+   taps, so a touch user could never open one of these. :focus-visible is used
+   only for the keyboard ring further down. */
+.tl-bar-body:hover,
+.tl-bar-body:focus{
+  width:calc(100% + 2.5rem);
+  background:var(--paper);
+  box-shadow:0 0 0 1px var(--hairline), 0 6px 18px -10px rgba(60,50,40,.45);
+  outline:none;
+}
+.tl-bar-body:hover .tl-bar-more,
+.tl-bar-body:focus .tl-bar-more,
+.tl-bar.is-open .tl-bar-more{max-height:12rem;opacity:1}
+/* Open by default where there is room; the org then wraps like the rest. */
+.tl-bar.is-open .tl-bar-org{white-space:normal;overflow:visible;
+  color:var(--ink-soft);font-size:.8rem;order:2}
+.tl-bar.is-open .tl-bar-body{display:flex;flex-direction:column}
+/* keep a visible ring for keyboard users specifically */
+.tl-bar-body:focus-visible{box-shadow:0 0 0 2px var(--indigo), 0 6px 18px -10px rgba(60,50,40,.45)}
+
+.tl-axis{position:relative}
+.tl-axis::before{content:"";position:absolute;left:50%;top:2.1rem;height:var(--tl-height);
+  width:1px;background:var(--hairline)}
+.tl-ticks{list-style:none;margin:0;padding:0;position:relative;height:var(--tl-height);
+  margin-top:2.1rem}
+.tl-tick{position:absolute;left:0;right:0;top:calc(var(--at) * var(--tl-height));text-align:center}
+.tl-tick span{font-family:var(--sans);font-size:.6rem;letter-spacing:.08em;color:var(--faint);
+  background:var(--paper);padding:.1rem .3rem}
+
+/* Roles that are honestly both sit on the centre line. */
+.tl-bars--both{position:absolute;left:0;right:0;top:2.1rem;height:var(--tl-height);
+  pointer-events:none}
+.tl-bars--both .tl-bar{left:50%;transform:translateX(-50%);width:auto;
+  flex-direction:column;align-items:center;pointer-events:auto}
+.tl-bars--both .tl-bar-line{width:3px;
+  background:linear-gradient(to bottom,var(--indigo),var(--vermilion));opacity:.55}
+.tl-bars--both .tl-bar-body{text-align:center;background:var(--paper);padding:.15rem .5rem}
+
+.cv-detail{margin-top:3rem}
+
+@media (max-width:720px){
+  /* The two-track layout depends on horizontal room; below that it becomes a
+     single ordered list and the detail below carries the content. */
+  .tl{display:none}
+}
+
 /* Motifs — Japanese patterns kept small and pale, so they read as marks on the
    sheet rather than decoration competing with the type. */
 .motif-asanoha{width:1.15rem;height:1.15rem;flex:none}

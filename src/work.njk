@@ -41,22 +41,31 @@ description: Engineering and product leadership in Tokyo — Third Intelligence,
     </div>
   </section>
 
-  <section class="cv">
-    <h2 class="section-head">Community</h2>
-    {%- for job in cv.community %}
-    <div class="cv-entry">
-      <div class="cv-when"><time>{{ job.dates }}</time></div>
-      <div class="cv-what">
-        <h3>{{ job.role }}<span class="cv-org">{{ job.org }}</span></h3>
-        {%- if job.note %}<p class="cv-note">{{ job.note }}</p>{% endif %}
-        <ul>
-          {%- for b in job.bullets %}
-          <li>{{ b }}</li>
-          {%- endfor %}
-        </ul>
+  <section class="cv cv--timeline">
+    <h2 class="section-head">Two careers at once</h2>
+    <p class="cv-intro">Paid work on the left, community work on the right, both against the same
+    years. The community track has run continuously since 2015 — often three commitments deep —
+    and Code Chrysalis sits on the centre line because an advisory is honestly neither one.</p>
+
+    {% timeline cv %}
+
+    {#- The bars are a visual summary; the detail stays available as a list. -#}
+    <div class="cv-detail">
+      {%- for job in cv.community %}
+      <div class="cv-entry">
+        <div class="cv-when"><time>{{ job.dates }}</time></div>
+        <div class="cv-what">
+          <h3>{{ job.role }}<span class="cv-org">{{ job.org }}</span></h3>
+          {%- if job.note %}<p class="cv-note">{{ job.note }}</p>{% endif %}
+          <ul>
+            {%- for b in job.bullets %}
+            <li>{{ b }}</li>
+            {%- endfor %}
+          </ul>
+        </div>
       </div>
+      {%- endfor %}
     </div>
-    {%- endfor %}
   </section>
 
   <section class="cv">

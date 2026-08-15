@@ -1,8 +1,6 @@
 {
   "_source": "Transcribed from 'Michael Omoto CV.pdf' (Drive, modified 2026-06-28). Update this file from the CV rather than editing the Work page directly.",
-
   "summary": "Engineering and product leader bridging Silicon Valley and Japan. Cognitive scientist by training; has built and scaled teams and shipped privacy-critical, payments, and AI products at Google, Mercari, and Presto. Has also taught and designed curriculum for over a decade, from ESL classrooms and coding bootcamps to middle-school, high-school, and university programs.",
-
   "experience": [
     {
       "role": "VP of Engineering",
@@ -11,7 +9,10 @@
       "note": "Tokyo · Frontier AI research lab",
       "bullets": [
         "Bootstrapped the product-engineering team, recruited five engineers with Silicon Valley experience in Tokyo, and set its technical direction and principles."
-      ]
+      ],
+      "start": "2026-04",
+      "end": null,
+      "importance": 2
     },
     {
       "role": "Chief Operating Officer",
@@ -20,7 +21,10 @@
       "bullets": [
         "Founded the company's Japan entity; secured its first contracts and helped shape the go-to-market strategy.",
         "Led the expansion of AI-driven wealth-management products for the Japanese market."
-      ]
+      ],
+      "start": "2025-12",
+      "end": "2026-04",
+      "importance": 5
     },
     {
       "role": "Engineering Manager",
@@ -34,7 +38,10 @@
         "Led the engineering intern program, supporting 40+ interns a year alongside internal talks and external events.",
         "As a 20% project, served as a Computer Science Education Program Manager, partnering with nonprofits.",
         "Member of the Japan Site DEI Tech Council."
-      ]
+      ],
+      "start": "2019-12",
+      "end": "2025-12",
+      "importance": 1
     },
     {
       "role": "Engineering Manager",
@@ -48,7 +55,10 @@
         "Founded the English Developer PR program; launched Women Who Code @ Mercari and the Global Engineering Meetup.",
         "Built engineering onboarding and a practical-engineering bootcamp for new-grad hires.",
         "Executive sponsor of Build@Mercari, a training and internship program for people underrepresented in tech."
-      ]
+      ],
+      "start": "2018-06",
+      "end": "2019-10",
+      "importance": 4
     },
     {
       "role": "Engineer → Director of Engineering",
@@ -62,15 +72,16 @@
         "Helped scale the company from Series A to D (~$200M valuation; Y Combinator-backed).",
         "Led business development and due diligence for Japan expansion.",
         "2017 Timmy Award nominee, Best Tech Manager (Silicon Valley)."
-      ]
+      ],
+      "start": "2013-01",
+      "end": "2018-02",
+      "importance": 3
     }
   ],
-
   "earlier": {
     "range": "2003 – 2012",
     "text": "Neuroscience research at the VA Medical Center — epilepsy cell-culture work under a UCLA grant, later a research coordinator routing protocols through IACUC, IRB and biosafety review. Applied behavioural therapy at Pacific Child & Family, doing ABA for children on the autism spectrum. English teaching in Japan as an Assistant Language Teacher with Heart Corporation, in Chiba and Ibaraki public schools. Consumer-science R&D at Neutrogena, where I designed and ran studies and built a web scraper and natural-language analysis engine — the first production code of a now decade-plus engineering career."
   },
-
   "community": [
     {
       "role": "Vice Chair, Education Committee",
@@ -78,7 +89,10 @@
       "dates": "2023 – Present",
       "bullets": [
         "Works with boards of education, the U.S. Embassy, and public and private institutions to help member companies build a globally minded, preferably bilingual talent pool."
-      ]
+      ],
+      "start": "2023-01",
+      "end": null,
+      "importance": 3
     },
     {
       "role": "Technical Lead (volunteer)",
@@ -87,7 +101,10 @@
       "bullets": [
         "Primary technical lead and engineer for a four-language platform — English, Japanese, Spanish, Portuguese — hosting a 20-year, daily-updated archive of Nikkei stories.",
         "Re-platformed the site from DigitalOcean droplets to AWS on an auto-deploying stack; thousands of commits modernising and maintaining the codebase since 2018."
-      ]
+      ],
+      "start": "2018-01",
+      "end": null,
+      "importance": 1
     },
     {
       "role": "Advisor",
@@ -98,7 +115,10 @@
         "Proposed the programs, designed the strategy, and authored Waffle's successful application for the $600K Google.org Impact Challenge for Women and Girls grant.",
         "Built the curriculum for both the Technovation (middle- and high-school) and Waffle College (university-level) programs.",
         "As primary internal Google sponsor, raised $100K through giving campaigns and recruited 30+ mentors."
-      ]
+      ],
+      "start": "2019-10",
+      "end": "2023-10",
+      "importance": 2
     },
     {
       "role": "VP Emeritus",
@@ -107,7 +127,10 @@
       "note": "Convención Panamericana Nikkei",
       "bullets": [
         "Helped lead the organising committee for COPANI XX (San Francisco, 2019): set conference strategy, led fundraising, and drafted the keynote invitation that helped secure former U.S. Transportation & Commerce Secretary Norman Mineta."
-      ]
+      ],
+      "start": "2018-01",
+      "end": "2019-12",
+      "importance": 5
     },
     {
       "role": "Mentor",
@@ -115,10 +138,26 @@
       "dates": "Sep 2015 – 2018",
       "bullets": [
         "Seven cohorts; weekly mentoring plus whiteboarding and interview workshops."
-      ]
+      ],
+      "start": "2015-09",
+      "end": "2018-12",
+      "importance": 6
+    },
+    {
+      "role": "Advisor",
+      "org": "Code Chrysalis",
+      "dates": "2019 – Present",
+      "track": "both",
+      "start": "2019-01",
+      "end": null,
+      "note": "Tokyo coding bootcamp",
+      "_verify": "Start year is a guess from the 2019 panel in the CV — confirm.",
+      "bullets": [
+        "Working advisor to the bootcamp, after earlier fireside chats and a solutions panel."
+      ],
+      "importance": 4
     }
   ],
-
   "education": [
     {
       "school": "University of California, Irvine",
@@ -137,6 +176,5 @@
       "year": "2012"
     }
   ],
-
   "languages": "English (native) · Japanese (near-native)"
 }
