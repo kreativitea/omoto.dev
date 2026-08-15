@@ -12,10 +12,18 @@ description: Engineering leader in Tokyo. Writing on privacy, how teams learn, a
     occasionally in Japanese.
   </p>
   <span class="mnote">
+    {# The arrow is the most hand-made thing on the page, so it is the one that
+       should look least settled — three passes of the same pencil. #}
     <svg class="mark" width="38" height="20" viewBox="0 0 38 20" aria-hidden="true">
-      <path d="M36 4 C 26 2, 12 7, 3 15" fill="none" stroke="currentColor" stroke-width="1.2"
-            stroke-linecap="round" filter="url(#pen)"/>
-      <path d="M3 15 l 8 -1 M3 15 l 1 -7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <defs>
+        <path id="mnote-arrow" d="M36 4 C 26 2, 12 7, 3 15 M3 15 l 8 -1 M3 15 l 1 -7"
+              fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </defs>
+      <g class="boil">
+        {%- for f in ["pen","pen2","pen3"] %}
+        <g><use href="#mnote-arrow" filter="url(#{{ f }})"/></g>
+        {%- endfor %}
+      </g>
     </svg>
     third draft. still one clause too long
   </span>
@@ -27,10 +35,16 @@ description: Engineering leader in Tokyo. Writing on privacy, how teams learn, a
       {# 麻の葉 (asanoha) — one hemp-leaf unit: a hexagon and its three
          diagonals. Small enough to read as a mark, not a pattern. #}
       <svg class="motif-asanoha" width="18" height="18" viewBox="0 0 26 26" aria-hidden="true">
-        <g fill="none" stroke="#7f9ab8" stroke-width="1.1" opacity=".72"
-           style="mix-blend-mode:var(--wash-blend)" filter="url(#wet-line)">
-          <path d="M13 2 L21.5 7 L21.5 19 L13 24 L4.5 19 L4.5 7 Z"/>
-          <path d="M13 2 L13 24 M4.5 7 L21.5 19 M21.5 7 L4.5 19"/>
+        <defs>
+          <g id="asanoha-unit" fill="none" stroke="#4a7098" stroke-width="1.1">
+            <path d="M13 2 L21.5 7 L21.5 19 L13 24 L4.5 19 L4.5 7 Z"/>
+            <path d="M13 2 L13 24 M4.5 7 L21.5 19 M21.5 7 L4.5 19"/>
+          </g>
+        </defs>
+        <g class="boil" opacity=".8" style="mix-blend-mode:var(--wash-blend)">
+          {%- for f in ["wet-line","wet-line2","wet-line3"] %}
+          <g><use href="#asanoha-unit" filter="url(#{{ f }})"/></g>
+          {%- endfor %}
         </g>
       </svg>
       Writing
