@@ -164,7 +164,30 @@ body{
 .wordmark .reading{display:block;margin-top:.7rem;font-family:var(--jp);font-weight:400;
   font-size:1.18rem;letter-spacing:.1em;color:var(--ink-soft);ruby-align:center}
 .wordmark .reading rt{font-size:.42em;letter-spacing:.1em;color:var(--faint);font-weight:400}
-.brush{display:block;width:min(28rem,100%);height:26px;margin:1.1rem 0 0}
+/* The stroke bleeds the full width of the window, edge to edge, and only
+   shrinks once the window does. Capping it at a rem width made it start giving
+   way while there was still screen either side of it.
+
+   The negative margin walks back out of the page's own centring and padding:
+   .page is centred at max-width --page-max with --page-pad either side, so its
+   content box begins that far in from the viewport edge. max(0px, …) covers
+   the case where the window is narrower than --page-max and the page is
+   already full width, leaving only the padding to undo.
+
+   Height is fixed rather than auto, and the SVG carries
+   preserveAspectRatio="none" — together they stretch the stroke's travel
+   without touching its weight. With height:auto the mark would thicken in step
+   with the window and overpower type that stays put. */
+.brush{
+  display:block;
+  width:100vw;
+  height:26px;
+  margin:1.1rem 0 0;
+  margin-left:calc(-1 * (max(0px, (100vw - var(--page-max)) / 2) + var(--page-pad)));
+}
+/* The masthead's first column is 1fr, whose auto minimum would otherwise grow
+   to fit a 100vw child and shove the seal off the page. */
+.masthead > div{min-width:0}
 .seal{width:76px;height:76px;flex:none;transform:rotate(2.4deg);margin-top:.2rem}
 /* The glyph is driven from CSS rather than SVG presentation attributes so
    --seal-weight is a single knob. paint-order draws the stroke under the fill,

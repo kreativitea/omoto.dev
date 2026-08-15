@@ -56,23 +56,30 @@
         <span class="reading" lang="ja"><ruby>{%- for r in site.nameJaRuby -%}{{ r.base }}<rt>{{ r.rt }}</rt>{%- endfor -%}</ruby></span>
       </h1>
 
-      {# One stroke. The outline is tapered — thin where the brush lands, fat
-         through the middle, thin as it lifts — and the white streaks are
-         kasure (掠れ), paper showing through where the ink ran out. #}
-      <svg class="brush" width="440" height="26" viewBox="0 0 440 26" aria-hidden="true">
+      {# One stroke, running the full width of the window.
+
+         preserveAspectRatio="none" with a locked height is load-bearing. The
+         default (meet) scales uniformly, so a stroke stretched to a wider
+         window would get proportionally FATTER — the same mistake as scaling
+         the whole mark instead of lengthening it. Stretching x alone keeps the
+         ink the same weight against type that is not scaling either, and a
+         near-horizontal mark tolerates it: what stretches is the travel, which
+         is exactly the thing that should.
+
+         The viewBox is trimmed to where the ink actually ends, so the mark
+         spans edge to edge rather than stopping short inside a padded box.
+
+         Tucked at the entry, swelling through the middle, lifting to a point.
+         The white streaks are kasure (掠れ) and run WITH the stroke, because
+         bristles separate lengthwise. Generated from a centreline and a
+         pressure profile, then baked — regenerate to revise, don't hand-edit. #}
+      <svg class="brush" width="1356" height="26" viewBox="0 0 1356 26"
+           preserveAspectRatio="none" aria-hidden="true">
         <g style="mix-blend-mode:var(--wash-blend)" filter="url(#dry1)" opacity=".82">
-          <path d="M8 12 C 80 4.6, 170 9.6, 250 11.6 C 320 13.4, 380 10.6, 424 8.6
-                   C 430 8.3, 434 9.2, 436 10.6
-                   L 433 17.6 C 427 19.2, 417 20, 405 19.6 C 365 18.2, 315 21.6, 245 19.6
-                   C 165 17.4, 77 20.6, 8 18.6 Z" fill="currentColor"/>
-          {# a second pass over the first, the way a loaded brush doubles back #}
-          <path d="M120 13 C 200 8, 300 16, 400 11" fill="none" stroke="currentColor"
-                stroke-width="2.4" opacity=".3"/>
-          <g stroke="var(--paper)" fill="none">
-            <path d="M320 14 H 436" stroke-width="1.5" stroke-dasharray="10 4 2 7 2 11"/>
-            <path d="M352 16.4 H 434" stroke-width="1.3" stroke-dasharray="6 5 3 8"/>
-            <path d="M386 18.4 H 432" stroke-width="1.1" stroke-dasharray="4 6 2 5"/>
-            <path d="M56 15 H 148" stroke-width=".9" stroke-dasharray="17 33" opacity=".55"/>
+          <path d="M1.0 16.9L11.4 17.9L21.8 18.3L32.2 18.5L42.7 18.7L53.2 18.9L63.7 19.0L74.3 19.1L85.0 19.2L95.6 19.3L106.4 19.4L117.1 19.4L127.9 19.5L138.7 19.5L149.6 19.6L160.5 19.6L171.4 19.6L182.4 19.6L193.4 19.7L204.5 19.7L215.5 19.7L226.6 19.7L237.8 19.6L248.9 19.6L260.1 19.6L271.3 19.6L282.6 19.6L293.9 19.5L305.2 19.5L316.5 19.5L327.8 19.5L339.2 19.5L350.6 19.5L362.0 19.6L373.5 19.6L384.9 19.6L396.4 19.6L407.9 19.5L419.4 19.5L431.0 19.4L442.5 19.3L454.1 19.2L465.7 19.0L477.3 18.9L488.9 18.8L500.5 18.7L512.1 18.6L523.8 18.5L535.5 18.4L547.1 18.3L558.8 18.1L570.5 17.9L582.2 17.8L593.9 17.6L605.6 17.5L617.4 17.4L629.1 17.3L640.8 17.3L652.6 17.3L664.3 17.3L676.0 17.3L687.8 17.4L699.5 17.4L711.3 17.3L723.0 17.3L734.7 17.2L746.5 17.2L758.2 17.1L769.9 17.0L781.7 16.9L793.4 16.9L805.1 16.8L816.8 16.7L828.5 16.6L840.2 16.5L851.9 16.4L863.5 16.3L875.2 16.2L886.9 16.0L898.5 15.9L910.1 15.8L921.7 15.7L933.3 15.5L944.9 15.4L956.5 15.3L968.0 15.2L979.6 15.1L991.1 15.0L1002.6 14.9L1014.0 14.8L1025.5 14.6L1036.9 14.5L1048.3 14.4L1059.7 14.3L1071.1 14.2L1082.4 14.1L1093.8 14.0L1105.0 13.9L1116.3 13.8L1127.6 13.7L1138.8 13.6L1149.9 13.4L1161.1 13.3L1172.2 13.1L1183.3 12.9L1194.4 12.7L1205.4 12.5L1216.4 12.3L1227.3 12.1L1238.3 11.9L1249.2 11.8L1260.0 11.6L1270.8 11.4L1281.6 11.3L1292.3 11.1L1303.0 10.9L1313.7 10.7L1324.3 10.6L1334.9 10.4L1345.4 10.2L1355.9 9.9L1355.9 7.1L1345.4 7.0L1334.9 7.0L1324.3 6.9L1313.7 6.9L1303.0 6.9L1292.3 6.9L1281.6 6.8L1270.8 6.8L1260.0 6.8L1249.1 6.7L1238.2 6.7L1227.3 6.6L1216.4 6.5L1205.4 6.4L1194.3 6.3L1183.3 6.3L1172.2 6.2L1161.1 6.1L1149.9 6.0L1138.7 6.0L1127.5 6.0L1116.3 5.9L1105.0 5.9L1093.7 5.9L1082.4 5.9L1071.1 5.9L1059.7 5.8L1048.3 5.8L1036.9 5.7L1025.5 5.7L1014.0 5.6L1002.5 5.6L991.0 5.5L979.5 5.5L968.0 5.4L956.5 5.3L944.9 5.3L933.3 5.2L921.7 5.1L910.1 5.1L898.5 5.0L886.8 4.9L875.2 4.8L863.5 4.7L851.9 4.7L840.2 4.6L828.5 4.6L816.8 4.5L805.1 4.5L793.4 4.4L781.6 4.4L769.9 4.4L758.2 4.3L746.4 4.3L734.7 4.3L723.0 4.3L711.2 4.3L699.5 4.3L687.7 4.3L676.0 4.4L664.3 4.5L652.5 4.6L640.8 4.6L629.1 4.6L617.3 4.6L605.6 4.6L593.9 4.5L582.2 4.4L570.5 4.3L558.8 4.2L547.1 4.1L535.4 4.1L523.8 4.0L512.1 4.0L500.5 4.0L488.8 4.0L477.2 4.0L465.6 3.9L454.0 3.9L442.4 3.9L430.9 3.9L419.3 3.9L407.8 3.9L396.3 4.0L384.8 4.1L373.4 4.2L361.9 4.4L350.5 4.5L339.1 4.7L327.7 4.8L316.4 5.0L305.1 5.1L293.8 5.2L282.5 5.3L271.2 5.5L260.0 5.6L248.8 5.8L237.7 5.9L226.5 6.1L215.4 6.3L204.3 6.5L193.3 6.7L182.3 6.9L171.3 7.1L160.4 7.4L149.5 7.6L138.6 7.9L127.8 8.2L117.0 8.5L106.2 8.8L95.5 9.1L84.8 9.4L74.2 9.8L63.6 10.2L53.1 10.6L42.6 11.0L32.1 11.5L21.7 12.1L11.3 12.8L1.0 14.1Z" fill="currentColor"/>
+          <g stroke="var(--paper)" fill="none" stroke-linecap="round">
+            <path d="M844.9 13.2L855.7 13.2L866.5 13.1L877.2 13.0L888.0 13.0L898.8 12.9L909.5 12.8L920.3 12.8L931.0 12.7L941.7 12.7L952.4 12.6L963.1 12.5L973.8 12.5L984.4 12.4L995.1 12.4L1005.7 12.3L1016.3 12.2L1026.9 12.2L1037.5 12.1L1048.1 12.0L1058.6 12.0L1069.1 11.9L1079.6 11.8L1090.1 11.8L1100.5 11.7L1111.0 11.7L1121.4 11.6L1131.7 11.5L1142.1 11.5L1152.4 11.4L1162.8 11.3L1173.0 11.2L1183.3 11.1L1193.5 11.0L1203.7 10.9L1213.9 10.8L1224.1 10.7L1234.2 10.5L1244.3 10.4L1254.3 10.3L1264.3 10.2L1274.3 10.1L1284.3 10.0L1294.2 9.9L1304.1 9.8L1314.0 9.7L1323.8 9.6L1333.6 9.5L1343.3 9.3" stroke-width="1.4" stroke-dasharray="9 5 3 8 2 12"/>
+            <path d="M984.1 8.8L991.9 8.8L999.7 8.8L1007.4 8.8L1015.2 8.8L1022.9 8.8L1030.6 8.8L1038.3 8.8L1046.0 8.8L1053.7 8.8L1061.4 8.8L1069.1 8.8L1076.8 8.8L1084.4 8.8L1092.0 8.7L1099.7 8.7L1107.3 8.7L1114.9 8.7L1122.5 8.7L1130.1 8.7L1137.6 8.6L1145.2 8.6L1152.7 8.6L1160.2 8.6L1167.8 8.6L1175.2 8.6L1182.7 8.6L1190.2 8.6L1197.7 8.6L1205.1 8.6L1212.5 8.6L1219.9 8.6L1227.3 8.5L1234.7 8.5L1242.1 8.5L1249.4 8.5L1256.7 8.5L1264.1 8.4L1271.3 8.4L1278.6 8.4L1285.9 8.4L1293.1 8.3L1300.4 8.3L1307.6 8.3L1314.8 8.2L1321.9 8.2L1329.1 8.2L1336.2 8.2L1343.3 8.1" stroke-width="1.1" stroke-dasharray="5 6 3 9"/>
           </g>
         </g>
       </svg>
