@@ -361,16 +361,17 @@ body{
 .track-key--career{color:var(--indigo)}
 .track-key--community{color:var(--vermilion)}
 
-.track-body{--track-h:34rem;position:relative;height:var(--track-h);
+.track-body{--track-h:34rem;--lane-pitch:1.9rem;
+  position:relative;height:var(--track-h);
   display:grid;grid-template-columns:1fr 2.6rem 1fr}
 .track-bars{list-style:none;margin:0;padding:0;position:relative;height:100%}
 .track-bar{position:absolute;
   top:calc(var(--from) * var(--track-h));
   height:calc((var(--to) - var(--from)) * var(--track-h));
-  width:calc(100% / var(--lanes));
+  width:var(--lane-pitch);
 }
-.track-bars--career .track-bar{right:calc(var(--lane) * 100% / var(--lanes))}
-.track-bars--community .track-bar{left:calc(var(--lane) * 100% / var(--lanes))}
+.track-bars--career .track-bar{right:calc(var(--lane) * var(--lane-pitch))}
+.track-bars--community .track-bar{left:calc(var(--lane) * var(--lane-pitch))}
 .track-line{position:absolute;top:0;bottom:0;width:3px;border-radius:2px;
   background:var(--indigo);opacity:.28;
   transform-origin:center;transition:opacity .2s ease,transform .2s ease}
@@ -501,6 +502,22 @@ body{
 .track-bar.is-education .track-line{opacity:.16;background:var(--ink-soft);min-height:5px}
 .track-bar.is-education.is-current .track-line{opacity:.55}
 .track-bar.is-education .track-label{color:var(--ink-soft)}
+
+/* Bars are links to their own entry. The anchor covers the whole lane cell, so
+   the target is a comfortable click even though the mark itself is 3px wide;
+   the label keeps pointer-events:none so it never intercepts. */
+.track-hit{position:absolute;inset:0;display:block;border-radius:3px}
+.track-hit:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+.track-bar:hover .track-line{opacity:.85;transform:scaleX(1.6)}
+
+/* Land the entry where the highlight band is, rather than jammed against the
+   top of the viewport — so the bar you just clicked is the one that lights. */
+.cv-entry{scroll-margin-top:38vh}
+
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
 
 </style>
 <meta property="og:type" content="website">
@@ -695,7 +712,7 @@ body{
 
       <section class="cv">
         <h2 class="section-head">Experience</h2>
-        <div class="cv-entry" data-key="code-chrysalis-paid">
+        <div class="cv-entry" id="code-chrysalis-paid" data-key="code-chrysalis-paid">
           <div class="cv-when"><time>Jul 2026 – Present</time></div>
           <div class="cv-what">
             <h3>Advisor<span class="cv-org">Code Chrysalis</span></h3><p class="cv-note">Tokyo coding bootcamp · paid advisory</p>
@@ -704,7 +721,7 @@ body{
             </ul>
           </div>
         </div>
-        <div class="cv-entry" data-key="third-intelligence">
+        <div class="cv-entry" id="third-intelligence" data-key="third-intelligence">
           <div class="cv-when"><time>Apr 2026 – Present</time></div>
           <div class="cv-what">
             <h3>VP of Engineering<span class="cv-org">Third Intelligence</span></h3><p class="cv-note">Tokyo · Frontier AI research lab</p>
@@ -713,7 +730,7 @@ body{
             </ul>
           </div>
         </div>
-        <div class="cv-entry" data-key="tifin-japan">
+        <div class="cv-entry" id="tifin-japan" data-key="tifin-japan">
           <div class="cv-when"><time>Dec 2025 – Apr 2026</time></div>
           <div class="cv-what">
             <h3>Chief Operating Officer<span class="cv-org">TIFIN Japan</span></h3>
@@ -723,7 +740,7 @@ body{
             </ul>
           </div>
         </div>
-        <div class="cv-entry" data-key="google-maps">
+        <div class="cv-entry" id="google-maps" data-key="google-maps">
           <div class="cv-when"><time>Dec 2019 – Dec 2025</time></div>
           <div class="cv-what">
             <h3>Engineering Manager<span class="cv-org">Google Maps</span></h3><p class="cv-note">Google · Tokyo</p>
@@ -737,7 +754,7 @@ body{
             </ul>
           </div>
         </div>
-        <div class="cv-entry" data-key="mercari">
+        <div class="cv-entry" id="mercari" data-key="mercari">
           <div class="cv-when"><time>Jun 2018 – Oct 2019</time></div>
           <div class="cv-what">
             <h3>Engineering Manager<span class="cv-org">Mercari</span></h3><p class="cv-note">Tokyo</p>
@@ -751,7 +768,7 @@ body{
             </ul>
           </div>
         </div>
-        <div class="cv-entry" data-key="presto">
+        <div class="cv-entry" id="presto" data-key="presto">
           <div class="cv-when"><time>Jan 2013 – Feb 2018</time></div>
           <div class="cv-what">
             <h3>Engineer → Director of Engineering<span class="cv-org">Presto</span></h3><p class="cv-note">formerly E la Carte · Redwood City, CA</p>
@@ -771,7 +788,7 @@ body{
         <h2 class="section-head">Community</h2>
         <p class="cv-intro">Close to a second career, and overlapping the first for most of a
         decade — Discover Nikkei alone has run through four other roles.</p>
-        <div class="cv-entry" data-key="american-chamber-of-commerce-in-japan">
+        <div class="cv-entry" id="american-chamber-of-commerce-in-japan" data-key="american-chamber-of-commerce-in-japan">
           <div class="cv-when"><time>2023 – Present</time></div>
           <div class="cv-what">
             <h3>Vice Chair, Education Committee<span class="cv-org">American Chamber of Commerce in Japan</span></h3>
@@ -780,7 +797,7 @@ body{
             </ul>
           </div>
         </div>
-        <div class="cv-entry" data-key="discover-nikkei">
+        <div class="cv-entry" id="discover-nikkei" data-key="discover-nikkei">
           <div class="cv-when"><time>2018 – Present</time></div>
           <div class="cv-what">
             <h3>Technical Lead (volunteer)<span class="cv-org">Discover Nikkei</span></h3>
@@ -790,7 +807,7 @@ body{
             </ul>
           </div>
         </div>
-        <div class="cv-entry" data-key="waffle">
+        <div class="cv-entry" id="waffle" data-key="waffle">
           <div class="cv-when"><time>Oct 2019 – Oct 2023</time></div>
           <div class="cv-what">
             <h3>Advisor<span class="cv-org">Waffle</span></h3><p class="cv-note">NPO closing Japan&#39;s IT gender gap</p>
@@ -801,7 +818,7 @@ body{
             </ul>
           </div>
         </div>
-        <div class="cv-entry" data-key="copani">
+        <div class="cv-entry" id="copani" data-key="copani">
           <div class="cv-when"><time>2018 – 2019</time></div>
           <div class="cv-what">
             <h3>VP Emeritus<span class="cv-org">COPANI</span></h3><p class="cv-note">Convención Panamericana Nikkei</p>
@@ -810,7 +827,7 @@ body{
             </ul>
           </div>
         </div>
-        <div class="cv-entry" data-key="hackbright-academy">
+        <div class="cv-entry" id="hackbright-academy" data-key="hackbright-academy">
           <div class="cv-when"><time>Sep 2015 – 2018</time></div>
           <div class="cv-what">
             <h3>Mentor<span class="cv-org">Hackbright Academy</span></h3>
@@ -819,7 +836,7 @@ body{
             </ul>
           </div>
         </div>
-        <div class="cv-entry" data-key="code-chrysalis-volunteer">
+        <div class="cv-entry" id="code-chrysalis-volunteer" data-key="code-chrysalis-volunteer">
           <div class="cv-when"><time>2019 – Present</time></div>
           <div class="cv-what">
             <h3>Advisor (volunteer)<span class="cv-org">Code Chrysalis</span></h3><p class="cv-note">Tokyo coding bootcamp</p>
@@ -840,19 +857,19 @@ body{
 
       <section class="cv">
         <h2 class="section-head">Education</h2>
-        <div class="cv-entry">
+        <div class="cv-entry" id="university-of-california-irvine" data-key="university-of-california-irvine">
           <div class="cv-when"><time>2006</time></div>
           <div class="cv-what">
             <h3>B.A. Psychology, Minor in Philosophy<span class="cv-org">University of California, Irvine</span></h3><p class="cv-note">Senior thesis in mathematical psychology: a Bayesian model predicting individual strength from team results.</p>
           </div>
         </div>
-        <div class="cv-entry">
+        <div class="cv-entry" id="santa-monica-college" data-key="santa-monica-college">
           <div class="cv-when"><time>2001 – 2004</time></div>
           <div class="cv-what">
             <h3>A.A. General Science, graduated with honours<span class="cv-org">Santa Monica College</span></h3>
           </div>
         </div>
-        <div class="cv-entry">
+        <div class="cv-entry" id="tesol-express" data-key="tesol-express">
           <div class="cv-when"><time>2012</time></div>
           <div class="cv-what">
             <h3>TEFL/TESOL Certificate<span class="cv-org">TESOL Express</span></h3>
@@ -868,81 +885,111 @@ body{
     <ul class="track-bars track-bars--career" style="--lanes:2">
       <li class="track-bar is-ongoing" data-key="code-chrysalis-paid"
         style="--from:0.0160;--to:0.0192;--lane:1;--lanes:2">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">Code Chrysalis<i>2026–now</i></span>
+        <a class="track-hit" href="#code-chrysalis-paid">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">Code Chrysalis<i>2026–now</i></span>
+        </a>
       </li>
       <li class="track-bar is-ongoing" data-key="third-intelligence"
         style="--from:0.0160;--to:0.0288;--lane:0;--lanes:2">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">Third Intelligence<i>2026–now</i></span>
+        <a class="track-hit" href="#third-intelligence">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">Third Intelligence<i>2026–now</i></span>
+        </a>
       </li>
       <li class="track-bar" data-key="tifin-japan"
         style="--from:0.0288;--to:0.0417;--lane:0;--lanes:2">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">TIFIN Japan<i>2025–2026</i></span>
+        <a class="track-hit" href="#tifin-japan">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">TIFIN Japan<i>2025–2026</i></span>
+        </a>
       </li>
       <li class="track-bar" data-key="google-maps"
         style="--from:0.0417;--to:0.2724;--lane:0;--lanes:2">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">Google Maps<i>2019–2025</i></span>
+        <a class="track-hit" href="#google-maps">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">Google Maps<i>2019–2025</i></span>
+        </a>
       </li>
       <li class="track-bar" data-key="mercari"
         style="--from:0.2788;--to:0.3301;--lane:0;--lanes:2">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">Mercari<i>2018–2019</i></span>
+        <a class="track-hit" href="#mercari">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">Mercari<i>2018–2019</i></span>
+        </a>
       </li>
       <li class="track-bar" data-key="presto"
         style="--from:0.3429;--to:0.5385;--lane:0;--lanes:2">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">Presto<i>2013–2018</i></span>
+        <a class="track-hit" href="#presto">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">Presto<i>2013–2018</i></span>
+        </a>
       </li>
       <li class="track-bar is-education" data-key="university-of-california-irvine"
         style="--from:0.8077;--to:0.8077;--lane:0;--lanes:2">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">University of California, Irvine<i>2006</i></span>
+        <a class="track-hit" href="#university-of-california-irvine">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">University of California, Irvine<i>2006</i></span>
+        </a>
       </li>
       <li class="track-bar is-education" data-key="santa-monica-college"
         style="--from:0.8846;--to:1.0000;--lane:0;--lanes:2">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">Santa Monica College<i>2001–2004</i></span>
+        <a class="track-hit" href="#santa-monica-college">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">Santa Monica College<i>2001–2004</i></span>
+        </a>
       </li>
       <li class="track-bar is-education" data-key="tesol-express"
         style="--from:0.5769;--to:0.5769;--lane:0;--lanes:2">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">TESOL Express<i>2012</i></span>
+        <a class="track-hit" href="#tesol-express">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">TESOL Express<i>2012</i></span>
+        </a>
       </li>
     </ul>
     <ul class="track-ticks"><li style="--at:1.0000"><span>2001</span></li><li style="--at:0.8846"><span>2004</span></li><li style="--at:0.7692"><span>2007</span></li><li style="--at:0.6538"><span>2010</span></li><li style="--at:0.5385"><span>2013</span></li><li style="--at:0.4231"><span>2016</span></li><li style="--at:0.3077"><span>2019</span></li><li style="--at:0.1923"><span>2022</span></li><li style="--at:0.0769"><span>2025</span></li><li style="--at:0.0000"><span>2027</span></li></ul>
     <ul class="track-bars track-bars--community" style="--lanes:4">
       <li class="track-bar is-ongoing" data-key="american-chamber-of-commerce-in-japan"
         style="--from:0.0160;--to:0.1538;--lane:2;--lanes:4">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">American Chamber of Commerce in Japan<i>2023–now</i></span>
+        <a class="track-hit" href="#american-chamber-of-commerce-in-japan">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">American Chamber of Commerce in Japan<i>2023–now</i></span>
+        </a>
       </li>
       <li class="track-bar is-ongoing" data-key="discover-nikkei"
         style="--from:0.0160;--to:0.3462;--lane:1;--lanes:4">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">Discover Nikkei<i>2018–now</i></span>
+        <a class="track-hit" href="#discover-nikkei">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">Discover Nikkei<i>2018–now</i></span>
+        </a>
       </li>
       <li class="track-bar" data-key="waffle"
         style="--from:0.1250;--to:0.2788;--lane:3;--lanes:4">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">Waffle<i>2019–2023</i></span>
+        <a class="track-hit" href="#waffle">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">Waffle<i>2019–2023</i></span>
+        </a>
       </li>
       <li class="track-bar" data-key="copani"
         style="--from:0.2724;--to:0.3462;--lane:2;--lanes:4">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">COPANI<i>2018–2019</i></span>
+        <a class="track-hit" href="#copani">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">COPANI<i>2018–2019</i></span>
+        </a>
       </li>
       <li class="track-bar" data-key="hackbright-academy"
         style="--from:0.3109;--to:0.4359;--lane:0;--lanes:4">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">Hackbright Academy<i>2015–2018</i></span>
+        <a class="track-hit" href="#hackbright-academy">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">Hackbright Academy<i>2015–2018</i></span>
+        </a>
       </li>
       <li class="track-bar is-ongoing" data-key="code-chrysalis-volunteer"
         style="--from:0.0160;--to:0.3077;--lane:0;--lanes:4">
-        <span class="track-line" aria-hidden="true"></span>
-        <span class="track-label">Code Chrysalis<i>2019–now</i></span>
+        <a class="track-hit" href="#code-chrysalis-volunteer">
+          <span class="track-line" aria-hidden="true"></span>
+          <span class="track-label">Code Chrysalis<i>2019–now</i></span>
+        </a>
       </li>
     </ul>
 
@@ -975,14 +1022,20 @@ body{
     // however many overlap.
     const lit = new Set();
     let nearest = null, nearestDist = Infinity;
+    let closest = null, closestDist = Infinity;
     for (const el of entries) {
       const r = el.getBoundingClientRect();
+      const dist = Math.abs((r.top + r.bottom) / 2 - mid);
+      if (dist < closestDist) { closestDist = dist; closest = el.dataset.key; }
       if (r.top < mid + band && r.bottom > mid - band) {
         lit.add(el.dataset.key);
-        const dist = Math.abs((r.top + r.bottom) / 2 - mid);
         if (dist < nearestDist) { nearestDist = dist; nearest = el.dataset.key; }
       }
     }
+    // At the very top or bottom of the page nothing crosses the band, and the
+    // rail would go blank exactly when the first and last entries are on
+    // screen. Fall back to whatever is closest.
+    if (!lit.size && closest) { lit.add(closest); nearest = closest; }
     for (const [key, bar] of bars) {
       bar.classList.toggle('is-current', lit.has(key));
       bar.classList.toggle('is-named', key === nearest);

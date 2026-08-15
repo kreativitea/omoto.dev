@@ -350,16 +350,17 @@ body{
 .track-key--career{color:var(--indigo)}
 .track-key--community{color:var(--vermilion)}
 
-.track-body{--track-h:34rem;position:relative;height:var(--track-h);
+.track-body{--track-h:34rem;--lane-pitch:1.9rem;
+  position:relative;height:var(--track-h);
   display:grid;grid-template-columns:1fr 2.6rem 1fr}
 .track-bars{list-style:none;margin:0;padding:0;position:relative;height:100%}
 .track-bar{position:absolute;
   top:calc(var(--from) * var(--track-h));
   height:calc((var(--to) - var(--from)) * var(--track-h));
-  width:calc(100% / var(--lanes));
+  width:var(--lane-pitch);
 }
-.track-bars--career .track-bar{right:calc(var(--lane) * 100% / var(--lanes))}
-.track-bars--community .track-bar{left:calc(var(--lane) * 100% / var(--lanes))}
+.track-bars--career .track-bar{right:calc(var(--lane) * var(--lane-pitch))}
+.track-bars--community .track-bar{left:calc(var(--lane) * var(--lane-pitch))}
 .track-line{position:absolute;top:0;bottom:0;width:3px;border-radius:2px;
   background:var(--indigo);opacity:.28;
   transform-origin:center;transition:opacity .2s ease,transform .2s ease}
