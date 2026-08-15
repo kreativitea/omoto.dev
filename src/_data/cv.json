@@ -3,6 +3,18 @@
   "summary": "Engineering and product leader bridging Silicon Valley and Japan. Cognitive scientist by training; has built and scaled teams and shipped privacy-critical, payments, and AI products at Google, Mercari, and Presto. Has also taught and designed curriculum for over a decade, from ESL classrooms and coding bootcamps to middle-school, high-school, and university programs.",
   "experience": [
     {
+      "role": "VP of Engineering",
+      "org": "Third Intelligence",
+      "dates": "Apr 2026 – Present",
+      "note": "Tokyo · Frontier AI research lab",
+      "bullets": [
+        "Bootstrapped the product-engineering team, recruited five engineers with Silicon Valley experience in Tokyo, and set its technical direction and principles."
+      ],
+      "start": "2026-04",
+      "end": null,
+      "importance": 2
+    },
+    {
       "role": "Advisor",
       "org": "Code Chrysalis",
       "key": "code-chrysalis-paid",
@@ -14,18 +26,6 @@
       "bullets": [
         "Paid advisory work, following seven years of volunteering with the same school."
       ]
-    },
-    {
-      "role": "VP of Engineering",
-      "org": "Third Intelligence",
-      "dates": "Apr 2026 – Present",
-      "note": "Tokyo · Frontier AI research lab",
-      "bullets": [
-        "Bootstrapped the product-engineering team, recruited five engineers with Silicon Valley experience in Tokyo, and set its technical direction and principles."
-      ],
-      "start": "2026-04",
-      "end": null,
-      "importance": 2
     },
     {
       "role": "Chief Operating Officer",
