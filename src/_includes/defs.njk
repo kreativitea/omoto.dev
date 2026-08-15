@@ -7,24 +7,10 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 
   {# Dry brush. Displacement scale must stay small relative to the stroke's
-     height, or the mark dissolves into fuzz rather than fraying.
-
-     Three of them, differing only in seed. Hand-drawn animation cycles two or
-     three drawings of the same line and that is what makes ink look alive
-     rather than printed — see .boil in the stylesheet. Here it is also the
-     governing idea of the sheet: three attempts, each one still visible, only
-     now they take turns. #}
+     height, or the mark dissolves into fuzz rather than fraying. #}
   <filter id="dry1" x="-20%" y="-70%" width="140%" height="240%">
     <feTurbulence type="fractalNoise" baseFrequency=".055 .012" numOctaves="4" seed="5" result="n"/>
     <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
-  <filter id="dry2" x="-20%" y="-70%" width="140%" height="240%">
-    <feTurbulence type="fractalNoise" baseFrequency=".055 .012" numOctaves="4" seed="61" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="4.9" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
-  <filter id="dry3" x="-20%" y="-70%" width="140%" height="240%">
-    <feTurbulence type="fractalNoise" baseFrequency=".058 .013" numOctaves="4" seed="127" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="4.2" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
 
   {# Carved stone edge, for the seal and the practice row. #}
@@ -76,38 +62,15 @@
     <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/>
     <feGaussianBlur stdDeviation=".35"/>
   </filter>
-  <filter id="wet-line2" x="-18%" y="-18%" width="136%" height="136%">
-    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="47" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.9" xChannelSelector="R" yChannelSelector="G"/>
-    <feGaussianBlur stdDeviation=".35"/>
-  </filter>
-  <filter id="wet-line3" x="-18%" y="-18%" width="136%" height="136%">
-    <feTurbulence type="fractalNoise" baseFrequency=".055" numOctaves="3" seed="88" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
-    <feGaussianBlur stdDeviation=".35"/>
-  </filter>
-
-  {# Pencil, for marginalia arrows. Three seeds again, so the hand shakes. #}
+  {# Pencil, for marginalia arrows. #}
   <filter id="pen" x="-15%" y="-120%" width="130%" height="340%">
     <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="3" result="n"/>
     <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
-  <filter id="pen2" x="-15%" y="-120%" width="130%" height="340%">
-    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="52" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
-  <filter id="pen3" x="-15%" y="-120%" width="130%" height="340%">
-    <feTurbulence type="fractalNoise" baseFrequency=".055" numOctaves="3" seed="96" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
 
-  {# Torn edge, for the flat cut-paper shapes in the post figures — the ridges
-     and the disc. No blur: the whole point of these shapes is that they are
-     hard-edged where everything around them is wet. The displacement only
-     stops them from looking like vector geometry. #}
-  <filter id="torn" x="-8%" y="-8%" width="116%" height="116%">
-    <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="3" seed="19" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
+  {# The torn edge used by the bands and disc in the post figures is NOT here:
+     lib/wash.js emits its own per figure, with an id derived from the seed, so
+     that two figures on one page cannot inherit each other's warp. A shared
+     definition would be the third thing on this page fighting for that id. #}
 
 </defs></svg>
