@@ -41,12 +41,12 @@
              pooled edge drift on separate clocks, so the pigment is never
              quite where its own rim says it should be. #}
           <svg class="name-wash" width="340" height="48" viewBox="0 0 340 48" preserveAspectRatio="none" aria-hidden="true">
-            <g class="swim" style="mix-blend-mode:var(--wash-blend)">
+            <g style="mix-blend-mode:var(--wash-blend)">
               <ellipse cx="170" cy="25" rx="156" ry="15" fill="#7fa6c8" opacity=".38" filter="url(#nw-a)"/>
               <ellipse cx="126" cy="28" rx="102" ry="11" fill="#a58fc0" opacity=".28" filter="url(#nw-b)"/>
               <ellipse cx="236" cy="21" rx="70"  ry="9"  fill="#8fbf9c" opacity=".26" filter="url(#nw-c)"/>
             </g>
-            <ellipse class="swim swim--slow" cx="170" cy="25" rx="156" ry="15" fill="none" stroke="#3f6f9c" stroke-width="2"
+            <ellipse cx="170" cy="25" rx="156" ry="15" fill="none" stroke="#3f6f9c" stroke-width="2"
                      opacity=".3" filter="url(#nw-a)" style="mix-blend-mode:var(--wash-blend)"/>
             <ellipse cx="116" cy="17" rx="40" ry="5" fill="#fff" opacity=".32" style="mix-blend-mode:screen"/>
           </svg>
@@ -82,7 +82,7 @@
             </g>
           </g>
         </defs>
-        <g class="boil" style="mix-blend-mode:var(--wash-blend)" opacity=".82">
+        <g style="mix-blend-mode:var(--wash-blend)" opacity=".82">
           {%- for f in ["dry1","dry2","dry3"] %}
           <g><use href="#brush-mark" filter="url(#{{ f }})"/></g>
           {%- endfor %}
@@ -110,18 +110,27 @@
      wallpaper. The upper row is inset by half a scale, which is what makes the
      interlock work. #}
   <svg class="motif-seigaiha" width="224" height="38" viewBox="0 0 224 38" aria-hidden="true">
-    <g fill="none" stroke="#7f9ab8" stroke-width="1.3" opacity=".5"
-       style="mix-blend-mode:var(--wash-blend)" filter="url(#wet-line)">
-      <g transform="translate(-16,-16)">
-        {%- for i in range(0, 9) %}
-        <g transform="translate({{ i * 32 }},0)"><path d="M0 34 A16 16 0 0 1 32 34"/><path d="M6 34 A10 10 0 0 1 26 34"/><path d="M12 34 A4 4 0 0 1 20 34"/></g>
-        {%- endfor %}
+    <defs>
+      <g id="seigaiha-rows" fill="none" stroke="#4a7098" stroke-width="1.3">
+        <g transform="translate(-16,-16)">
+          {%- for i in range(0, 9) %}
+          <g transform="translate({{ i * 32 }},0)"><path d="M0 34 A16 16 0 0 1 32 34"/><path d="M6 34 A10 10 0 0 1 26 34"/><path d="M12 34 A4 4 0 0 1 20 34"/></g>
+          {%- endfor %}
+        </g>
+        <g transform="translate(0,4)">
+          {%- for i in range(0, 7) %}
+          <g transform="translate({{ i * 32 }},0)"><path d="M0 34 A16 16 0 0 1 32 34"/><path d="M6 34 A10 10 0 0 1 26 34"/><path d="M12 34 A4 4 0 0 1 20 34"/></g>
+          {%- endfor %}
+        </g>
       </g>
-      <g transform="translate(0,4)">
-        {%- for i in range(0, 7) %}
-        <g transform="translate({{ i * 32 }},0)"><path d="M0 34 A16 16 0 0 1 32 34"/><path d="M6 34 A10 10 0 0 1 26 34"/><path d="M12 34 A4 4 0 0 1 20 34"/></g>
-        {%- endfor %}
-      </g>
+    </defs>
+    {# Waves are the one motif on the sheet that has an excuse to move. Three
+       passes over the whole pattern, authored once and stamped three times —
+       repeating fifty arcs per frame instead would be absurd for a footer. #}
+    <g class="boil" opacity=".55" style="mix-blend-mode:var(--wash-blend)">
+      {%- for f in ["wet-line","wet-line2","wet-line3"] %}
+      <g><use href="#seigaiha-rows" filter="url(#{{ f }})"/></g>
+      {%- endfor %}
     </g>
   </svg>
 
