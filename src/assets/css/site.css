@@ -490,3 +490,19 @@ body{
 .track-bar.is-education .track-line{opacity:.16;background:var(--ink-soft);min-height:5px}
 .track-bar.is-education.is-current .track-line{opacity:.55}
 .track-bar.is-education .track-label{color:var(--ink-soft)}
+
+/* Bars are links to their own entry. The anchor covers the whole lane cell, so
+   the target is a comfortable click even though the mark itself is 3px wide;
+   the label keeps pointer-events:none so it never intercepts. */
+.track-hit{position:absolute;inset:0;display:block;border-radius:3px}
+.track-hit:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+.track-bar:hover .track-line{opacity:.85;transform:scaleX(1.6)}
+
+/* Land the entry where the highlight band is, rather than jammed against the
+   top of the viewport — so the bar you just clicked is the one that lights. */
+.cv-entry{scroll-margin-top:38vh}
+
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}

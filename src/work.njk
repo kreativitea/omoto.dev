@@ -23,7 +23,7 @@ description: Engineering and product leadership in Tokyo — Third Intelligence,
       <section class="cv">
         <h2 class="section-head">Experience</h2>
         {%- for job in cv.experience %}
-        <div class="cv-entry" data-key="{{ job | key }}">
+        <div class="cv-entry" id="{{ job | key }}" data-key="{{ job | key }}">
           <div class="cv-when"><time>{{ job.dates }}</time></div>
           <div class="cv-what">
             <h3>{{ job.role }}<span class="cv-org">{{ job.org }}</span></h3>
@@ -43,7 +43,7 @@ description: Engineering and product leadership in Tokyo — Third Intelligence,
         <p class="cv-intro">Close to a second career, and overlapping the first for most of a
         decade — Discover Nikkei alone has run through four other roles.</p>
         {%- for job in cv.community %}
-        <div class="cv-entry" data-key="{{ job | key }}">
+        <div class="cv-entry" id="{{ job | key }}" data-key="{{ job | key }}">
           <div class="cv-when"><time>{{ job.dates }}</time></div>
           <div class="cv-what">
             <h3>{{ job.role }}<span class="cv-org">{{ job.org }}</span></h3>
@@ -69,7 +69,7 @@ description: Engineering and product leadership in Tokyo — Third Intelligence,
       <section class="cv">
         <h2 class="section-head">Education</h2>
         {%- for e in cv.education %}
-        <div class="cv-entry">
+        <div class="cv-entry" id="{{ e | key }}" data-key="{{ e | key }}">
           <div class="cv-when"><time>{{ e.year }}</time></div>
           <div class="cv-what">
             <h3>{{ e.credential }}<span class="cv-org">{{ e.school }}</span></h3>
@@ -113,14 +113,20 @@ description: Engineering and product leadership in Tokyo — Third Intelligence,
     // however many overlap.
     const lit = new Set();
     let nearest = null, nearestDist = Infinity;
+    let closest = null, closestDist = Infinity;
     for (const el of entries) {
       const r = el.getBoundingClientRect();
+      const dist = Math.abs((r.top + r.bottom) / 2 - mid);
+      if (dist < closestDist) { closestDist = dist; closest = el.dataset.key; }
       if (r.top < mid + band && r.bottom > mid - band) {
         lit.add(el.dataset.key);
-        const dist = Math.abs((r.top + r.bottom) / 2 - mid);
         if (dist < nearestDist) { nearestDist = dist; nearest = el.dataset.key; }
       }
     }
+    // At the very top or bottom of the page nothing crosses the band, and the
+    // rail would go blank exactly when the first and last entries are on
+    // screen. Fall back to whatever is closest.
+    if (!lit.size && closest) { lit.add(closest); nearest = closest; }
     for (const [key, bar] of bars) {
       bar.classList.toggle('is-current', lit.has(key));
       bar.classList.toggle('is-named', key === nearest);
