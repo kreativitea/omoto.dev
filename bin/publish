@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+#
+# Move a finished piece from the private drafts repo into this public one.
+#
+#   bin/publish                 list what's in progress
+#   bin/publish some-piece      notes/some-piece.md -> src/writing/some-piece.md
+#
+# Drafts live in a separate private repo (kreativitea/articles.omoto.dev) that is
+# symlinked in at notes/. Publishing therefore crosses a repo boundary, which is
+# why `git mv` can't do it: the deletion belongs to one repo's history and the
+# addition to the other's.
+#
+# Both sides are staged and neither is committed — the last look at front matter
+# before a piece becomes public is worth keeping manual.
+
+set -euo pipefail
+
+root=$(git rev-parse --show-toplevel)
+notes="$root/notes"
+dest_dir="$root/src/writing"
+
+if [ ! -d "$notes" ]; then
+  echo "no notes/ here — drafts are only linked into the main checkout." >&2
+  echo "run this from the main checkout, not a worktree." >&2
+  exit 1
+fi
+
+if [ $# -eq 0 ]; then
+  echo "in progress:"
+  find "$notes/" -maxdepth 1 -name '*.md' -exec basename {} .md \; | sort | sed 's/^/  /'
+  echo
+  echo "publish one with: bin/publish <name>"
+  exit 0
+fi
+
+name=${1%.md}
+src="$notes/$name.md"
+dest="$dest_dir/$name.md"
+
+if [ ! -f "$src" ]; then
+  echo "no draft at notes/$name.md" >&2
+  exit 1
+fi
+
+if [ -e "$dest" ]; then
+  echo "src/writing/$name.md already exists — refusing to overwrite" >&2
+  exit 1
+fi
+
+if ! head -n1 "$src" | grep -q '^---'; then
+  echo "warning: notes/$name.md has no front matter; it needs at least title and date." >&2
+fi
+
+mv "$src" "$dest"
+
+# Stage the deletion in the drafts repo and the addition here. `add -A` rather
+# than `rm`, because the file is already gone by this point.
+git -C "$notes" add -A -- "$name.md"
+git -C "$root" add -- "src/writing/$name.md"
+
+cat <<MSG
+
+moved notes/$name.md -> src/writing/$name.md, staged in both repos.
+
+  drafts:  git -C notes commit -m "Publish $name" && git -C notes push
+  site:    git commit -m "Add $name" && git push
+
+Add \`draft: true\` to hold it back from the deployed site while you keep editing
+in the open — but note that the file itself is public from the moment you push.
+MSG
