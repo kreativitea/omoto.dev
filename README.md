@@ -66,13 +66,45 @@ date: 2026-07-30
 summary: One line for the index page and the feed.
 drafts: 6          # optional — renders as "sixth draft" in the byline
 touched: 2 Aug     # optional — "last touched 2 Aug"
-draft: true        # optional — local only, never deploys
+draft: true        # optional — unbuilt, but the file is still public. See below.
 wash:
   seed: subpoena-2026    # any string; the same seed always paints the same figure
   palette: sumi          # indigo | sakura | matcha | ochre | sumi
   caption: Chiba, 2012   # optional
 ---
 ```
+
+### Work in progress
+
+**`draft: true` is not privacy.** It drops a page from the built site, so nothing is served — but
+the markdown is still committed here, and this repo is public. A piece held back with `draft: true`
+is readable by anyone the moment it's pushed.
+
+So anything genuinely unfinished lives in a separate private repo,
+[kreativitea/articles.omoto.dev](https://github.com/kreativitea/articles.omoto.dev), cloned to
+`~/Code/personal/articles.omoto.dev` and symlinked in at `notes/`:
+
+```bash
+ln -s ~/Code/personal/articles.omoto.dev ~/Code/personal/omoto/notes
+```
+
+`notes` is gitignored, so this repo never sees it — no submodule, no `.gitmodules`, nothing in
+public history recording that the drafts repo exists. Drafts are still versioned and backed up,
+just somewhere else. They're outside `src/`, so Eleventy doesn't render them; a piece gets its
+wash figure and its real typography only once it's published.
+
+The symlink is absolute on purpose. Worktrees under `.claude/worktrees/` sit two levels deeper,
+where a relative link would dangle.
+
+Publishing crosses the repo boundary, which is more than a `git mv` can do:
+
+```bash
+bin/publish some-piece
+```
+
+That moves `notes/some-piece.md` to `src/writing/some-piece.md` and stages the deletion in the
+drafts repo alongside the addition here. Neither is committed — check the front matter first. Run
+it with no arguments to list what's in progress.
 
 ## Design
 

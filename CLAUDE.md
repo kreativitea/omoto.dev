@@ -44,6 +44,23 @@ let Mike relaunch.
 already serving on 8080, start the worktree's server on a different port rather than fighting over
 it.
 
+## Drafts are in a different repo
+
+`notes/` is a symlink to a **private** repo (`kreativitea/articles.omoto.dev`, checked out at
+`~/Code/personal/articles.omoto.dev`). This repo is public. Nothing from `notes/` may cross into it
+except through `bin/publish`, and only when Mike says a piece is done.
+
+That includes indirect leaks: don't quote draft text in a commit message, a PR title or body, or a
+file in this repo. Summarising an unpublished piece in a public commit still publishes it.
+
+The symlink only exists in the main checkout — a worktree is a fresh checkout and `notes` is
+gitignored, so it isn't copied in. Deliberately: a per-worktree *copy* of the drafts repo would
+fork the history of work in progress. To read or edit a draft from a worktree, use the absolute
+path `~/Code/personal/articles.omoto.dev/`, which is the same working tree the main checkout sees.
+Don't add `notes` to `.worktreeinclude`.
+
+`bin/publish` needs `notes/` and so must be run from the main checkout.
+
 ## Before finishing
 
 Commit inside the worktree and open a PR. Don't merge to `main` without asking — `main` deploys to

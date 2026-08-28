@@ -7,7 +7,14 @@ node_modules/
 # agent worktrees — separate git repos, never part of this one
 .claude/worktrees/
 
-# raw writing notes — kept out of a public repo until a piece is ready.
+# Work in progress. `notes` is a symlink to a separate *private* repo
+# (kreativitea/articles.omoto.dev) checked out at ~/Code/personal/articles.omoto.dev,
+# so drafts are versioned and backed up without ever entering this public one.
+#
 # Deliberately outside src/, because anything under src/ is Eleventy input and
-# would deploy. Publishing is `git mv notes/x.md src/writing/x.md`.
-notes/
+# would deploy. Publishing moves a piece across the repo boundary — see bin/publish.
+#
+# No trailing slash, and that is load-bearing: `notes/` matches directories only,
+# and git records a symlink as a blob, not a directory. With the slash this
+# pattern silently stops matching and the symlink becomes committable.
+notes
