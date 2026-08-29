@@ -4,13 +4,13 @@ Personal site and writing. Eleventy → static HTML → GitHub Pages.
 
 ## Requirements
 
-**Node is not currently installed on this machine.** You'll need it to build or preview locally:
+Node 18 or newer, which is what Eleventy 3 wants. If it's missing:
 
 ```bash
 brew install node
 ```
 
-CI installs its own Node, so deploys work regardless.
+CI installs its own Node, so deploys work regardless of what's on any given machine.
 
 ## Local
 
@@ -20,7 +20,7 @@ npm run dev
 ```
 
 Serves at <http://localhost:8080>. Posts with `draft: true` are visible locally and excluded from
-production builds.
+production builds — but they are not private; see [Work in progress](#work-in-progress).
 
 ## Deploy
 

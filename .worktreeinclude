@@ -1,4 +1,10 @@
 # Untracked/ignored paths copied into every new worktree.
-# node_modules is ~22M / 1650 files — cheaper to copy than to npm install per worktree,
-# and it means `npm run dev` works the moment a worktree is created.
+#
+# node_modules is ~22M / 1650 files — cheaper to copy than to install per worktree. The copy
+# does not bring node_modules/.bin, though, whose entries are all symlinks, so no local binary
+# is runnable until you run `npm install` once in the worktree. That takes under a second and
+# needs no network: every package is already there and npm only relinks the bins.
+#
+# Don't add `notes` here. It's a symlink to the private drafts repo, and a per-worktree copy
+# would fork the history of work in progress. See CLAUDE.md.
 node_modules/

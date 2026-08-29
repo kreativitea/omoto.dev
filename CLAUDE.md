@@ -44,6 +44,10 @@ let Mike relaunch.
 already serving on 8080, start the worktree's server on a different port rather than fighting over
 it.
 
+Run `npm install` once in a new worktree first. `node_modules` is copied in, but its `.bin`
+directory is not, so `npm run dev` has no binary to call until npm relinks them. It takes under a
+second and hits no network.
+
 ## Drafts are in a different repo
 
 `notes/` is a symlink to a **private** repo (`kreativitea/articles.omoto.dev`, checked out at
