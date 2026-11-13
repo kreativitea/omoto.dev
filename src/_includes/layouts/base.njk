@@ -6,7 +6,10 @@
 <meta name="color-scheme" content="light">
 <title>{% if title %}{{ title }} — {{ site.name }}{% else %}{{ site.name }}{% endif %}</title>
 <meta name="description" content="{{ description or site.description }}">
-<link rel="canonical" href="{{ site.url }}{{ page.url }}">
+{# A piece that ran somewhere else first sets `canonical` in front matter to
+   point at the original, so the two copies don't compete as duplicates.
+   Everything else is its own canonical. #}
+<link rel="canonical" href="{{ canonical or (site.url + page.url) }}">
 <link rel="alternate" type="application/atom+xml" title="{{ site.name }}" href="{{ '/feed.xml' | rel(absoluteAssets) }}">
 <link rel="stylesheet" href="{{ '/assets/css/site.css' | rel(absoluteAssets) }}">
 {%- if absoluteAssets %}
